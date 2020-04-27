@@ -5,19 +5,6 @@
 
 using namespace Rcpp;
 
-// list_mat
-SEXP list_mat(SEXP x, SEXP geometry_cols, SEXP id_col);
-RcppExport SEXP _geometries_list_mat(SEXP xSEXP, SEXP geometry_colsSEXP, SEXP id_colSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type geometry_cols(geometry_colsSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type id_col(id_colSEXP);
-    rcpp_result_gen = Rcpp::wrap(list_mat(x, geometry_cols, id_col));
-    return rcpp_result_gen;
-END_RCPP
-}
 // rcpp_get_vec
 SEXP rcpp_get_vec(SEXP x, SEXP cols);
 RcppExport SEXP _geometries_rcpp_get_vec(SEXP xSEXP, SEXP colsSEXP) {
@@ -57,7 +44,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_geometries_list_mat", (DL_FUNC) &_geometries_list_mat, 3},
     {"_geometries_rcpp_get_vec", (DL_FUNC) &_geometries_rcpp_get_vec, 2},
     {"_geometries_rcpp_get_mat", (DL_FUNC) &_geometries_rcpp_get_mat, 2},
     {"_geometries_rcpp_get_list_mat", (DL_FUNC) &_geometries_rcpp_get_list_mat, 3},
