@@ -164,7 +164,7 @@ namespace shapes {
     } // else default
     }
     default: {
-      Rcpp::stop("geometries - unsupported POINT type");
+      Rcpp::stop("geometries - unsupported type");
     }
     }
     return Rcpp::List::create(); // never reaches
@@ -190,7 +190,7 @@ namespace shapes {
     } // else default
     }
     default: {
-      Rcpp::stop("geometries - unsupported POINT type");
+      Rcpp::stop("geometries - unsupported type");
     }
     }
     return Rcpp::List::create(); // never reaches
@@ -224,7 +224,7 @@ namespace shapes {
     } // else default
     }
     default: {
-      Rcpp::stop("geometries - unsupported POINT type");
+      Rcpp::stop("geometries - unsupported type");
     }
     }
     }
