@@ -1,0 +1,21 @@
+Package: geometries
+Type: Package
+Title: Convert Between R Objects and Geometric Structures
+Version: 0.1.0
+Authors@R: c(
+    person("David", "Cooley", ,"david.cooley.au@gmail.com", role = c("aut", "cre"))
+    )
+Description: Conversion functions are available at both the R level, 
+  and through 'Rcpp'.
+License: GPL-3
+URL: https://dcooley.github.io/geometries/
+BugReports: https://github.com/dcooley/geometries/issues
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.0
+SystemRequirements: C++11
+LinkingTo: 
+    Rcpp
+Imports: 
+    Rcpp
+Roxygen: list(markdown = TRUE)
