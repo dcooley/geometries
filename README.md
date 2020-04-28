@@ -59,6 +59,50 @@ polygon( df, c("x","y"), c("id") )
 
 ``` r
 
+library(Rcpp)
+
+## calculate_bbox
+## returns the xmin, ymin, xmax and ymax
+cppFunction(
+  depends = "geometries"
+  , includes = '#include "geometries/bbox/bbox.hpp"'
+  , code = '
+    Rcpp::NumericVector calculate_bbox( SEXP x, SEXP geometry ) {
+      Rcpp::NumericVector bbox(4);
+      bbox(0) = bbox(1) = bbox(2) = bbox(3) = NA_REAL;
+      geometries::bbox::calculate_bbox( bbox, x, geometry ) ;
+      return bbox;
+    }
+  '
+)
+
+## of a data.frame
+df <- data.frame(
+  x = 1:10
+  , y = 21:30
+  , z = 31:40
+)
+
+calculate_bbox(df, c("x","y"))
+# [1]  1 21 10 30
+calculate_bbox(df, c("x","z"))
+# [1]  1 31 10 40
+calculate_bbox(df, c("z","y"))
+# [1] 31 21 40 30
+
+## of an sf object
+sf <- sfheaders::sf_linestring(
+  obj = df
+  , x = "x"
+  , y = "y"
+)
+
+calculate_bbox(sf$geometry, NULL )
+# [1]  1 21 10 30
+```
+
+``` r
+
 ## other_columns
 ## - find the columns not specified by any combination of
 ## - col

@@ -5,6 +5,18 @@
 
 using namespace Rcpp;
 
+// rcpp_calculate_bbox
+SEXP rcpp_calculate_bbox(SEXP x, SEXP geometry_cols);
+RcppExport SEXP _geometries_rcpp_calculate_bbox(SEXP xSEXP, SEXP geometry_colsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type geometry_cols(geometry_colsSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_calculate_bbox(x, geometry_cols));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rcpp_other_columns
 SEXP rcpp_other_columns(SEXP x, SEXP col1, SEXP col2);
 RcppExport SEXP _geometries_rcpp_other_columns(SEXP xSEXP, SEXP col1SEXP, SEXP col2SEXP) {
@@ -57,6 +69,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_geometries_rcpp_calculate_bbox", (DL_FUNC) &_geometries_rcpp_calculate_bbox, 2},
     {"_geometries_rcpp_other_columns", (DL_FUNC) &_geometries_rcpp_other_columns, 3},
     {"_geometries_rcpp_get_vec", (DL_FUNC) &_geometries_rcpp_get_vec, 2},
     {"_geometries_rcpp_get_mat", (DL_FUNC) &_geometries_rcpp_get_mat, 2},
