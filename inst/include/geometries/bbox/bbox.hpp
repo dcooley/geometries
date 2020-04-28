@@ -325,7 +325,15 @@ namespace bbox {
       Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
       calculate_bbox( bbox, df, geometry_cols );
       break;
-    }
+    }  else if ( Rf_isNewList( x ) ) {
+      Rcpp::List lst = Rcpp::as< Rcpp::List >( x );
+      R_xlen_t i;
+      for( i = 0; i < lst.size(); ++i ) {
+        SEXP s = lst[ i ];
+        calculate_bbox( bbox, s, geometry_cols );
+      }
+    }// else default
+    break;
     }
     default: {
       Rcpp::stop("geometries - unsupported type for bbox");  // #nocov
@@ -366,7 +374,15 @@ namespace bbox {
       Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
       calculate_bbox( bbox, df, geometry_cols );
       break;
-    }
+    } else if ( Rf_isNewList( x ) ) {
+      Rcpp::List lst = Rcpp::as< Rcpp::List >( x );
+      R_xlen_t i;
+      for( i = 0; i < lst.size(); ++i ) {
+        SEXP s = lst[ i ];
+        calculate_bbox( bbox, s, geometry_cols );
+      }
+    }// else default
+    break;
     }
     default: {
       Rcpp::stop("geometries - unsupported type for bbox");  // #nocov

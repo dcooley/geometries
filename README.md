@@ -62,7 +62,8 @@ polygon( df, c("x","y"), c("id") )
 library(Rcpp)
 
 ## calculate_bbox
-## returns the xmin, ymin, xmax and ymax
+## returns the xmin, ymin, xmax and ymax of various objects
+
 cppFunction(
   depends = "geometries"
   , includes = '#include "geometries/bbox/bbox.hpp"'
@@ -89,6 +90,25 @@ calculate_bbox(df, c("x","z"))
 # [1]  1 31 10 40
 calculate_bbox(df, c("z","y"))
 # [1] 31 21 40 30
+
+## If using a list, 
+l <- list(
+  matrix(1:6, ncol = 2 )
+  , matrix(6:1, ncol = 2)
+)
+
+calculate_bbox( l, NULL )
+# [1] 1 1 6 6
+
+l <- list(
+  matrix(1:6, ncol = 3 )
+  , matrix(6:1, ncol = 3)
+)
+
+calculate_bbox( l, c(0,1) )
+# [1] 1 3 6 4
+calculate_bbox( l, c(1,2) )
+# [1] 3 1 4 6
 
 ## of an sf object
 sf <- sfheaders::sf_linestring(
