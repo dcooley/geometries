@@ -4,6 +4,7 @@
 #include <Rcpp.h>
 #include "geometries/utils/columns/columns.hpp"
 #include "geometries/utils/lines/lines.hpp"
+#include "geometries/utils/lists/list.hpp"
 #include "geometries/utils/matrix/matrix.hpp"
 #include "geometries/utils/sexp/sexp.hpp"
 #include "geometries/utils/subset/subset.hpp"

@@ -1,5 +1,7 @@
 ---
 output: github_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -49,5 +51,50 @@ df <- data.frame(
 
 polygon( df, c("x","y"), c("id") )
 
+
+```
+
+
+### Utilities
+
+```{r}
+
+## other_columns
+## - find the columns not specified by any combination of
+## - col
+## - col1, col2
+## - col1, col2, col3
+## for data.frames, matrices and numeric and string column values
+library(Rcpp)
+
+cppFunction(
+  depends = "geometries"
+  , includes = '#include "geometries/utils/columns/columns.hpp"'
+  , code = '
+    SEXP other_columns( SEXP x, SEXP col1, SEXP col2 ) {
+      return geometries::utils::other_columns( x, col1, col2 );
+    }
+  '
+)
+
+df <- data.frame(
+  x = 1:5
+  , y = 1:5
+  , z = 1:5
+  , m = 1:5
+  , id = 1:5
+  , val = letters[1:5]
+)
+
+other_columns( df, "x", "y" )
+
+other_columns( df, "x", c("z","m") )
+
+other_columns( df, 0, 1 )
+
+other_columns( df, 0, c(1,2,3) )
+
+m <- as.matrix( df[, c("x","y","z","m","id")] ) ## droped the char to make matrix numeric
+other_columns( m, c(2,3), 4 ) 
 
 ```

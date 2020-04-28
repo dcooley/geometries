@@ -54,3 +54,51 @@ polygon( df, c("x","y"), c("id") )
 # [4,]    9    2
 # [5,]   10    1
 ```
+
+### Utilities
+
+``` r
+
+## other_columns
+## - find the columns not specified by any combination of
+## - col
+## - col1, col2
+## - col1, col2, col3
+## for data.frames, matrices and numeric and string column values
+library(Rcpp)
+
+cppFunction(
+  depends = "geometries"
+  , includes = '#include "geometries/utils/columns/columns.hpp"'
+  , code = '
+    SEXP other_columns( SEXP x, SEXP col1, SEXP col2 ) {
+      return geometries::utils::other_columns( x, col1, col2 );
+    }
+  '
+)
+
+df <- data.frame(
+  x = 1:5
+  , y = 1:5
+  , z = 1:5
+  , m = 1:5
+  , id = 1:5
+  , val = letters[1:5]
+)
+
+other_columns( df, "x", "y" )
+# [1] "z"   "m"   "id"  "val"
+
+other_columns( df, "x", c("z","m") )
+# [1] "y"   "id"  "val"
+
+other_columns( df, 0, 1 )
+# [1] 2 3 4 5
+
+other_columns( df, 0, c(1,2,3) )
+# [1] 4 5
+
+m <- as.matrix( df[, c("x","y","z","m","id")] ) ## droped the char to make matrix numeric
+other_columns( m, c(2,3), 4 ) 
+# [1] 0 1
+```
