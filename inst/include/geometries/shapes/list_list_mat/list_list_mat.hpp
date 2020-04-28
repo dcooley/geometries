@@ -56,7 +56,6 @@ namespace shapes {
 
     R_xlen_t i;
 
-    // issue 56 - no need to keep all the columns in the subset_dataframe
     Rcpp::StringVector keep_columns = geometries::utils::concatenate_vectors( geometry_cols, group_id_col_1 );
     keep_columns = geometries::utils::concatenate_vectors( keep_columns, group_id_col_2 );
     Rcpp::DataFrame df_keep = df[ keep_columns ];
@@ -93,7 +92,6 @@ namespace shapes {
 
     R_xlen_t i;
 
-    // issue 56 - no need to keep all the columns in the subset_dataframe
     Rcpp::StringVector keep_columns = geometries::utils::concatenate_vectors( geometry_cols, group_id_col_1 );
     keep_columns = geometries::utils::concatenate_vectors( keep_columns, group_id_col_2 );
     Rcpp::DataFrame df_keep = df[ keep_columns ];
