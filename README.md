@@ -170,7 +170,6 @@ cppFunction(
   '
 )
 
-
 l <- list(
   matrix(1:20, ncol = 2 )
   , matrix(1:6, ncol = 2)
@@ -182,4 +181,28 @@ coordinate_indices( l )
 # [1,]    0    9
 # [2,]   10   12
 # [3,]   13   17
+```
+
+``` r
+
+## id positions
+## 
+## takes a sorted vector and returns the start & end indices of each unique element
+cppFunction(
+  depends = 'geometries'
+  , includes = '#include "geometries/utils/lines/lines.hpp"'
+  , code = '
+    Rcpp::IntegerMatrix id_positions( SEXP x ) {
+      return geometries::utils::id_positions( x );
+    }
+  '
+)
+
+x <- c( rep(1, 5), rep(2, 10), rep(3, 6), rep(4, 2) )
+id_positions( x )
+#      [,1] [,2]
+# [1,]    0    4
+# [2,]    5   14
+# [3,]   15   20
+# [4,]   21   22
 ```
