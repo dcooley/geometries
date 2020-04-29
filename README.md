@@ -123,46 +123,34 @@ calculate_bbox(sf$geometry, NULL )
 
 ``` r
 
-## other_columns
-## - find the columns not specified by any combination of
-## - col
-## - col1, col2
-## - col1, col2, col3
-## for data.frames, matrices and numeric and string column values
+## Count Coordinates
+## counts the number of coordinates in a given geometry
 library(Rcpp)
 
 cppFunction(
-  depends = "geometries"
-  , includes = '#include "geometries/utils/columns/columns.hpp"'
+  depends = 'geometries'
+  , includes = '#include "geometries/geometries/coordinates.hpp"'
   , code = '
-    SEXP other_columns( SEXP x, SEXP col1, SEXP col2 ) {
-      return geometries::utils::other_columns( x, col1, col2 );
+    R_xlen_t count_coordinates( SEXP x ) {
+      R_xlen_t count = 0;
+      geometries::coordinates::count_coordinates( x, count );
+      return count;
     }
   '
 )
 
+
 df <- data.frame(
-  x = 1:5
-  , y = 1:5
-  , z = 1:5
-  , m = 1:5
-  , id = 1:5
-  , val = letters[1:5]
+  x = 1:10
+  , y = 10:1
+  , z = 21:30
+  , m = 30:21
+  , val = letters[1:10]
+  , id = c( rep(1,5), rep(2,5) )
 )
 
-other_columns( df, "x", "y" )
-# [1] "z"   "m"   "id"  "val"
+poly <- polygon( df, c("x","y"), c("id") )
 
-other_columns( df, "x", c("z","m") )
-# [1] "y"   "id"  "val"
-
-other_columns( df, 0, 1 )
-# [1] 2 3 4 5
-
-other_columns( df, 0, c(1,2,3) )
-# [1] 4 5
-
-m <- as.matrix( df[, c("x","y","z","m","id")] ) ## droped the char to make matrix numeric
-other_columns( m, c(2,3), 4 ) 
-# [1] 0 1
+count_coordinates( poly )
+# [1] 10
 ```
