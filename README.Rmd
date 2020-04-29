@@ -166,8 +166,9 @@ cppFunction(
 
 
 l <- list(
-  matrix(1:6, ncol = 2 )
-  , matrix(6:1, ncol = 2)
+  matrix(1:20, ncol = 2 )
+  , matrix(1:6, ncol = 2)
+  , matrix(1:10, ncol = 2)
 )
 
 coordinate_indices( l )

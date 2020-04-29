@@ -172,12 +172,14 @@ cppFunction(
 
 
 l <- list(
-  matrix(1:6, ncol = 2 )
-  , matrix(6:1, ncol = 2)
+  matrix(1:20, ncol = 2 )
+  , matrix(1:6, ncol = 2)
+  , matrix(1:10, ncol = 2)
 )
 
 coordinate_indices( l )
 #      [,1] [,2]
-# [1,]    0    2
-# [2,]    3    5
+# [1,]    0    9
+# [2,]   10   12
+# [3,]   13   17
 ```
