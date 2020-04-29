@@ -124,7 +124,8 @@ calculate_bbox(sf$geometry, NULL )
 ``` r
 
 ## Count Coordinates
-## counts the number of coordinates in a given geometry
+##
+## either counts the number of coordinates in a given geometry,
 library(Rcpp)
 
 cppFunction(
@@ -139,7 +140,6 @@ cppFunction(
   '
 )
 
-
 df <- data.frame(
   x = 1:10
   , y = 10:1
@@ -153,4 +153,31 @@ poly <- polygon( df, c("x","y"), c("id") )
 
 count_coordinates( poly )
 # [1] 10
+```
+
+``` r
+
+## Coordinate indices
+## 
+## gives the start and end indices 
+cppFunction(
+  depends = 'geometries'
+  , includes = '#include "geometries/geometries/coordinates.hpp"'
+  , code = '
+    Rcpp::IntegerMatrix coordinate_indices( Rcpp::List x ) {
+      return geometries::coordinates::coordinate_indices( x );
+    }
+  '
+)
+
+
+l <- list(
+  matrix(1:6, ncol = 2 )
+  , matrix(6:1, ncol = 2)
+)
+
+coordinate_indices( l )
+#      [,1] [,2]
+# [1,]    0    2
+# [2,]    3    5
 ```
