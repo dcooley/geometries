@@ -398,7 +398,8 @@ namespace bbox {
   ) {
 
     if( Rf_isNull( geometry_cols ) ) {
-      return calculate_bbox( bbox, x );
+      calculate_bbox( bbox, x );
+      return;
     }
 
     // assumes 2-column?, and in correct order?
@@ -419,6 +420,18 @@ namespace bbox {
     }
     }
   }
+
+  inline Rcpp::NumericVector calculate_bbox(
+    SEXP& x,
+    SEXP& geometry_cols
+  ) {
+    Rcpp::NumericVector bbox(4);
+    bbox(0) = bbox(1) = bbox(2) = bbox(3) = NA_REAL;
+    calculate_bbox( bbox, x, geometry_cols );
+    return bbox;
+  }
+
+
 
 } // bbox
 } // geometries

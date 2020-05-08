@@ -26,9 +26,48 @@ No? Ok, this library isn't for you.
 
 But if you answered 'yes', this might be of interest.
 
+## Shapes
+
+When one thinks of data structures of 'shapes' in R, the current standard / typical structures are
+
+- **Point** - a vector of x, y values
+- **Line** - a matrix of x, y columns
+- **Polygon** - a list of matrices of x, y columns
+- **MultiPolygon** - a list of list of matrices of x, y columns
+
+(in reality you can have more than just x & y columns)
+
+But constructing these can sometimes be a bit fiddly. 
+
+So you can use the **shapes** API to build these structures from tabular data (e.g. data.frames)
+
 ```{r}
 
+df <- data.frame(
+  x = 1:10
+  , y = 10:1
+  , z = 21:30
+  , m = 30:21
+  , val = letters[1:10]
+  , id = c( rep(1,5), rep(2,5) )
+)
+
+df
+
 library(Rcpp)
+
+cppFunction(
+  depends = "geometries"
+  , includes = '#include "geometries/shapes/shapes.hpp"'
+  , code = '
+    SEXP line( SEXP df, SEXP geometry_cols ) {
+      return geometries::shapes::get_mat( df, geometry_cols );
+    }
+  '
+)
+
+line( df, c("x","y") )
+
 
 cppFunction(
   depends = "geometries"
@@ -40,22 +79,32 @@ cppFunction(
   '
 )
 
-df <- data.frame(
-  x = 1:10
-  , y = 10:1
-  , z = 21:30
-  , m = 30:21
-  , val = letters[1:10]
-  , id = c( rep(1,5), rep(2,5) )
+polygon( df, c("x","y"), c("id") )
+
+cppFunction(
+  depends = "geometries"
+  , includes = '#include "geometries/shapes/shapes.hpp"'
+  , code = '
+    SEXP multipolygon( SEXP df, SEXP geometry_cols, SEXP polygon_id, SEXP line_id ) {
+      return geometries::shapes::get_listListMat( df, geometry_cols, polygon_id, line_id );
+    }
+  '
 )
 
-polygon( df, c("x","y"), c("id") )
+multipolygon( df, c("x","y"), c("id"),  c("id") )
 
 
 ```
 
 
-### Utilities
+## Collections
+
+
+## Interleaving
+
+
+
+## Utilities
 
 ```{r}
 
@@ -69,10 +118,7 @@ cppFunction(
   , includes = '#include "geometries/bbox/bbox.hpp"'
   , code = '
     Rcpp::NumericVector calculate_bbox( SEXP x, SEXP geometry ) {
-      Rcpp::NumericVector bbox(4);
-      bbox(0) = bbox(1) = bbox(2) = bbox(3) = NA_REAL;
-      geometries::bbox::calculate_bbox( bbox, x, geometry ) ;
-      return bbox;
+      return geometries::bbox::calculate_bbox( x, geometry );
     }
   '
 )
@@ -171,6 +217,7 @@ l <- list(
 )
 
 coordinate_indices( l )
+
 
 ```
 
