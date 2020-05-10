@@ -6,6 +6,13 @@
 namespace geometries {
 namespace coordinates {
 
+  /*
+   * Count Coordinates
+   *
+   * counts the number of coordinates in a single geometry
+   * If the input is a List, it returns the total number of coordinates
+   * in each geometry inside the list
+   */
   inline void count_coordinates(
       SEXP& geom,
       R_xlen_t& geom_count
@@ -48,7 +55,11 @@ namespace coordinates {
 
   /*
    * Returns a matrix giving the start and end indices of each coordinate
-   * in a collection
+   * in a geometry.
+   *
+   * If the geometry is a list of three matrices, it will return 3x2 matrix
+   * Where column 0 is the start index, and column 1 is the end index
+   *
    */
   inline Rcpp::IntegerMatrix coordinate_indices(
       Rcpp::List& geometries
@@ -72,6 +83,35 @@ namespace coordinates {
       cumulative_coords += geom_counter;
       res( i, 1 ) = cumulative_coords - 1;
     }
+    return res;
+  }
+
+
+
+  /*
+   * Returns a matrix giving the start and end indices of each coordinate
+   * in a geometry.
+   *
+   * If the input is a non-list
+   * the result matrix is 1x2
+   *
+   */
+  inline Rcpp::IntegerMatrix coordinate_indices(
+    SEXP& geometries
+  ) {
+
+    if( Rf_isMatrix( geometries ) ) {
+      Rcpp::IntegerMatrix im(1,2);
+      im(0,1) = geometries::utils::sexp_n_row( geometries );
+      return im;
+    } else if( Rf_isNewList( geometries ) ) {
+      Rcpp::List lst = Rcpp::as< Rcpp::List >( geometries );
+      return coordinate_indices( lst );
+    }
+
+    // TODO - handle a vector input
+    Rcpp::stop("geometries - unsupported type for counting coordinates");
+    Rcpp::IntegerMatrix res;
     return res;
   }
 
