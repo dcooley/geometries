@@ -19,3 +19,7 @@ LinkingTo:
 Imports: 
     Rcpp
 Roxygen: list(markdown = TRUE)
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

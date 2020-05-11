@@ -6,13 +6,7 @@
 namespace geometries {
 namespace utils {
 
-  // template <int RTYPE>
-  // inline SEXP sexp_unique(Rcpp::Vector< RTYPE > v) {
-  //   return Rcpp::sort_unique( v );
-  // }
-  //
-
-  // issue 27
+   // issue 27 (sfheaders)
   template < typename T, int RTYPE >
   inline SEXP sexp_unique( Rcpp::Vector< RTYPE > x ) {
     std::set< T > seen;

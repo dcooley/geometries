@@ -77,7 +77,6 @@ namespace utils {
     }
     case STRSXP: {
       Rcpp::StringVector values = Rcpp::as< Rcpp::StringVector >( values_to_find );
-      //Rcpp::StringVector look_in = Rcpp::as< Rcpp::StringVector >( vector_to_look_in );
       Rcpp::StringVector look_in = geometries::utils::get_sexp_col_names( x );
       return where_is( values, look_in );
     }

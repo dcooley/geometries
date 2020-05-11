@@ -102,11 +102,14 @@ namespace coordinates {
 
     if( Rf_isMatrix( geometries ) ) {
       Rcpp::IntegerMatrix im(1,2);
-      im(0,1) = geometries::utils::sexp_n_row( geometries );
+      im(0,1) = geometries::utils::sexp_n_row( geometries ) - 1;
       return im;
     } else if( Rf_isNewList( geometries ) ) {
       Rcpp::List lst = Rcpp::as< Rcpp::List >( geometries );
       return coordinate_indices( lst );
+    } else if ( TYPEOF( geometries ) == INTSXP || TYPEOF( geometries ) == REALSXP ) {
+      // vectors - start and end at the same place
+      return Rcpp::IntegerMatrix(1,2); // initialise (0,0) matrix
     }
 
     // TODO - handle a vector input
