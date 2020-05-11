@@ -7,6 +7,14 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+## Shapes
+
+
+```r
+'#include "geometries/shapes/shapes.hpp"
+```
+
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
