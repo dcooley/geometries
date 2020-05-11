@@ -99,6 +99,3 @@ multipolygon( df, c("x","y"), c("id"),  c("id") )
 
 ## Collections
 
-
-## Utilities
-
