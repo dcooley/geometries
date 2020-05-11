@@ -55,6 +55,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="articles/shapes.html">shapes</a>
+    </li>
+    <li>
       <a href="articles/utils.html">utilities</a>
     </li>
   </ul>
@@ -82,15 +85,14 @@
 <div id="geometries" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#geometries" class="anchor"></a>geometries</h1></div>
-<!-- badges: start -->
-<!-- badges: end -->
-<p>Have you every wanted to generate geometric structures from data.frames, but independant of any R classes, attributes or libraries?</p>
+
+<p>Have you every wanted to generate geometric structures from data.frames, but independent of any R classes, attributes or libraries?</p>
 <p>No? Ok, this library isn’t for you.</p>
 <p>But if you answered ‘yes’, this might be of interest.</p>
-<div id="shapes" class="section level2">
+<div id="what-is-the-point" class="section level2">
 <h2 class="hasAnchor">
-<a href="#shapes" class="anchor"></a>Shapes</h2>
-<p>When one thinks of data structures of ‘shapes’ in R, the current standard / typical structures are</p>
+<a href="#what-is-the-point" class="anchor"></a>What is the point?</h2>
+<p>When one thinks of ‘shape’ objects in R, the current standard / typical structures are</p>
 <ul>
 <li>
 <strong>Point</strong> - a vector of x, y values</li>
@@ -103,116 +105,17 @@
 </ul>
 <p>(in reality you can have more than just x &amp; y columns)</p>
 <p>But constructing these can sometimes be a bit fiddly.</p>
-<p>So you can use the <strong>shapes</strong> API to build these structures from tabular data (e.g. data.frames)</p>
-<div class="sourceCode" id="cb1"><pre class="r">
-<span class="no">df</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(
-  <span class="kw">x</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fl">10</span>
-  , <span class="kw">y</span> <span class="kw">=</span> <span class="fl">10</span>:<span class="fl">1</span>
-  , <span class="kw">z</span> <span class="kw">=</span> <span class="fl">21</span>:<span class="fl">30</span>
-  , <span class="kw">m</span> <span class="kw">=</span> <span class="fl">30</span>:<span class="fl">21</span>
-  , <span class="kw">val</span> <span class="kw">=</span> <span class="no">letters</span>[<span class="fl">1</span>:<span class="fl">10</span>]
-  , <span class="kw">id</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>( <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>,<span class="fl">5</span>), <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">2</span>,<span class="fl">5</span>) )
-)
-
-<span class="no">df</span>
-<span class="co">#     x  y  z  m val id</span>
-<span class="co"># 1   1 10 21 30   a  1</span>
-<span class="co"># 2   2  9 22 29   b  1</span>
-<span class="co"># 3   3  8 23 28   c  1</span>
-<span class="co"># 4   4  7 24 27   d  1</span>
-<span class="co"># 5   5  6 25 26   e  1</span>
-<span class="co"># 6   6  5 26 25   f  2</span>
-<span class="co"># 7   7  4 27 24   g  2</span>
-<span class="co"># 8   8  3 28 23   h  2</span>
-<span class="co"># 9   9  2 29 22   i  2</span>
-<span class="co"># 10 10  1 30 21   j  2</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">Rcpp</span>)
-
-<span class="fu"><a href="https://rdrr.io/pkg/Rcpp/man/cppFunction.html">cppFunction</a></span>(
-  <span class="kw">depends</span> <span class="kw">=</span> <span class="st">"geometries"</span>
-  , <span class="kw">includes</span> <span class="kw">=</span> <span class="st">'#include "geometries/shapes/shapes.hpp"'</span>
-  , <span class="kw">code</span> <span class="kw">=</span> <span class="st">'
-    SEXP line( SEXP df, SEXP geometry_cols ) {
-      return geometries::shapes::get_mat( df, geometry_cols );
-    }
-  '</span>
-)
-
-<span class="fu"><a href="https://rdrr.io/r/stats/line.html">line</a></span>( <span class="no">df</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"x"</span>,<span class="st">"y"</span>) )
-<span class="co">#       [,1] [,2]</span>
-<span class="co">#  [1,]    1   10</span>
-<span class="co">#  [2,]    2    9</span>
-<span class="co">#  [3,]    3    8</span>
-<span class="co">#  [4,]    4    7</span>
-<span class="co">#  [5,]    5    6</span>
-<span class="co">#  [6,]    6    5</span>
-<span class="co">#  [7,]    7    4</span>
-<span class="co">#  [8,]    8    3</span>
-<span class="co">#  [9,]    9    2</span>
-<span class="co"># [10,]   10    1</span>
-
-
-<span class="fu"><a href="https://rdrr.io/pkg/Rcpp/man/cppFunction.html">cppFunction</a></span>(
-  <span class="kw">depends</span> <span class="kw">=</span> <span class="st">"geometries"</span>
-  , <span class="kw">includes</span> <span class="kw">=</span> <span class="st">'#include "geometries/shapes/shapes.hpp"'</span>
-  , <span class="kw">code</span> <span class="kw">=</span> <span class="st">'
-    SEXP polygon( SEXP df, SEXP geometry_cols, SEXP line_id ) {
-      return geometries::shapes::get_listMat( df, geometry_cols, line_id );
-    }
-  '</span>
-)
-
-<span class="fu"><a href="https://rdrr.io/r/graphics/polygon.html">polygon</a></span>( <span class="no">df</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"x"</span>,<span class="st">"y"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"id"</span>) )
-<span class="co"># [[1]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]    1   10</span>
-<span class="co"># [2,]    2    9</span>
-<span class="co"># [3,]    3    8</span>
-<span class="co"># [4,]    4    7</span>
-<span class="co"># [5,]    5    6</span>
-<span class="co"># </span>
-<span class="co"># [[2]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]    6    5</span>
-<span class="co"># [2,]    7    4</span>
-<span class="co"># [3,]    8    3</span>
-<span class="co"># [4,]    9    2</span>
-<span class="co"># [5,]   10    1</span>
-
-<span class="fu"><a href="https://rdrr.io/pkg/Rcpp/man/cppFunction.html">cppFunction</a></span>(
-  <span class="kw">depends</span> <span class="kw">=</span> <span class="st">"geometries"</span>
-  , <span class="kw">includes</span> <span class="kw">=</span> <span class="st">'#include "geometries/shapes/shapes.hpp"'</span>
-  , <span class="kw">code</span> <span class="kw">=</span> <span class="st">'
-    SEXP multipolygon( SEXP df, SEXP geometry_cols, SEXP polygon_id, SEXP line_id ) {
-      return geometries::shapes::get_listListMat( df, geometry_cols, polygon_id, line_id );
-    }
-  '</span>
-)
-
-<span class="fu">multipolygon</span>( <span class="no">df</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"x"</span>,<span class="st">"y"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"id"</span>),  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"id"</span>) )
-<span class="co"># [[1]]</span>
-<span class="co"># [[1]][[1]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]    1   10</span>
-<span class="co"># [2,]    2    9</span>
-<span class="co"># [3,]    3    8</span>
-<span class="co"># [4,]    4    7</span>
-<span class="co"># [5,]    5    6</span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co"># [[2]]</span>
-<span class="co"># [[2]][[1]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]    6    5</span>
-<span class="co"># [2,]    7    4</span>
-<span class="co"># [3,]    8    3</span>
-<span class="co"># [4,]    9    2</span>
-<span class="co"># [5,]   10    1</span></pre></div>
+<p>So my <strong>goal</strong> of this package is to take away the pain of building <strong>shapes</strong>. I want to accept <strong>any</strong> base R data object and convert it into the required <strong>shape</strong></p>
+<p>And I’m building it as an <strong>interface</strong> package. That is, it’s all being written in C++ header files, so you can link to these header files from your own package.</p>
 </div>
-<div id="collections" class="section level2">
+<div id="what-do-you-mean-link-to" class="section level2">
 <h2 class="hasAnchor">
-<a href="#collections" class="anchor"></a>Collections</h2>
+<a href="#what-do-you-mean-link-to" class="anchor"></a>What do you mean, ‘link to’?</h2>
+<p>When you build a package, if you want to use C++ code from <strong>another package</strong>, you have to let the compiler know. In an R package, you do this by specifying a <code>LinkingTo</code> value in the DESCRIPTION.</p>
+<p>Take for example, the <a href="https://github.com/dcooley/geometries/blob/master/DESCRIPTION#L17">LinkingTo</a> section in the DESCRIPTION field of this package</p>
+<p><img src="./vignettes/images/LinkingTo.png"></p>
+<p>This tells the compiler I want to link to Rcpp’s. Which means I can use all the <a href="https://github.com/RcppCore/Rcpp/tree/master/inst/include/Rcpp">Rcpp code</a> by including whichever header file I want.</p>
+<p>… To be continued…</p>
 </div>
 </div>
   </div>
@@ -240,7 +143,13 @@
 </ul>
 </div>
 
-  </div>
+  <div class="dev-status">
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/dcooley/geometries/actions"><img src="https://github.com/dcooley/geometries/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+</ul>
+</div>
+</div>
 </div>
 
 

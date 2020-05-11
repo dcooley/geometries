@@ -1,0 +1,77 @@
+---
+title: "shapes"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{geometries}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#"
+)
+```
+
+```{r setup}
+library(geometries)
+library(Rcpp)
+```
+
+```{r}
+
+df <- data.frame(
+  x = 1:10
+  , y = 10:1
+  , z = 21:30
+  , m = 30:21
+  , val = letters[1:10]
+  , id = c( rep(1,5), rep(2,5) )
+)
+
+df
+
+library(Rcpp)
+
+cppFunction(
+  depends = "geometries"
+  , includes = '#include "geometries/shapes/shapes.hpp"'
+  , code = '
+    SEXP line( SEXP df, SEXP geometry_cols ) {
+      return geometries::shapes::get_mat( df, geometry_cols );
+    }
+  '
+)
+
+line( df, c("x","y") )
+
+
+cppFunction(
+  depends = "geometries"
+  , includes = '#include "geometries/shapes/shapes.hpp"'
+  , code = '
+    SEXP polygon( SEXP df, SEXP geometry_cols, SEXP line_id ) {
+      return geometries::shapes::get_listMat( df, geometry_cols, line_id );
+    }
+  '
+)
+
+polygon( df, c("x","y"), c("id") )
+
+cppFunction(
+  depends = "geometries"
+  , includes = '#include "geometries/shapes/shapes.hpp"'
+  , code = '
+    SEXP multipolygon( SEXP df, SEXP geometry_cols, SEXP polygon_id, SEXP line_id ) {
+      return geometries::shapes::get_listListMat( df, geometry_cols, polygon_id, line_id );
+    }
+  '
+)
+
+multipolygon( df, c("x","y"), c("id"),  c("id") )
+
+
+```
+
+

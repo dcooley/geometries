@@ -2,6 +2,7 @@ pandoc: 2.7.3
 pkgdown: 1.5.1
 pkgdown_sha: ~
 articles:
+  shapes: shapes.html
   utils: utils.html
-last_built: 2020-05-11T08:33Z
+last_built: 2020-05-11T09:07Z
 

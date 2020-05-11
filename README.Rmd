@@ -17,18 +17,17 @@ knitr::opts_chunk$set(
 
 # geometries
 
-<!-- badges: start -->
-<!-- badges: end -->
+[![R build status](https://github.com/dcooley/geometries/workflows/R-CMD-check/badge.svg)](https://github.com/dcooley/geometries/actions)
 
-Have you every wanted to generate geometric structures from data.frames, but independant of any R classes, attributes or libraries? 
+Have you every wanted to generate geometric structures from data.frames, but independent of any R classes, attributes or libraries? 
 
 No? Ok, this library isn't for you.
 
 But if you answered 'yes', this might be of interest.
 
-## Shapes
+## What is the point?
 
-When one thinks of data structures of 'shapes' in R, the current standard / typical structures are
+When one thinks of 'shape' objects in R, the current standard / typical structures are
 
 - **Point** - a vector of x, y values
 - **Line** - a matrix of x, y columns
@@ -39,63 +38,19 @@ When one thinks of data structures of 'shapes' in R, the current standard / typi
 
 But constructing these can sometimes be a bit fiddly. 
 
-So you can use the **shapes** API to build these structures from tabular data (e.g. data.frames)
+So my **goal** of this package is to take away the pain of building **shapes**. I want to accept **any** base R data object and convert it into the required **shape**
 
-```{r}
+And I'm building it as an **interface** package. That is, it's all being written in C++ header files, so you can link to these header files from your own package.
 
-df <- data.frame(
-  x = 1:10
-  , y = 10:1
-  , z = 21:30
-  , m = 30:21
-  , val = letters[1:10]
-  , id = c( rep(1,5), rep(2,5) )
-)
+## What do you mean, 'link to'?
 
-df
+When you build a package, if you want to use C++ code from **another package**, you have to let the compiler know. In an R package, you do this by specifying a `LinkingTo` value in the DESCRIPTION.
 
-library(Rcpp)
+Take for example, the [LinkingTo](https://github.com/dcooley/geometries/blob/master/DESCRIPTION#L17) section in the DESCRIPTION field of this package
 
-cppFunction(
-  depends = "geometries"
-  , includes = '#include "geometries/shapes/shapes.hpp"'
-  , code = '
-    SEXP line( SEXP df, SEXP geometry_cols ) {
-      return geometries::shapes::get_mat( df, geometry_cols );
-    }
-  '
-)
+![](./vignettes/images/LinkingTo.png)
 
-line( df, c("x","y") )
+This tells the compiler I want to link to Rcpp's. Which means I can use all the [Rcpp code](https://github.com/RcppCore/Rcpp/tree/master/inst/include/Rcpp) by including whichever header file I want.
 
 
-cppFunction(
-  depends = "geometries"
-  , includes = '#include "geometries/shapes/shapes.hpp"'
-  , code = '
-    SEXP polygon( SEXP df, SEXP geometry_cols, SEXP line_id ) {
-      return geometries::shapes::get_listMat( df, geometry_cols, line_id );
-    }
-  '
-)
-
-polygon( df, c("x","y"), c("id") )
-
-cppFunction(
-  depends = "geometries"
-  , includes = '#include "geometries/shapes/shapes.hpp"'
-  , code = '
-    SEXP multipolygon( SEXP df, SEXP geometry_cols, SEXP polygon_id, SEXP line_id ) {
-      return geometries::shapes::get_listListMat( df, geometry_cols, polygon_id, line_id );
-    }
-  '
-)
-
-multipolygon( df, c("x","y"), c("id"),  c("id") )
-
-
-```
-
-
-## Collections
-
+... To be continued...
