@@ -7,7 +7,7 @@ Authors@R: c(
     )
 Description: Conversion functions are available at both the R level, 
   and through 'Rcpp'.
-License: GPL-3
+License: MIT + file LICENSE
 URL: https://dcooley.github.io/geometries/
 BugReports: https://github.com/dcooley/geometries/issues
 Encoding: UTF-8

@@ -5,3 +5,6 @@
 ^docs$
 ^pkgdown$
 ^\.github$
+^LICENSE\.md$
+^vignettes/shapes.Rmd
+^vignettes/utils.Rmd

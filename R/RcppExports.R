@@ -9,10 +9,6 @@ rcpp_other_columns <- function(x, col1, col2) {
     .Call(`_geometries_rcpp_other_columns`, x, col1, col2)
 }
 
-rcpp_unique <- function(x) {
-    .Call(`_geometries_rcpp_unique`, x)
-}
-
 rcpp_get_vec <- function(x, cols) {
     .Call(`_geometries_rcpp_get_vec`, x, cols)
 }

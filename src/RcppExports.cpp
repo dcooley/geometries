@@ -30,17 +30,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpp_unique
-SEXP rcpp_unique(SEXP x);
-RcppExport SEXP _geometries_rcpp_unique(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_unique(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // rcpp_get_vec
 SEXP rcpp_get_vec(SEXP x, SEXP cols);
 RcppExport SEXP _geometries_rcpp_get_vec(SEXP xSEXP, SEXP colsSEXP) {
@@ -82,7 +71,6 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_calculate_bbox", (DL_FUNC) &_geometries_rcpp_calculate_bbox, 2},
     {"_geometries_rcpp_other_columns", (DL_FUNC) &_geometries_rcpp_other_columns, 3},
-    {"_geometries_rcpp_unique", (DL_FUNC) &_geometries_rcpp_unique, 1},
     {"_geometries_rcpp_get_vec", (DL_FUNC) &_geometries_rcpp_get_vec, 2},
     {"_geometries_rcpp_get_mat", (DL_FUNC) &_geometries_rcpp_get_mat, 2},
     {"_geometries_rcpp_get_list_mat", (DL_FUNC) &_geometries_rcpp_get_list_mat, 3},
