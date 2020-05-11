@@ -8,7 +8,7 @@
 #include "geometries/utils/matrix/matrix.hpp"
 #include "geometries/utils/sexp/sexp.hpp"
 #include "geometries/utils/subset/subset.hpp"
-#include "geometries/utils/unique/unique_ids.hpp"
+#include "geometries/utils/unique/unique.hpp""
 #include "geometries/utils/vectors/vectors.hpp"
 
 namespace geometries {

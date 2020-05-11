@@ -6,5 +6,7 @@
 ^pkgdown$
 ^\.github$
 ^LICENSE\.md$
+^vignettes/bbox.Rmd
+^vignettes/geometries.Rmd
 ^vignettes/shapes.Rmd
 ^vignettes/utils.Rmd

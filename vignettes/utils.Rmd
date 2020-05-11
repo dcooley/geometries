@@ -19,139 +19,29 @@ library(geometries)
 library(Rcpp)
 ```
 
-```{r}
 
-cppFunction(
-  depends = "geometries"
-  , includes = '#include "geometries/shapes/shapes.hpp"'
-  , code = '
-    SEXP polygon( SEXP df, SEXP geometry_cols, SEXP line_id ) {
-      return geometries::shapes::get_listMat( df, geometry_cols, line_id );
-    }
-  '
-)
+You can include all utility functions through the main header
 
+```r
+#include "geometries/utils/utils.hpp"
 ```
 
-```{r}
+Or include the specific ones you need
 
-## calculate_bbox
-## returns the xmin, ymin, xmax and ymax of various objects
-
-cppFunction(
-  depends = "geometries"
-  , includes = '#include "geometries/bbox/bbox.hpp"'
-  , code = '
-    Rcpp::NumericVector calculate_bbox( SEXP x, SEXP geometry ) {
-      return geometries::bbox::calculate_bbox( x, geometry );
-    }
-  '
-)
-
-## of a data.frame
-df <- data.frame(
-  x = 1:10
-  , y = 21:30
-  , z = 31:40
-)
-
-calculate_bbox(df, c("x","y"))
-calculate_bbox(df, c("x","z"))
-calculate_bbox(df, c("z","y"))
-
-## If using a list, 
-l <- list(
-  matrix(1:6, ncol = 2 )
-  , matrix(6:1, ncol = 2)
-)
-
-calculate_bbox( l, NULL )
-
-l <- list(
-  matrix(1:6, ncol = 3 )
-  , matrix(6:1, ncol = 3)
-)
-
-calculate_bbox( l, c(0,1) )
-calculate_bbox( l, c(1,2) )
-
-## of an sf object
-sf <- sfheaders::sf_linestring(
-  obj = df
-  , x = "x"
-  , y = "y"
-)
-
-calculate_bbox(sf$geometry, NULL )
-
+```r
+#include "geometries/utils/columns/columns.hpp"
+#include "geometries/utils/lines/lines.hpp"
+#include "geometries/utils/lists/list.hpp"
+#include "geometries/utils/matrix/matrix.hpp"
+#include "geometries/utils/sexp/sexp.hpp"
+#include "geometries/utils/subset/subset.hpp"
+#include "geometries/utils/unique/unique_ids.hpp"
+#include "geometries/utils/vectors/vectors.hpp"
 ```
 
+### columns
 
-```{r}
-
-## Count Coordinates
-##
-## either counts the number of coordinates in a given geometry,
-cppFunction(
-  depends = 'geometries'
-  , includes = '#include "geometries/geometries/coordinates.hpp"'
-  , code = '
-    R_xlen_t count_coordinates( SEXP x ) {
-      R_xlen_t count = 0;
-      geometries::coordinates::count_coordinates( x, count );
-      return count;
-    }
-  '
-)
-
-df <- data.frame(
-  x = 1:10
-  , y = 10:1
-  , z = 21:30
-  , m = 30:21
-  , val = letters[1:10]
-  , id = c( rep(1,5), rep(2,5) )
-)
-
-poly <- polygon( df, c("x","y"), c("id") )
-
-count_coordinates( poly )
-```
-
-```{r}
-
-## Coordinate indices
-## 
-## gives the start and end indices of geometries
-cppFunction(
-  depends = 'geometries'
-  , includes = '#include "geometries/geometries/coordinates.hpp"'
-  , code = '
-    Rcpp::IntegerMatrix coordinate_indices( SEXP x ) {
-      return geometries::coordinates::coordinate_indices( x );
-    }
-  '
-)
-
-x <- 1:2
-
-coordinate_indices( x )
-
-m <- matrix(1:6, ncol = 2) 
-
-coordinate_indices( m )
-
-l <- list(
-  matrix(1:20, ncol = 2 )
-  , matrix(1:6, ncol = 2)
-  , matrix(1:10, ncol = 2)
-)
-
-coordinate_indices( l )
-
-
-```
-
+### lines
 
 ```{r}
 
@@ -173,6 +63,17 @@ id_positions( x )
 
 
 ```
+
+### list
+
+### matrix
+
+### sexp
+
+### subset
+
+### unique
+
 
 ```{r}
 
@@ -205,5 +106,12 @@ sorted_unique( x )
 rcpp_unique( x )
 
 ```
+
+
+### vectors
+
+
+
+
 
 

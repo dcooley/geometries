@@ -7,14 +7,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-## Shapes
-
-
-```r
-'#include "geometries/shapes/shapes.hpp"
-```
-
-
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -22,10 +14,28 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup }
 library(geometries)
 library(Rcpp)
 ```
+
+The shape headers are in
+
+```r
+#include "geometries/shapes/shapes.hpp"
+```
+
+Including this header will give you all the functions for creating 'shapes' from matrices and data.frames.
+
+- `geometries::shapes::get_vec()` - creates a vector
+- `geometries::shapes::get_mat()` - creates a matrix
+- `geometries::shapes::get_listMat()` - creates lists of matrices
+- `geometries::shapes::get_listListMat()` - creates lists of lists of matrices
+
+All these examples show you how to include the header and call the functions using Rcpp code. The same principles apply in a .cpp file in a package.
+
+
+### Lines
 
 ```{r}
 
@@ -53,7 +63,11 @@ cppFunction(
 )
 
 line( df, c("x","y") )
+```
 
+### Polygon
+
+```{r}
 
 cppFunction(
   depends = "geometries"
@@ -66,7 +80,12 @@ cppFunction(
 )
 
 polygon( df, c("x","y"), c("id") )
+```
 
+
+### MultiPolygon
+
+```{r}
 cppFunction(
   depends = "geometries"
   , includes = '#include "geometries/shapes/shapes.hpp"'
@@ -78,7 +97,6 @@ cppFunction(
 )
 
 multipolygon( df, c("x","y"), c("id"),  c("id") )
-
 
 ```
 

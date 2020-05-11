@@ -1,0 +1,108 @@
+---
+title: "coordinates"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{geometries}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#"
+)
+```
+
+```{r setup}
+library(geometries)
+library(Rcpp)
+```
+
+
+```r
+#include "geometries/geometries/coordinates.hpp"
+```
+
+
+```{r}
+
+cppFunction(
+  depends = "geometries"
+  , includes = '#include "geometries/shapes/shapes.hpp"'
+  , code = '
+    SEXP polygon( SEXP df, SEXP geometry_cols, SEXP line_id ) {
+      return geometries::shapes::get_listMat( df, geometry_cols, line_id );
+    }
+  '
+)
+
+```
+
+```{r}
+
+## Count Coordinates
+##
+## either counts the number of coordinates in a given geometry,
+cppFunction(
+  depends = 'geometries'
+  , includes = '#include "geometries/geometries/coordinates.hpp"'
+  , code = '
+    R_xlen_t count_coordinates( SEXP x ) {
+      R_xlen_t count = 0;
+      geometries::coordinates::count_coordinates( x, count );
+      return count;
+    }
+  '
+)
+
+df <- data.frame(
+  x = 1:10
+  , y = 10:1
+  , z = 21:30
+  , m = 30:21
+  , val = letters[1:10]
+  , id = c( rep(1,5), rep(2,5) )
+)
+
+poly <- polygon( df, c("x","y"), c("id") )
+
+count_coordinates( poly )
+```
+
+
+```{r}
+
+## Coordinate indices
+## 
+## gives the start and end indices of geometries
+cppFunction(
+  depends = 'geometries'
+  , includes = '#include "geometries/geometries/coordinates.hpp"'
+  , code = '
+    Rcpp::IntegerMatrix coordinate_indices( SEXP x ) {
+      return geometries::coordinates::coordinate_indices( x );
+    }
+  '
+)
+
+x <- 1:2
+
+coordinate_indices( x )
+
+m <- matrix(1:6, ncol = 2) 
+
+coordinate_indices( m )
+
+l <- list(
+  matrix(1:20, ncol = 2 )
+  , matrix(1:6, ncol = 2)
+  , matrix(1:10, ncol = 2)
+)
+
+coordinate_indices( l )
+
+
+```
+
+
