@@ -13,8 +13,8 @@ rcpp_get_vec <- function(x, cols) {
     .Call(`_geometries_rcpp_get_vec`, x, cols)
 }
 
-rcpp_get_mat <- function(x, cols) {
-    .Call(`_geometries_rcpp_get_mat`, x, cols)
+rcpp_to_mat <- function(x, cols) {
+    .Call(`_geometries_rcpp_to_mat`, x, cols)
 }
 
 rcpp_get_list_mat <- function(x, cols, id) {

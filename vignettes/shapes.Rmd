@@ -28,9 +28,9 @@ The shape headers are in
 Including this header will give you all the functions for creating 'shapes' from matrices and data.frames.
 
 - `geometries::shapes::get_vec()` - creates a vector
-- `geometries::shapes::get_mat()` - creates a matrix
-- `geometries::shapes::get_listMat()` - creates lists of matrices
-- `geometries::shapes::get_listListMat()` - creates lists of lists of matrices
+- `geometries::shapes::to_mat()` - creates a matrix
+- `geometries::shapes::to_listMat()` - creates lists of matrices
+- `geometries::shapes::to_listListMat()` - creates lists of lists of matrices
 
 All these examples show you how to include the header and call the functions using Rcpp code. The same principles apply in a .cpp file in a package.
 
@@ -57,7 +57,7 @@ cppFunction(
   , includes = '#include "geometries/shapes/shapes.hpp"'
   , code = '
     SEXP line( SEXP df, SEXP geometry_cols ) {
-      return geometries::shapes::get_mat( df, geometry_cols );
+      return geometries::shapes::to_mat( df, geometry_cols );
     }
   '
 )
@@ -74,7 +74,7 @@ cppFunction(
   , includes = '#include "geometries/shapes/shapes.hpp"'
   , code = '
     SEXP polygon( SEXP df, SEXP geometry_cols, SEXP line_id ) {
-      return geometries::shapes::get_listMat( df, geometry_cols, line_id );
+      return geometries::shapes::to_listMat( df, geometry_cols, line_id );
     }
   '
 )
@@ -91,7 +91,7 @@ cppFunction(
   , includes = '#include "geometries/shapes/shapes.hpp"'
   , code = '
     SEXP multipolygon( SEXP df, SEXP geometry_cols, SEXP polygon_id, SEXP line_id ) {
-      return geometries::shapes::get_listListMat( df, geometry_cols, polygon_id, line_id );
+      return geometries::shapes::to_listListMat( df, geometry_cols, polygon_id, line_id );
     }
   '
 )

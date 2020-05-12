@@ -106,7 +106,7 @@
   , <span class="kw">includes</span> <span class="kw">=</span> <span class="st">'#include "geometries/shapes/shapes.hpp"'</span>
   , <span class="kw">code</span> <span class="kw">=</span> <span class="st">'
     SEXP polygon( SEXP df, SEXP geometry_cols, SEXP line_id ) {
-      return geometries::shapes::get_listMat( df, geometry_cols, line_id );
+      return geometries::shapes::to_listMat( df, geometry_cols, line_id );
     }
   '</span>
 )</pre></body></html></div>

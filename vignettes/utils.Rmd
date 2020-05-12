@@ -39,9 +39,68 @@ Or include the specific ones you need
 #include "geometries/utils/vectors/vectors.hpp"
 ```
 
+
 ### columns
 
+The two functions in here are 
+
+- `column_positions()` - Finds named columns in a matrix
+- `other_columns()` - returns the 'other columns' not specified in the inputs
+
+```{r}
+
+cppFunction(
+  depends = 'geometries'
+  , includes = '#include "geometries/utils/columns/columns.hpp"'
+  , code = '
+    Rcpp::IntegerVector column_positions( SEXP x, Rcpp::StringVector cols ) {
+      return geometries::utils::column_positions( x, cols );
+    }
+  '
+)
+
+m <- matrix(1:20, ncol = 4)
+colnames( m ) <- c("x","y","z","m")
+
+column_positions(m, "x")
+column_positions(m, "y")
+column_positions(m, c("z","m"))
+
+```
+
+
+
+```{r}
+
+cppFunction(
+  depends = 'geometries'
+  , includes = '#include "geometries/utils/columns/columns.hpp"'
+  , code = '
+    SEXP other_columns( SEXP x, SEXP cols ) {
+      return geometries::utils::other_columns( x, cols );
+    }
+  '
+)
+
+
+df <- data.frame(
+  x = 1:5
+  , y = 2:6
+  , z = 3:7
+  , m = 4:8
+  , val = letters[1:5]
+)
+
+other_columns( df, c("x","y") )
+
+```
+
+
 ### lines
+
+The idea of `lines` is to get the position (index) in a vector where consecutive values begin and end.
+
+The output is a matrix where the first column is the start index, and the second column is the end index
 
 ```{r}
 
@@ -58,7 +117,7 @@ cppFunction(
   '
 )
 
-x <- c( rep(1, 5), rep(2, 10), rep(3, 6), rep(4, 2) )
+( x <- c( rep(1, 5), rep(2, 10), rep(3, 6), rep(4, 2) ) )
 id_positions( x )
 
 
@@ -74,6 +133,7 @@ id_positions( x )
 
 ### unique
 
+There is already a `Rcpp::unique()` functions, but this doesn't guarantee maintaining the original order of the input. So I've made my own version
 
 ```{r}
 
@@ -85,7 +145,7 @@ cppFunction(
   depends = "geometries"
   , includes = '#include "geometries/utils/unique/unique_sort.hpp"'
   , code = '
-    SEXP sorted_unique( SEXP x ) {
+    SEXP my_unique( SEXP x ) {
       return geometries::utils::get_sexp_unique( x );
     }
   '
@@ -102,7 +162,7 @@ cppFunction(
 
 x <- c(1,1,1,3,3,4,4,2)
 
-sorted_unique( x )
+my_unique( x )
 rcpp_unique( x )
 
 ```

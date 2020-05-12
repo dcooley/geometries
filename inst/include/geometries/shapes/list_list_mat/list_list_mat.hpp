@@ -4,10 +4,10 @@
 #include <Rcpp.h>
 #include "geometries/utils/subset/subset.hpp"
 #include "geometries/shapes/mat/mat.hpp"
-#include "geometries/shapes/list_mat/list_mat.hpp"
+#include "geometries/shapes/list_mat/to_list_mat.hpp"
 
 /*
- * get_listListMat
+ * to_listListMat
  *
  * Converts various inputs into a list[[ list[[ matrix ]] ]] structure
  */
@@ -16,31 +16,31 @@ namespace geometries {
 namespace shapes {
 
   // #nocov start
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
     Rcpp::IntegerMatrix& im
   ) {
     Rcpp::List mp(1);
-    mp[0] = geometries::shapes::get_listMat(im);
+    mp[0] = geometries::shapes::to_listMat(im);
     return mp;
   }
 
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
       Rcpp::NumericMatrix& nm
   ) {
     Rcpp::List mp(1);
-    mp[0] = geometries::shapes::get_listMat(nm);
+    mp[0] = geometries::shapes::to_listMat(nm);
     return mp;
   }
 
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
       Rcpp::DataFrame& df
   ) {
     Rcpp::List mp(1);
-    mp[0] = geometries::shapes::get_listMat(df);
+    mp[0] = geometries::shapes::to_listMat(df);
     return mp;
   }
 
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
     Rcpp::DataFrame& df,
     Rcpp::StringVector& geometry_cols,
     Rcpp::String& group_id_col_1,
@@ -68,14 +68,14 @@ namespace shapes {
       Rcpp::Range rng( start, end );
       Rcpp::DataFrame df_subset = geometries::utils::subset_dataframe( df_keep, df_names, start, end );
 
-      mpl[ i ] = geometries::shapes::get_listMat( df_subset, geometry_cols, group_id_col_2 );
+      mpl[ i ] = geometries::shapes::to_listMat( df_subset, geometry_cols, group_id_col_2 );
     }
     return mpl;
   }
 
 
 
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
       Rcpp::DataFrame& df,
       Rcpp::StringVector& geometry_cols,
       Rcpp::String& group_id_col_1,
@@ -104,13 +104,13 @@ namespace shapes {
       Rcpp::Range rng( start, end );
       Rcpp::DataFrame df_subset = geometries::utils::subset_dataframe( df_keep, df_names, start, end );
 
-      mpl[ i ] = geometries::shapes::get_listListMat( df_subset, geometry_cols, group_id_col_2, group_id_col_3 );
+      mpl[ i ] = geometries::shapes::to_listListMat( df_subset, geometry_cols, group_id_col_2, group_id_col_3 );
     }
     return mpl;
   }
 
 
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
       Rcpp::DataFrame& df,
       Rcpp::IntegerVector& geometry_cols,
       int& group_id_col_1,
@@ -129,11 +129,11 @@ namespace shapes {
     Rcpp::String str_group_id_col_2 = df_names[ group_id_col_2 ];
     Rcpp::StringVector str_geometry_cols = df_names[ geometry_cols ];
 
-    return get_listListMat( df, str_geometry_cols, str_group_id_col_1, str_group_id_col_2 );
+    return to_listListMat( df, str_geometry_cols, str_group_id_col_1, str_group_id_col_2 );
   }
 
 
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
       Rcpp::DataFrame& df,
       Rcpp::IntegerVector& geometry_cols,
       int& group_id_col_1,
@@ -156,23 +156,23 @@ namespace shapes {
     Rcpp::String str_group_id_col_3 = df_names[ group_id_col_3 ];
     Rcpp::StringVector str_geometry_cols = df_names[ geometry_cols ];
 
-    return get_listListMat( df, str_geometry_cols, str_group_id_col_1, str_group_id_col_2, str_group_id_col_3 );
+    return to_listListMat( df, str_geometry_cols, str_group_id_col_1, str_group_id_col_2, str_group_id_col_3 );
   }
 
 
 
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
       Rcpp::IntegerMatrix& im,
       Rcpp::StringVector& geometry_cols,
       Rcpp::String& group_id_col_1,
       Rcpp::String& group_id_col_2
   ) {
     Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( im );
-    return get_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2 );
+    return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2 );
   }
 
 
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
       Rcpp::IntegerMatrix& im,
       Rcpp::StringVector& geometry_cols,
       Rcpp::String& group_id_col_1,
@@ -180,21 +180,21 @@ namespace shapes {
       Rcpp::String& group_id_col_3
   ) {
     Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( im );
-    return get_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
+    return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
   }
 
 
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
       Rcpp::IntegerMatrix& im,
       Rcpp::IntegerVector& geometry_cols,
       int& group_id_col_1,
       int& group_id_col_2
   ) {
     Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( im );
-    return get_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2 );
+    return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2 );
   }
 
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
       Rcpp::IntegerMatrix& im,
       Rcpp::IntegerVector& geometry_cols,
       int& group_id_col_1,
@@ -202,21 +202,21 @@ namespace shapes {
       int& group_id_col_3
   ) {
     Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( im );
-    return get_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
+    return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
   }
 
 
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
       Rcpp::NumericMatrix& nm,
       Rcpp::StringVector& geometry_cols,
       Rcpp::String& group_id_col_1,
       Rcpp::String& group_id_col_2
   ) {
     Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( nm );
-    return get_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2 );
+    return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2 );
   }
 
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
       Rcpp::NumericMatrix& nm,
       Rcpp::StringVector& geometry_cols,
       Rcpp::String& group_id_col_1,
@@ -224,21 +224,21 @@ namespace shapes {
       Rcpp::String& group_id_col_3
   ) {
     Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( nm );
-    return get_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
+    return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
   }
 
 
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
       Rcpp::NumericMatrix& nm,
       Rcpp::IntegerVector& geometry_cols,
       int& group_id_col_1,
       int& group_id_col_2
   ) {
     Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( nm );
-    return get_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2 );
+    return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2 );
   }
 
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
       Rcpp::NumericMatrix& nm,
       Rcpp::IntegerVector& geometry_cols,
       int& group_id_col_1,
@@ -246,11 +246,11 @@ namespace shapes {
       int& group_id_col_3
   ) {
     Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( nm );
-    return get_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
+    return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
   }
 
 
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
       SEXP& x,
       Rcpp::StringVector& geometry_cols,
       Rcpp::String& group_id_col_1,
@@ -262,7 +262,7 @@ namespace shapes {
       Rcpp::stop("geometries - polygons needs to be matrices or dataframes");  // #nocov
     } else {
       Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
-      return get_listListMat( im, geometry_cols, group_id_col_1, group_id_col_2 );
+      return to_listListMat( im, geometry_cols, group_id_col_1, group_id_col_2 );
     }
     }
     case REALSXP: {
@@ -270,13 +270,13 @@ namespace shapes {
       Rcpp::stop("geometries - polygons needs to be matrices or dataframes");  // #nocov
     } else {
       Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-      return get_listListMat( nm, geometry_cols, group_id_col_1, group_id_col_2 );
+      return to_listListMat( nm, geometry_cols, group_id_col_1, group_id_col_2 );
     }
     }
     case VECSXP: {
       if( Rf_inherits( x, "data.frame") ) {
       Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-      return get_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2 );
+      return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2 );
     }
     }
     default: {
@@ -286,7 +286,7 @@ namespace shapes {
   }
 
 
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
       SEXP& x,
       Rcpp::StringVector& geometry_cols,
       Rcpp::String& group_id_col_1,
@@ -299,7 +299,7 @@ namespace shapes {
       Rcpp::stop("geometries - polygons needs to be matrices or dataframes");
     } else {
       Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
-      return get_listListMat( im, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
+      return to_listListMat( im, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
     }
     }
     case REALSXP: {
@@ -307,13 +307,13 @@ namespace shapes {
       Rcpp::stop("geometries - polygons needs to be matrices or dataframes");
     } else {
       Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-      return get_listListMat( nm, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
+      return to_listListMat( nm, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
     }
     }
     case VECSXP: {
       if( Rf_inherits( x, "data.frame") ) {
       Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-      return get_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
+      return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
     }
     }
     default: {
@@ -323,7 +323,7 @@ namespace shapes {
   }
 
 
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
     SEXP& x,
     Rcpp::IntegerVector& geometry_cols,
     int& group_id_col_1,
@@ -335,7 +335,7 @@ namespace shapes {
         Rcpp::stop("geometries - polygons needs to be matrices or dataframes");
     } else {
       Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
-      return get_listListMat( im, geometry_cols, group_id_col_1, group_id_col_2 );
+      return to_listListMat( im, geometry_cols, group_id_col_1, group_id_col_2 );
     }
     }
     case REALSXP: {
@@ -343,13 +343,13 @@ namespace shapes {
       Rcpp::stop("geometries - polygons needs to be matrices or dataframes");
     } else {
       Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-      return get_listListMat( nm, geometry_cols, group_id_col_1, group_id_col_2 );
+      return to_listListMat( nm, geometry_cols, group_id_col_1, group_id_col_2 );
     }
     }
     case VECSXP: {
     if( Rf_inherits( x, "data.frame") ) {
       Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-      return get_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2 );
+      return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2 );
     }
     }
     default: {
@@ -359,7 +359,7 @@ namespace shapes {
   }
 
 
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
       SEXP& x,
       Rcpp::IntegerVector& geometry_cols,
       int& group_id_col_1,
@@ -372,7 +372,7 @@ namespace shapes {
       Rcpp::stop("geometries - polygons needs to be matrices or dataframes");
     } else {
       Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
-      return get_listListMat( im, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
+      return to_listListMat( im, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
     }
     }
     case REALSXP: {
@@ -380,13 +380,13 @@ namespace shapes {
       Rcpp::stop("geometries - polygons needs to be matrices or dataframes");
     } else {
       Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-      return get_listListMat( nm, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
+      return to_listListMat( nm, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
     }
     }
     case VECSXP: {
       if( Rf_inherits( x, "data.frame") ) {
       Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-      return get_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
+      return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
     }
     }
     default: {
@@ -397,7 +397,7 @@ namespace shapes {
 
 
 
-  inline SEXP get_listListMat(
+  inline SEXP to_listListMat(
     SEXP& x,
     SEXP& geometry_cols,  // IntegerVector or StringVector
     SEXP& group_id_col_1, // the outer-most ID column; e.g. polygon_id
@@ -417,7 +417,7 @@ namespace shapes {
       Rcpp::IntegerVector iv_group_id_col_2 = Rcpp::as< Rcpp::IntegerVector >( group_id_col_2 );
       int i_group_id_col_1 = iv_group_id_col_1[0];
       int i_group_id_col_2 = iv_group_id_col_2[0];
-      return get_listListMat( x, iv_geometry_cols, i_group_id_col_1, i_group_id_col_2 );
+      return to_listListMat( x, iv_geometry_cols, i_group_id_col_1, i_group_id_col_2 );
     }
     case STRSXP: {
       Rcpp::StringVector sv_geometry_cols = Rcpp::as< Rcpp::StringVector >( geometry_cols );
@@ -425,7 +425,7 @@ namespace shapes {
       Rcpp::StringVector sv_group_id_col_2 = Rcpp::as< Rcpp::StringVector >( group_id_col_2 );
       Rcpp::String s_group_id_col_1 = sv_group_id_col_1[0];
       Rcpp::String s_group_id_col_2 = sv_group_id_col_2[0];
-      return get_listListMat( x, sv_geometry_cols, s_group_id_col_1, s_group_id_col_2 );
+      return to_listListMat( x, sv_geometry_cols, s_group_id_col_1, s_group_id_col_2 );
     }
     default: {
       Rcpp::stop("geometries - unknown id column types");
@@ -435,7 +435,7 @@ namespace shapes {
   }
 
 
-inline SEXP get_listListMat(
+inline SEXP to_listListMat(
     SEXP& x,
     SEXP& geometry_cols,  // IntegerVector or StringVector
     SEXP& group_id_col_1, // the outer-most ID column; e.g. multipolygon_id
@@ -461,7 +461,7 @@ inline SEXP get_listListMat(
     int i_group_id_col_3 = iv_group_id_col_3[0];
 
     //Rcpp::stop("stopping");
-    return get_listListMat( x, iv_geometry_cols, i_group_id_col_1, i_group_id_col_2, i_group_id_col_3 );
+    return to_listListMat( x, iv_geometry_cols, i_group_id_col_1, i_group_id_col_2, i_group_id_col_3 );
   }
   case STRSXP: {
     Rcpp::StringVector sv_geometry_cols = Rcpp::as< Rcpp::StringVector >( geometry_cols );
@@ -471,7 +471,7 @@ inline SEXP get_listListMat(
     Rcpp::String s_group_id_col_1 = sv_group_id_col_1[0];
     Rcpp::String s_group_id_col_2 = sv_group_id_col_2[0];
     Rcpp::String s_group_id_col_3 = sv_group_id_col_3[0];
-    return get_listListMat( x, sv_geometry_cols, s_group_id_col_1, s_group_id_col_2, s_group_id_col_3 );
+    return to_listListMat( x, sv_geometry_cols, s_group_id_col_1, s_group_id_col_2, s_group_id_col_3 );
   }
   default: {
     Rcpp::stop("geometries - unknown id column types");

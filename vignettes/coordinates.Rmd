@@ -21,7 +21,7 @@ library(Rcpp)
 
 
 ```r
-#include "geometries/geometries/coordinates.hpp"
+#include "geometries/coordinates/coordinates.hpp"
 ```
 
 
@@ -32,7 +32,7 @@ cppFunction(
   , includes = '#include "geometries/shapes/shapes.hpp"'
   , code = '
     SEXP polygon( SEXP df, SEXP geometry_cols, SEXP line_id ) {
-      return geometries::shapes::get_listMat( df, geometry_cols, line_id );
+      return geometries::shapes::to_listMat( df, geometry_cols, line_id );
     }
   '
 )
@@ -46,7 +46,7 @@ cppFunction(
 ## either counts the number of coordinates in a given geometry,
 cppFunction(
   depends = 'geometries'
-  , includes = '#include "geometries/geometries/coordinates.hpp"'
+  , includes = '#include "geometries/coordinates/coordinates.hpp"'
   , code = '
     R_xlen_t count_coordinates( SEXP x ) {
       R_xlen_t count = 0;
@@ -78,7 +78,7 @@ count_coordinates( poly )
 ## gives the start and end indices of geometries
 cppFunction(
   depends = 'geometries'
-  , includes = '#include "geometries/geometries/coordinates.hpp"'
+  , includes = '#include "geometries/coordinates/coordinates.hpp"'
   , code = '
     Rcpp::IntegerMatrix coordinate_indices( SEXP x ) {
       return geometries::coordinates::coordinate_indices( x );

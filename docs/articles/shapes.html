@@ -107,11 +107,11 @@
 <li>
 <code>geometries::shapes::get_vec()</code> - creates a vector</li>
 <li>
-<code>geometries::shapes::get_mat()</code> - creates a matrix</li>
+<code>geometries::shapes::to_mat()</code> - creates a matrix</li>
 <li>
-<code>geometries::shapes::get_listMat()</code> - creates lists of matrices</li>
+<code>geometries::shapes::to_listMat()</code> - creates lists of matrices</li>
 <li>
-<code>geometries::shapes::get_listListMat()</code> - creates lists of lists of matrices</li>
+<code>geometries::shapes::to_listListMat()</code> - creates lists of lists of matrices</li>
 </ul>
 <p>All these examples show you how to include the header and call the functions using Rcpp code. The same principles apply in a .cpp file in a package.</p>
 <div id="lines" class="section level3">
@@ -147,7 +147,7 @@
   , <span class="kw">includes</span> <span class="kw">=</span> <span class="st">'#include "geometries/shapes/shapes.hpp"'</span>
   , <span class="kw">code</span> <span class="kw">=</span> <span class="st">'
     SEXP line( SEXP df, SEXP geometry_cols ) {
-      return geometries::shapes::get_mat( df, geometry_cols );
+      return geometries::shapes::to_mat( df, geometry_cols );
     }
   '</span>
 )
@@ -174,7 +174,7 @@
   , <span class="kw">includes</span> <span class="kw">=</span> <span class="st">'#include "geometries/shapes/shapes.hpp"'</span>
   , <span class="kw">code</span> <span class="kw">=</span> <span class="st">'
     SEXP polygon( SEXP df, SEXP geometry_cols, SEXP line_id ) {
-      return geometries::shapes::get_listMat( df, geometry_cols, line_id );
+      return geometries::shapes::to_listMat( df, geometry_cols, line_id );
     }
   '</span>
 )
@@ -204,7 +204,7 @@
   , <span class="kw">includes</span> <span class="kw">=</span> <span class="st">'#include "geometries/shapes/shapes.hpp"'</span>
   , <span class="kw">code</span> <span class="kw">=</span> <span class="st">'
     SEXP multipolygon( SEXP df, SEXP geometry_cols, SEXP polygon_id, SEXP line_id ) {
-      return geometries::shapes::get_listListMat( df, geometry_cols, polygon_id, line_id );
+      return geometries::shapes::to_listListMat( df, geometry_cols, polygon_id, line_id );
     }
   '</span>
 )

@@ -13,11 +13,11 @@ SEXP rcpp_get_vec(
 
 // LINE ----------
 // [[Rcpp::export]]
-SEXP rcpp_get_mat(
+SEXP rcpp_to_mat(
     SEXP x,
     SEXP cols
 ) {
-  return geometries::shapes::get_mat( x, cols );
+  return geometries::shapes::to_mat( x, cols );
 }
 
 // LINES -----------
@@ -27,5 +27,5 @@ SEXP rcpp_get_list_mat(
     SEXP cols,
     SEXP id
 ) {
-  return geometries::shapes::get_listMat( x, cols, id );
+  return geometries::shapes::to_listMat( x, cols, id );
 }
