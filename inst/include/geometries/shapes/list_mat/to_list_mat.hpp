@@ -9,11 +9,11 @@ namespace geometries {
 namespace shapes {
 
   // #nocov start
-/*
- * to_listMat
- *
- * Converts various inputs into a list[[ matrix ]] structure
- */
+  /*
+  * to_listMat
+  *
+  * Converts various inputs into a list[[ matrix ]] structure
+  */
   template< int RTYPE >
   inline SEXP to_listMat(
     Rcpp::Matrix< RTYPE >& m
