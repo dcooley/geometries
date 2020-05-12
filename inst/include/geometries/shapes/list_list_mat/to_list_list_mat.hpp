@@ -1,9 +1,9 @@
-#ifndef R_GEOMETRIES_SHAPES_LIST_LIST_MAT_H
-#define R_GEOMETRIES_SHAPES_LIST_LIST_MAT_H
+#ifndef R_GEOMETRIES_SHAPES_TO_LIST_LIST_MAT_H
+#define R_GEOMETRIES_SHAPES_TO_LIST_LIST_MAT_H
 
 #include <Rcpp.h>
 #include "geometries/utils/subset/subset.hpp"
-#include "geometries/shapes/mat/mat.hpp"
+#include "geometries/shapes/mat/to_mat.hpp"
 #include "geometries/shapes/list_mat/to_list_mat.hpp"
 
 /*
@@ -16,19 +16,12 @@ namespace geometries {
 namespace shapes {
 
   // #nocov start
+  template< int RTYPE >
   inline SEXP to_listListMat(
-    Rcpp::IntegerMatrix& im
+    Rcpp::Matrix< RTYPE >& m
   ) {
     Rcpp::List mp(1);
-    mp[0] = geometries::shapes::to_listMat(im);
-    return mp;
-  }
-
-  inline SEXP to_listListMat(
-      Rcpp::NumericMatrix& nm
-  ) {
-    Rcpp::List mp(1);
-    mp[0] = geometries::shapes::to_listMat(nm);
+    mp[0] = geometries::shapes::to_listMat< RTYPE >(m);
     return mp;
   }
 
@@ -160,95 +153,53 @@ namespace shapes {
   }
 
 
-
+  template< int RTYPE >
   inline SEXP to_listListMat(
-      Rcpp::IntegerMatrix& im,
+      Rcpp::Matrix< RTYPE >& m,
       Rcpp::StringVector& geometry_cols,
       Rcpp::String& group_id_col_1,
       Rcpp::String& group_id_col_2
   ) {
-    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( im );
+    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( m );
     return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2 );
   }
 
 
+  template< int RTYPE >
   inline SEXP to_listListMat(
-      Rcpp::IntegerMatrix& im,
+      Rcpp::Matrix< RTYPE >& m,
       Rcpp::StringVector& geometry_cols,
       Rcpp::String& group_id_col_1,
       Rcpp::String& group_id_col_2,
       Rcpp::String& group_id_col_3
   ) {
-    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( im );
+    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( m );
     return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
   }
 
 
+  template< int RTYPE >
   inline SEXP to_listListMat(
-      Rcpp::IntegerMatrix& im,
+      Rcpp::Matrix< RTYPE >& m,
       Rcpp::IntegerVector& geometry_cols,
       int& group_id_col_1,
       int& group_id_col_2
   ) {
-    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( im );
+    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( m );
     return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2 );
   }
 
+  template < int RTYPE >
   inline SEXP to_listListMat(
-      Rcpp::IntegerMatrix& im,
+      Rcpp::Matrix< RTYPE >& m,
       Rcpp::IntegerVector& geometry_cols,
       int& group_id_col_1,
       int& group_id_col_2,
       int& group_id_col_3
   ) {
-    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( im );
+    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( m );
     return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
   }
-
-
-  inline SEXP to_listListMat(
-      Rcpp::NumericMatrix& nm,
-      Rcpp::StringVector& geometry_cols,
-      Rcpp::String& group_id_col_1,
-      Rcpp::String& group_id_col_2
-  ) {
-    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( nm );
-    return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2 );
-  }
-
-  inline SEXP to_listListMat(
-      Rcpp::NumericMatrix& nm,
-      Rcpp::StringVector& geometry_cols,
-      Rcpp::String& group_id_col_1,
-      Rcpp::String& group_id_col_2,
-      Rcpp::String& group_id_col_3
-  ) {
-    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( nm );
-    return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
-  }
-
-
-  inline SEXP to_listListMat(
-      Rcpp::NumericMatrix& nm,
-      Rcpp::IntegerVector& geometry_cols,
-      int& group_id_col_1,
-      int& group_id_col_2
-  ) {
-    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( nm );
-    return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2 );
-  }
-
-  inline SEXP to_listListMat(
-      Rcpp::NumericMatrix& nm,
-      Rcpp::IntegerVector& geometry_cols,
-      int& group_id_col_1,
-      int& group_id_col_2,
-      int& group_id_col_3
-  ) {
-    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( nm );
-    return to_listListMat( df, geometry_cols, group_id_col_1, group_id_col_2, group_id_col_3 );
-  }
-
 
   inline SEXP to_listListMat(
       SEXP& x,

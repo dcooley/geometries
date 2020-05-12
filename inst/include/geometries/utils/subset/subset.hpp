@@ -6,32 +6,12 @@
 namespace geometries {
 namespace utils {
 
-  inline Rcpp::LogicalVector subset_vector(
-      Rcpp::LogicalVector& lv,
+  template < int RTYPE >
+  inline Rcpp::Vector< RTYPE > subset_vector(
+      Rcpp::Vector< RTYPE >& v,
       Rcpp::Range& rng
   ) {
-    return lv[ rng ];
-  }
-
-  inline Rcpp::IntegerVector subset_vector(
-      Rcpp::IntegerVector& iv,
-      Rcpp::Range& rng
-  ) {
-    return iv[ rng ];
-  }
-
-  inline Rcpp::NumericVector subset_vector(
-    Rcpp::NumericVector& nv,
-    Rcpp::Range& rng
-  ) {
-    return nv[ rng ];
-  }
-
-  inline Rcpp::StringVector subset_vector(
-      Rcpp::StringVector& sv,
-      Rcpp::Range& rng
-  ) {
-    return sv[ rng ];
+    return v[ rng ];
   }
 
   inline SEXP subset_vector(

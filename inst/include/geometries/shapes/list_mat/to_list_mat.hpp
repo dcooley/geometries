@@ -3,7 +3,7 @@
 
 #include <Rcpp.h>
 #include "geometries/utils/utils.hpp"
-#include "geometries/shapes/mat/mat.hpp"
+#include "geometries/shapes/mat/to_mat.hpp"
 
 namespace geometries {
 namespace shapes {
@@ -14,19 +14,12 @@ namespace shapes {
  *
  * Converts various inputs into a list[[ matrix ]] structure
  */
+  template< int RTYPE >
   inline SEXP to_listMat(
-    Rcpp::IntegerMatrix& im
+    Rcpp::Matrix< RTYPE >& m
   ) {
     Rcpp::List lst(1);
-    lst[0] = im;
-    return lst;
-  }
-
-  inline SEXP to_listMat(
-    Rcpp::NumericMatrix& nm
-  ) {
-    Rcpp::List lst(1);
-    lst[0] = nm;
+    lst[0] = m;
     return lst;
   }
 
@@ -83,39 +76,14 @@ namespace shapes {
   // gets lines from data.farme
   // when the start & end rows are known
   // where geometry_cols are ordered?
+  template < int RTYPE >
   inline SEXP to_listMat(
-      Rcpp::NumericMatrix& nm,
+      Rcpp::Matrix< RTYPE >& m,
       Rcpp::IntegerVector& geometry_cols,
       int& start,
       int& end
   ) {
-    geometries::utils::column_check( nm, geometry_cols );
-    R_xlen_t n_col = geometry_cols.length();
-    // matrix can just be subset by cols and rows
-    Rcpp::Range rows = Rcpp::Range( start, end );
-    Rcpp::Range cols = Rcpp::Range( geometry_cols[0], geometry_cols[ ( n_col - 1 ) ] );
-    Rcpp::NumericMatrix a_line = nm( rows, cols );
-    return a_line;
-  }
-
-  inline SEXP to_listMat(
-      Rcpp::NumericMatrix& nm,
-      Rcpp::StringVector& geometry_cols,
-      int& start,
-      int& end
-  ) {
-    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( nm );
-    return to_listMat( df, geometry_cols, start, end );
-  }
-
-
-  inline SEXP to_listMat(
-      Rcpp::IntegerMatrix& im,
-      Rcpp::IntegerVector& geometry_cols,
-      int& start,
-      int& end
-  ) {
-    geometries::utils::column_check( im, geometry_cols );
+    geometries::utils::column_check( m, geometry_cols );
     R_xlen_t n_col = geometry_cols.length();
 
     if( n_col <= 1 ) {
@@ -125,17 +93,18 @@ namespace shapes {
     // matrix can just be subset by cols and rows
     Rcpp::Range rows = Rcpp::Range( start, end );
     Rcpp::Range cols = Rcpp::Range( geometry_cols[0], geometry_cols[ ( n_col - 1 ) ] );
-    Rcpp::IntegerMatrix a_line = im( rows, cols );
+    Rcpp::Matrix< RTYPE > a_line = m( rows, cols );
     return a_line;
   }
 
+  template < int RTYPE >
   inline SEXP to_listMat(
-      Rcpp::IntegerMatrix& im,
+      Rcpp::Matrix< RTYPE >& m,
       Rcpp::StringVector& geometry_cols,
       int& start,
       int& end
   ) {
-    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( im );
+    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( m );
     return to_listMat( df, geometry_cols, start, end );
   }
 
@@ -262,39 +231,23 @@ namespace shapes {
     return to_listMat( df, cols, line_ids );
   }
 
+  template< int RTYPE >
   inline SEXP to_listMat(
-    Rcpp::IntegerMatrix& im,
+    Rcpp::Matrix< RTYPE >& m,
     Rcpp::StringVector& cols,
     Rcpp::String& id_col
   ) {
-    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( im );
+    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( m );
     return to_listMat( df, cols, id_col );
   }
 
+  template< int RTYPE >
   inline SEXP to_listMat(
-      Rcpp::IntegerMatrix& im,
+      Rcpp::Matrix< RTYPE >& m,
       Rcpp::IntegerVector& cols,
       int& id_col
   ) {
-    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( im );
-    return to_listMat( df, cols, id_col );
-  }
-
-  inline SEXP to_listMat(
-    Rcpp::NumericMatrix& nm,
-    Rcpp::StringVector& cols,
-    Rcpp::String& id_col
-  ) {
-    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( nm );
-    return to_listMat( df, cols, id_col );
-  }
-
-  inline SEXP to_listMat(
-      Rcpp::NumericMatrix& nm,
-      Rcpp::IntegerVector& cols,
-      int& id_col
-  ) {
-    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( nm );
+    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( m );
     return to_listMat( df, cols, id_col );
   }
 

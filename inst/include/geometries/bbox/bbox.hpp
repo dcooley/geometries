@@ -6,32 +6,16 @@
 namespace geometries {
 namespace bbox {
 
-  inline void bbox_size_check( Rcpp::IntegerVector& point ) {
+  template< int RTYPE >
+  inline void bbox_size_check( Rcpp::Vector< RTYPE >& point ) {
     if( point.length() < 2 ) {
       Rcpp::stop("geometries - incorrect size of bounding box");
     }
   }
 
-  inline void bbox_size_check( Rcpp::NumericVector& point ) {
-    if( point.length() < 2 ) {
-      Rcpp::stop("geometries - incorrect size of bounding box");
-    }
-  }
-
-  inline void bbox_size_check( Rcpp::StringVector& sv ) {
-    if( sv.length() < 2 ) {
-      Rcpp::stop("geometries - incorrect size of bounding box");  // #nocov
-    }
-  }
-
-  inline void bbox_size_check( Rcpp::IntegerMatrix& im ) {
-    if( im.ncol() < 2 ) {
-      Rcpp::stop("geometries - incorrect size of bounding box");
-    }
-  }
-
-  inline void bbox_size_check( Rcpp::NumericMatrix& nm ) {
-    if( nm.ncol() < 2 ) {
+  template< int RTYPE >
+  inline void bbox_size_check( Rcpp::Matrix< RTYPE >& m ) {
+    if( m.ncol() < 2 ) {
       Rcpp::stop("geometries - incorrect size of bounding box");
     }
   }
@@ -42,6 +26,7 @@ namespace bbox {
     }
   }
 
+  // TODO: - template bbox type
   inline void make_bbox(
       Rcpp::NumericVector& bbox,
       Rcpp::NumericVector& x,

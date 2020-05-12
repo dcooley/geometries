@@ -8,7 +8,7 @@ namespace utils {
 
   // #nocov start
   inline Rcpp::StringVector matrix_names(
-      Rcpp::List m_attr
+      Rcpp::List& m_attr
   ) {
     if( m_attr.size() < 2 ) {
       Rcpp::stop("geometries - could not find matrix names. Perhaps your matrix does not have names");
@@ -17,15 +17,9 @@ namespace utils {
     return matrix_names;
   }
 
+  template < int RTYPE >
   inline Rcpp::StringVector matrix_names(
-      Rcpp::IntegerMatrix& m
-  ) {
-    Rcpp::List m_attr = m.attr("dimnames");
-    return matrix_names( m_attr );
-  }
-
-  inline Rcpp::StringVector matrix_names(
-      Rcpp::NumericMatrix& m
+      Rcpp::Matrix< RTYPE >& m
   ) {
     Rcpp::List m_attr = m.attr("dimnames");
     return matrix_names( m_attr );
@@ -112,26 +106,16 @@ namespace utils {
     return nm;
   }
 
-  inline Rcpp::IntegerMatrix matrix_row_to_matrix(
-    Rcpp::IntegerMatrix& im,
+  template< int RTYPE >
+  inline Rcpp::Matrix< RTYPE > matrix_row_to_matrix(
+    Rcpp::Matrix< RTYPE >& m,
     R_xlen_t& i
   ) {
-    Rcpp::IntegerVector this_row = im( i, Rcpp::_ );
-    R_xlen_t n_col = im.ncol();
-    Rcpp::IntegerMatrix im2( 1, n_col );
-    im2( 0, Rcpp::_ ) = this_row;
-    return im2;
-  }
-
-  inline Rcpp::NumericMatrix matrix_row_to_matrix(
-      Rcpp::NumericMatrix& nm,
-      R_xlen_t& i
-  ) {
-    Rcpp::NumericVector this_row = nm( i, Rcpp::_ );
-    R_xlen_t n_col = nm.ncol();
-    Rcpp::NumericMatrix nm2( 1, n_col );
-    nm2( 0, Rcpp::_ ) = this_row;
-    return nm2;
+    Rcpp::Vector< RTYPE > this_row = m( i, Rcpp::_ );
+    R_xlen_t n_col = m.ncol();
+    Rcpp::Matrix< RTYPE > m2( 1, n_col );
+    m2( 0, Rcpp::_ ) = this_row;
+    return m2;
   }
   // #nocov end
 

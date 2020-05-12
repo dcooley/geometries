@@ -27,7 +27,7 @@ The shape headers are in
 
 Including this header will give you all the functions for creating 'shapes' from matrices and data.frames.
 
-- `geometries::shapes::get_vec()` - creates a vector
+- `geometries::shapes::to_vec()` - creates a vector
 - `geometries::shapes::to_mat()` - creates a matrix
 - `geometries::shapes::to_listMat()` - creates lists of matrices
 - `geometries::shapes::to_listListMat()` - creates lists of lists of matrices

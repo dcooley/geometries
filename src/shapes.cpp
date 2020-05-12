@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+
 #include "geometries/shapes/shapes.hpp"
 
 
@@ -8,7 +9,7 @@ SEXP rcpp_get_vec(
     SEXP x,
     SEXP cols
 ) {
-  return geometries::shapes::get_vec( x, cols );
+  return geometries::shapes::to_vec( x, cols );
 }
 
 // LINE ----------

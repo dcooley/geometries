@@ -74,7 +74,7 @@ count_coordinates( poly )
 ```{r}
 
 ## Coordinate indices
-## 
+##
 ## gives the start and end indices of geometries
 cppFunction(
   depends = 'geometries'
@@ -90,7 +90,7 @@ x <- 1:2
 
 coordinate_indices( x )
 
-m <- matrix(1:6, ncol = 2) 
+m <- matrix(1:6, ncol = 2)
 
 coordinate_indices( m )
 

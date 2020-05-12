@@ -1,5 +1,5 @@
-#ifndef R_GEOMETRIES_SHAPES_VEC_H
-#define R_GEOMETRIES_SHAPES_VEC_H
+#ifndef R_GEOMETRIES_SHAPES_TO_VEC_H
+#define R_GEOMETRIES_SHAPES_TO_VEC_H
 
 #include <Rcpp.h>
 #include "geometries/utils/utils.hpp"
@@ -8,49 +8,47 @@ namespace geometries {
 namespace shapes {
 
   // #nocov start
-  inline SEXP get_vec(
-      Rcpp::IntegerVector& iv
+  template< int RTYPE >
+  inline SEXP to_vec(
+      Rcpp::Vector< RTYPE >& v
   ) {
-    return iv;
+    return v;
   }
 
-  inline SEXP get_vec(
-      Rcpp::NumericVector& nv
-  ) {
-    return nv;
-  }
 
-  inline SEXP get_vec(
-      Rcpp::IntegerMatrix& im
+  template< int RTYPE >
+  inline SEXP to_vec(
+      Rcpp::Matrix< RTYPE >& m
   ) {
-    R_xlen_t n_row = im.nrow();
+    R_xlen_t n_row = m.nrow();
     if( n_row != 1 ) {
       Rcpp::stop("geometries - expecting single-row matrix");
     }
-    Rcpp::IntegerVector iv = im( 0, Rcpp::_ );
-    return iv;
+    Rcpp::Vector< RTYPE > v = m( 0, Rcpp::_ );
+    return v;
   }
 
-  inline SEXP get_vec(
-      Rcpp::IntegerMatrix& im,
+  template< int RTYPE >
+  inline SEXP to_vec(
+      Rcpp::Matrix< RTYPE >& m,
       Rcpp::IntegerVector& geometry_cols
   ) {
-    geometries::utils::column_check( im, geometry_cols );
-    R_xlen_t n_row = im.nrow();
+    geometries::utils::column_check( m, geometry_cols );
+    R_xlen_t n_row = m.nrow();
     if( n_row != 1 ) {
       Rcpp::stop("geometries - expecting single-row matrix");
     }
     R_xlen_t n_col = geometry_cols.length();
     R_xlen_t i;
-    Rcpp::IntegerVector iv( n_col );
+    Rcpp::Vector< RTYPE > v( n_col );
     for( i = 0; i < n_col; ++i ) {
       int this_col = geometry_cols[ i ];
-      iv[ i ] = im( 0, this_col );
+      v[ i ] = m( 0, this_col );
     }
-    return iv;
+    return v;
   }
 
-  inline SEXP get_vec(
+  inline SEXP to_vec(
       Rcpp::DataFrame& df
   ) {
     R_xlen_t n_row = df.nrow();
@@ -66,7 +64,7 @@ namespace shapes {
     return nv;
   }
 
-  inline SEXP get_vec(
+  inline SEXP to_vec(
       Rcpp::DataFrame& df,
       Rcpp::StringVector& geometry_cols
   ) {
@@ -88,79 +86,40 @@ namespace shapes {
     return nv;
   }
 
-
-  inline SEXP get_vec(
-      Rcpp::IntegerMatrix& im,
+  template< int RTYPE >
+  inline SEXP to_vec(
+      Rcpp::Matrix< RTYPE >& m,
       Rcpp::StringVector& geometry_cols
   ) {
-    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( im );
-    return get_vec( df, geometry_cols );
+    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( m );
+    return to_vec( df, geometry_cols );
   }
 
-  inline SEXP get_vec(
-      Rcpp::NumericMatrix& nm
-  ) {
-    R_xlen_t n_row = nm.nrow();
-    if( n_row != 1 ) {
-      Rcpp::stop("geometries - expecting single-row matrix");
-    }
-    Rcpp::NumericVector nv = nm( 0, Rcpp::_ );
-    return nv;
-  }
-
-  inline SEXP get_vec(
-      Rcpp::NumericMatrix& nm,
-      Rcpp::StringVector& geometry_cols
-  ) {
-    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( nm );
-    return get_vec( df, geometry_cols );
-  }
-
-
-  inline SEXP get_vec(
-      Rcpp::NumericMatrix& nm,
-      Rcpp::IntegerVector& geometry_cols
-  ) {
-    geometries::utils::column_check( nm, geometry_cols );
-    R_xlen_t n_row = nm.nrow();
-    if( n_row != 1 ) {
-      Rcpp::stop("geometries - expecting single-row matrix");
-    }
-    R_xlen_t n_col = geometry_cols.length();
-    R_xlen_t i;
-    Rcpp::NumericVector nv( n_col );
-    for( i = 0; i < n_col; ++i ) {
-      int this_col = geometry_cols[ i ];
-      nv[ i ] = nm( 0, this_col );
-    }
-    return nv;
-  }
-
-  inline SEXP get_vec(
+   inline SEXP to_vec(
       Rcpp::DataFrame& df,
       Rcpp::IntegerVector& geometry_cols
   ) {
     Rcpp::NumericMatrix nm = geometries::utils::df_to_matrix( df, geometry_cols );
-    return get_vec( nm );
+    return to_vec( nm );
   }
 
-  inline SEXP get_vec(
+  inline SEXP to_vec(
       SEXP& x,
       Rcpp::IntegerVector& geometry_cols
   ) {
     switch( TYPEOF( x ) ) {
     case INTSXP: {
       Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
-      return get_vec( im, geometry_cols );
+      return to_vec( im, geometry_cols );
     }
     case REALSXP: {
       Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-      return get_vec( nm, geometry_cols );
+      return to_vec( nm, geometry_cols );
     }
     case VECSXP: {
       if( Rf_inherits( x, "data.frame" ) ) {
       Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-      return get_vec( df, geometry_cols );
+      return to_vec( df, geometry_cols );
     } // else default
     }
     default: {
@@ -170,23 +129,23 @@ namespace shapes {
     return Rcpp::List::create(); // never reaches
   }
 
-  inline SEXP get_vec(
+  inline SEXP to_vec(
       SEXP& x,
       Rcpp::StringVector& geometry_cols
   ) {
     switch( TYPEOF( x ) ) {
     case INTSXP: {
       Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
-      return get_vec( im, geometry_cols );
+      return to_vec( im, geometry_cols );
     }
     case REALSXP: {
       Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-      return get_vec( nm, geometry_cols );
+      return to_vec( nm, geometry_cols );
     }
     case VECSXP: {
     if( Rf_inherits( x, "data.frame" ) ) {
       Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-      return get_vec( df, geometry_cols );
+      return to_vec( df, geometry_cols );
     } // else default
     }
     default: {
@@ -196,31 +155,31 @@ namespace shapes {
     return Rcpp::List::create(); // never reaches
   }
 
-  inline SEXP get_vec(
+  inline SEXP to_vec(
       SEXP& x
   ) {
     switch( TYPEOF( x ) ) {
     case INTSXP: {
       if( Rf_isMatrix( x ) ) {
       Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
-      return get_vec( im );
+      return to_vec( im );
     } else {
       Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( x );
-      return get_vec( iv );
+      return to_vec( iv );
     }
     case REALSXP: {
       if( Rf_isMatrix( x ) ) {
       Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-      return get_vec( nm );
+      return to_vec( nm );
     } else {
       Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( x );
-      return get_vec( nv );
+      return to_vec( nv );
     }
     }
     case VECSXP: {
       if( Rf_inherits( x, "data.frame" ) ) {
       Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-      return get_vec( df );
+      return to_vec( df );
     } // else default
     }
     default: {
@@ -231,13 +190,13 @@ namespace shapes {
     return Rcpp::List::create(); // never reaches
   }
 
-  inline SEXP get_vec(
+  inline SEXP to_vec(
       SEXP& x,
       SEXP& geometry_cols
   ) {
 
     if( Rf_isNull( geometry_cols ) ) {
-      return get_vec( x );
+      return to_vec( x );
     }
 
     switch( TYPEOF( geometry_cols ) ) {
@@ -245,17 +204,17 @@ namespace shapes {
     case INTSXP: {
       Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( geometry_cols );
       if( iv.length() == 0 ) {
-        return get_vec( x );
+        return to_vec( x );
       } else {
-        return get_vec( x, iv );
+        return to_vec( x, iv );
       }
     }
     case STRSXP: {
       Rcpp::StringVector sv = Rcpp::as< Rcpp::StringVector >( geometry_cols );
       if( sv.length() == 0 ) {
-        return get_vec( x );
+        return to_vec( x );
       } else {
-        return get_vec( x, sv );
+        return to_vec( x, sv );
       }
     }
     default: {

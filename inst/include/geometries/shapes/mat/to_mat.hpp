@@ -1,5 +1,5 @@
-#ifndef R_GEOMETRIES_SHAPES_MAT_H
-#define R_GEOMETRIES_SHAPES_MAT_H
+#ifndef R_GEOMETRIES_SHAPES_TO_MAT_H
+#define R_GEOMETRIES_SHAPES_TO_MAT_H
 
 #include <Rcpp.h>
 #include "geometries/utils/utils.hpp"
@@ -18,16 +18,11 @@ namespace shapes {
    *
    * Converts various inputs into a matrix structure
    */
+  template< int RTYPE >
   inline SEXP to_mat(
-    Rcpp::IntegerMatrix& im
+    Rcpp::Matrix< RTYPE >& m
   ) {
-    return im;
-  }
-
-  inline SEXP to_mat(
-    Rcpp::NumericMatrix& nm
-  ) {
-    return nm;
+    return m;
   }
 
   inline SEXP to_mat(
@@ -37,37 +32,21 @@ namespace shapes {
     return nm;
   }
 
+  template< int RTYPE >
   inline SEXP to_mat(
-      Rcpp::IntegerMatrix& im,
+      Rcpp::Matrix< RTYPE >& m,
       Rcpp::IntegerVector& geometry_cols
   ) {
-    geometries::utils::column_check( im, geometry_cols );
-    R_xlen_t n_row = im.nrow();
+    geometries::utils::column_check( m, geometry_cols );
+    R_xlen_t n_row = m.nrow();
     R_xlen_t n_col = geometry_cols.size();
     R_xlen_t i;
-    Rcpp::IntegerMatrix im2( n_row, n_col );
+    Rcpp::Matrix< RTYPE > m2( n_row, n_col );
     for( i = 0; i < n_col; ++i ) {
       int this_col = geometry_cols[ i ];
-      im2( Rcpp::_, i ) = im( Rcpp::_, this_col );
+      m2( Rcpp::_, i ) = m( Rcpp::_, this_col );
     }
-    return im2;
-  }
-
-
-  inline SEXP to_mat(
-      Rcpp::NumericMatrix& nm,
-      Rcpp::IntegerVector& geometry_cols
-  ) {
-    geometries::utils::column_check( nm, geometry_cols );
-    R_xlen_t n_row = nm.nrow();
-    R_xlen_t n_col = geometry_cols.size();
-    R_xlen_t i;
-    Rcpp::NumericMatrix nm2( n_row, n_col );
-    for( i = 0; i < n_col; ++i ) {
-      int this_col = geometry_cols[ i ];
-      nm2( Rcpp::_, i ) = nm( Rcpp::_, this_col );
-    }
-    return nm2;
+    return m2;
   }
 
   inline SEXP to_mat(
@@ -91,19 +70,12 @@ namespace shapes {
     return nm;
   }
 
+  template< int RTYPE >
   inline SEXP to_mat(
-    Rcpp::IntegerMatrix& im,
+    Rcpp::Matrix< RTYPE >& m,
     Rcpp::StringVector& geometry_cols
   ) {
-    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( im );
-    return to_mat( df, geometry_cols );
-  }
-
-  inline SEXP to_mat(
-      Rcpp::NumericMatrix& im,
-      Rcpp::StringVector& geometry_cols
-  ) {
-    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( im );
+    Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( m );
     return to_mat( df, geometry_cols );
   }
 
