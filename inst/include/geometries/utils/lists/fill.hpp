@@ -11,19 +11,14 @@ namespace utils {
       Rcpp::Vector< RTYPE >& v,
       Rcpp::IntegerMatrix& line_positions
   ) {
-    R_xlen_t n = line_positions.nrow();  // nrow should also be the row of the final sf object we are creating
+    R_xlen_t n = line_positions.nrow();  // nrow should also be the row of the final df object we are creating
     Rcpp::List res( n );
     R_xlen_t i;
 
-    // Rcpp::Rcout << "n: " << n << std::endl;
-    // Rcpp::Rcout << "line_positions: " << line_positions << std::endl;
-
     for( i = 0; i < n; ++i ) {
-      //Rcpp::Rcout << "i: " << i << std::endl;
       R_xlen_t start = line_positions(i, 0);
       R_xlen_t end = line_positions(i, 1);
       Rcpp::IntegerVector elements = Rcpp::seq( start, end );
-      //Rcpp::Rcout << "elements: " << elements << std::endl;
       res[ i ] = v[ elements ];
     }
     return res;

@@ -117,15 +117,6 @@ namespace shapes {
     return lst;
   }
 
-
-  // The design of this is;
-  // every time an 'sfg' *could* be created, -
-  // then every time an 'sfc' *could* be created
-
-  // get list of lines (e.g. MULTILINESTRING)
-  // from a data.frame, where geometry_cols are specified, and a vector of line_ids
-  // gives a 'line_id' for each row
-  // - assumes df is sorted by line_id
   inline SEXP to_listMat(
       Rcpp::DataFrame& df,
       Rcpp::StringVector& geometry_cols,

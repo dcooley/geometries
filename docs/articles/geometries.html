@@ -116,7 +116,7 @@
 <span class="co">## either counts the number of coordinates in a given geometry,</span>
 <span class="fu"><a href="https://rdrr.io/pkg/Rcpp/man/cppFunction.html">cppFunction</a></span>(
   <span class="kw">depends</span> <span class="kw">=</span> <span class="st">'geometries'</span>
-  , <span class="kw">includes</span> <span class="kw">=</span> <span class="st">'#include "geometries/geometries/coordinates.hpp"'</span>
+  , <span class="kw">includes</span> <span class="kw">=</span> <span class="st">'#include "geometries/geometries/dimensions.hpp"'</span>
   , <span class="kw">code</span> <span class="kw">=</span> <span class="st">'
     R_xlen_t count_coordinates( SEXP x ) {
       R_xlen_t count = 0;
@@ -145,7 +145,7 @@
 <span class="co">## gives the start and end indices of geometries</span>
 <span class="fu"><a href="https://rdrr.io/pkg/Rcpp/man/cppFunction.html">cppFunction</a></span>(
   <span class="kw">depends</span> <span class="kw">=</span> <span class="st">'geometries'</span>
-  , <span class="kw">includes</span> <span class="kw">=</span> <span class="st">'#include "geometries/geometries/coordinates.hpp"'</span>
+  , <span class="kw">includes</span> <span class="kw">=</span> <span class="st">'#include "geometries/geometries/dimensions.hpp"'</span>
   , <span class="kw">code</span> <span class="kw">=</span> <span class="st">'
     Rcpp::IntegerMatrix coordinate_indices( SEXP x ) {
       return geometries::coordinates::coordinate_indices( x );

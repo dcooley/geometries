@@ -2,6 +2,8 @@
 
 #include "geometries/shapes/shapes.hpp"
 
+#include "geometries/coordinates/dimensions.hpp"
+
 
 // POINTS -----------
 // [[Rcpp::export]]
@@ -30,3 +32,18 @@ SEXP rcpp_get_list_mat(
 ) {
   return geometries::shapes::to_listMat( x, cols, id );
 }
+
+
+// converting objects to a single matrix/list/data.frame
+// iterate and get all dimensions.
+//
+
+// [[Rcpp::export]]
+SEXP rcpp_coordinates( Rcpp::List& sfc ) {
+
+  Rcpp::IntegerMatrix dimensions = geometries::coordinates::geometry_dimensions( sfc );
+  return dimensions;
+
+}
+
+

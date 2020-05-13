@@ -21,7 +21,7 @@ library(Rcpp)
 
 
 ```r
-#include "geometries/coordinates/coordinates.hpp"
+#include "geometries/coordinates/dimensions.hpp"
 ```
 
 
@@ -39,6 +39,11 @@ cppFunction(
 
 ```
 
+### Geometry Dimension
+
+Counts the number of coordinates, the dimension, and the level of nesting.
+
+
 ```{r}
 
 ## Count Coordinates
@@ -46,12 +51,18 @@ cppFunction(
 ## either counts the number of coordinates in a given geometry,
 cppFunction(
   depends = 'geometries'
-  , includes = '#include "geometries/coordinates/coordinates.hpp"'
+  , includes = '#include "geometries/coordinates/dimensions.hpp"'
   , code = '
-    R_xlen_t count_coordinates( SEXP x ) {
+    Rcpp::IntegerVector geometry_dimension( SEXP x ) {
       R_xlen_t count = 0;
-      geometries::coordinates::count_coordinates( x, count );
-      return count;
+      R_xlen_t dimension = 0;
+      R_xlen_t nest = 0;
+      geometries::coordinates::geometry_dimension( x, count, dimension, nest );
+      Rcpp::IntegerVector iv(3);
+      iv[0] = count;
+      iv[1] = dimension;
+      iv[2] = nest;
+      return iv;
     }
   '
 )
@@ -67,9 +78,11 @@ df <- data.frame(
 
 poly <- polygon( df, c("x","y"), c("id") )
 
-count_coordinates( poly )
+geometry_dimension( poly )
 ```
 
+
+### Coordinate Dimensions
 
 ```{r}
 
@@ -78,21 +91,21 @@ count_coordinates( poly )
 ## gives the start and end indices of geometries
 cppFunction(
   depends = 'geometries'
-  , includes = '#include "geometries/coordinates/coordinates.hpp"'
+  , includes = '#include "geometries/coordinates/dimensions.hpp"'
   , code = '
-    Rcpp::IntegerMatrix coordinate_indices( SEXP x ) {
-      return geometries::coordinates::coordinate_indices( x );
+    Rcpp::IntegerMatrix geometry_dimensions( SEXP x ) {
+      return geometries::coordinates::geometry_dimensions( x );
     }
   '
 )
 
 x <- 1:2
 
-coordinate_indices( x )
+geometry_dimensions( x )
 
 m <- matrix(1:6, ncol = 2)
 
-coordinate_indices( m )
+geometry_dimensions( m )
 
 l <- list(
   matrix(1:20, ncol = 2 )
@@ -100,7 +113,10 @@ l <- list(
   , matrix(1:10, ncol = 2)
 )
 
-coordinate_indices( l )
+geometry_dimensions( l )
+
+l <- list( l )
+geometry_dimensions( l )
 
 
 ```
