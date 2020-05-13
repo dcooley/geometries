@@ -26,7 +26,7 @@ namespace utils {
   template< int RTYPE >
   inline Rcpp::List matrix_to_list(
       Rcpp::Matrix< RTYPE >& mat,
-      R_xlen_t& sfg_rows
+      R_xlen_t& total_rows
   ) {
 
     R_xlen_t n_col = mat.ncol();
@@ -35,7 +35,7 @@ namespace utils {
     for( i = 0; i < n_col; ++i ) {
       res[ i ] = mat( Rcpp::_, i );
     }
-    sfg_rows = mat.nrow();
+    total_rows = mat.nrow();
     return res;
   }
 
@@ -43,7 +43,7 @@ namespace utils {
   template< int RTYPE >
   inline Rcpp::List matrix_to_list(
       Rcpp::Matrix< RTYPE >& mat,
-      R_xlen_t& sfg_rows,
+      R_xlen_t& total_rows,
       double& id
   ) {
 
@@ -58,14 +58,14 @@ namespace utils {
     for( i = 0; i < n_col; ++i ) {
       res[ i + 1 ] = mat( Rcpp::_, i );
     }
-    sfg_rows = mat.nrow();
+    total_rows = mat.nrow();
     return res;
   }
 
   template< int RTYPE >
   inline Rcpp::List vector_to_list(
       Rcpp::Vector< RTYPE >& v,
-      R_xlen_t& sfg_rows
+      R_xlen_t& total_rows
     ) {
 
     R_xlen_t n = v.length();
@@ -74,14 +74,14 @@ namespace utils {
     for( i = 0; i < n; ++i ) {
       res[ i ] = v[ i ];
     }
-    sfg_rows = 1; // TODO??
+    total_rows = 1; // TODO??
     return res;
   }
 
   template< int RTYPE >
   inline Rcpp::List vector_to_list(
       Rcpp::Vector< RTYPE >& v,
-      R_xlen_t& sfg_rows,
+      R_xlen_t& total_rows,
       double& id
     ) {
 
@@ -94,7 +94,7 @@ namespace utils {
     for( i = 0; i < n; ++i ) {
       res[ i + 1 ] = v[ i ];
     }
-    sfg_rows = 1; // TODO??
+    total_rows = 1; // TODO??
     return res;
   }
 

@@ -125,6 +125,72 @@ id_positions( x )
 
 ### list
 
+
+#### Utils
+
+```{r}
+
+## Fills vector 1 with the contents of vector 2
+## assumes the lenghts of the vectors are already set
+## in this example, vector x is length 10, and I set teh first two elements to 1.
+## then I fill it with a vector y, length 8, filled with 2s
+cppFunction(
+  depends = "geometries"
+  , includes = '#include "geometries/utils/lists/utils.hpp"'
+  , code = '
+    Rcpp::NumericVector fill_vector() {
+      Rcpp::NumericVector x( 10, Rcpp::NumericVector::get_na() );
+      x[0] = 1;
+      x[1] = 1;
+      Rcpp::NumericVector y( 8, 2.0 );
+      R_xlen_t idx = 2;
+      return geometries::utils::fill_vector( x, y, idx );
+    }
+  '
+)
+
+fill_vector()
+
+
+## Matrix_to_list
+## splits matrix columns into list elements
+## 'n_row' argument is used to count the total number of rows when iterating 
+## multiple objects
+cppFunction(
+  depends = "geometries"
+  , includes = '#include "geometries/utils/lists/utils.hpp"'
+  , code = '
+    SEXP matrix_to_list( Rcpp::NumericMatrix mat ) {
+      R_xlen_t n_row = mat.nrow();
+      return geometries::utils::matrix_to_list( mat, n_row );
+    }
+  '
+)
+
+m <- matrix(1:10, ncol = 2)
+matrix_to_list( m )
+
+## there is a second version where you can specify an 'id' for the list elements
+cppFunction(
+  depends = "geometries"
+  , includes = '#include "geometries/utils/lists/utils.hpp"'
+  , code = '
+    SEXP matrix_to_list( Rcpp::NumericMatrix mat ) {
+      R_xlen_t n_row = mat.nrow();
+      double id = 3;
+      return geometries::utils::matrix_to_list( mat, n_row, id );
+    }
+  '
+)
+
+m <- matrix(1:10, ncol = 2)
+matrix_to_list( m )
+
+
+
+```
+
+
 ### matrix
 
 ### sexp
