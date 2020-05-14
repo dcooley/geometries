@@ -25,6 +25,7 @@ namespace utils {
    *
    * and adds an 'id' column
    */
+  template< int RTYPE >
   inline Rcpp::List collapse_list(
       Rcpp::List& lst,
       R_xlen_t& total_rows
@@ -45,7 +46,7 @@ namespace utils {
     Rcpp::List lst_res( n_vectors );
 
     for( i = 0; i < n_vectors; ++i ) {
-      lst_res[ i ] = Rcpp::NumericVector( total_rows, Rcpp::NumericVector::get_na() );
+      lst_res[ i ] = Rcpp::Vector< RTYPE >( total_rows, Rcpp::Vector< RTYPE >::get_na() );
     }
 
     R_xlen_t row_counter = 0;
@@ -62,18 +63,18 @@ namespace utils {
       for( j = 0; j < n_col; ++j ) {
 
         SEXP s = inner_list[ j ];
-        Rcpp::NumericVector new_vector = Rcpp::as< Rcpp::NumericVector >( s );
+        Rcpp::Vector< RTYPE > new_vector = Rcpp::as< Rcpp::Vector< RTYPE > >( s );
         vector_size = new_vector.length();
 
-        Rcpp::NumericVector current_vector = lst_res[ j + 1 ];
+        Rcpp::Vector< RTYPE > current_vector = lst_res[ j + 1 ];
         lst_res[ j + 1 ] = geometries::utils::fill_vector( current_vector, new_vector, row_counter );;
       }
 
       // id column
       double id = i + 1;
       SEXP s2 = lst_res[ 0 ];
-      Rcpp::NumericVector current_id_vector = Rcpp::as< Rcpp::NumericVector >( s2 );
-      Rcpp::NumericVector new_id_vector = Rcpp::rep( id, vector_size );
+      Rcpp::Vector< RTYPE > current_id_vector = Rcpp::as< Rcpp::Vector< RTYPE > >( s2 );
+      Rcpp::Vector< RTYPE > new_id_vector = Rcpp::rep( id, vector_size );
 
       lst_res[ 0 ] = geometries::utils::fill_vector( current_id_vector, new_id_vector, row_counter );
 
@@ -83,7 +84,12 @@ namespace utils {
   }
 
   // collapse_list - user-supplied 'id', incremented for each list element.
-  inline Rcpp::List collapse_list( Rcpp::List& lst, R_xlen_t& total_rows, double& id ) {
+  template< int RTYPE >
+  inline Rcpp::List collapse_list(
+      Rcpp::List& lst,
+      R_xlen_t& total_rows,
+      double& id
+    ) {
 
     R_xlen_t lst_size = lst.size();
     // each list must have the same number of columns.
@@ -100,7 +106,7 @@ namespace utils {
     Rcpp::List lst_res( n_vectors );
 
     for( i = 0; i < n_vectors; ++i ) {
-      lst_res[ i ] = Rcpp::NumericVector( total_rows, Rcpp::NumericVector::get_na() );
+      lst_res[ i ] = Rcpp::Vector< RTYPE >( total_rows, Rcpp::Vector< RTYPE >::get_na() );
     }
 
     R_xlen_t row_counter = 0;
@@ -117,18 +123,18 @@ namespace utils {
       for( j = 0; j < n_col; ++j ) {
 
         SEXP s = inner_list[ j ];
-        Rcpp::NumericVector new_vector = Rcpp::as< Rcpp::NumericVector >( s );
+        Rcpp::Vector< RTYPE > new_vector = Rcpp::as< Rcpp::Vector< RTYPE > >( s );
         vector_size = new_vector.length();
 
-        Rcpp::NumericVector current_vector = lst_res[ j + 1 ];
+        Rcpp::Vector< RTYPE > current_vector = lst_res[ j + 1 ];
         lst_res[ j + 1 ] = geometries::utils::fill_vector( current_vector, new_vector, row_counter );;
       }
 
       // id column
       //double id = i + 1;
       SEXP s2 = lst_res[ 0 ];
-      Rcpp::NumericVector current_id_vector = Rcpp::as< Rcpp::NumericVector >( s2 );
-      Rcpp::NumericVector new_id_vector = Rcpp::rep( id, vector_size );
+      Rcpp::Vector< RTYPE > current_id_vector = Rcpp::as< Rcpp::Vector< RTYPE > >( s2 );
+      Rcpp::Vector< RTYPE > new_id_vector = Rcpp::rep( id, vector_size );
 
       lst_res[ 0 ] = geometries::utils::fill_vector( current_id_vector, new_id_vector, row_counter );
 

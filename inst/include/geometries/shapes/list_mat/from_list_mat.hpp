@@ -3,6 +3,10 @@
 
 // converts nested list[[ matrix ]] structure into a list
 
+#include <Rcpp.h>
+
+#include "geometries/utils/lists/collapse.hpp"
+
 namespace geometries {
 namespace shapes {
 
@@ -18,8 +22,28 @@ namespace shapes {
     for( i = 0; i < n_col; ++i ) {
       res[ i ] = mat( Rcpp::_, i );
     }
-    geometry_rows = mat.nrow();
+    geometry_rows += mat.nrow();
     return res;
+  }
+
+  inline Rcpp::List matrix_to_list(
+    SEXP& mat,
+    R_xlen_t& geometry_rows
+  ) {
+    switch( TYPEOF( mat ) ) {
+    case INTSXP: {
+      Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( mat );
+      return matrix_to_list( im, geometry_rows );
+    }
+    case REALSXP: {
+      Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( mat );
+      return matrix_to_list( nm, geometry_rows );
+    }
+    default: {
+      Rcpp::stop("geometries - expecting a matrix" );
+    }
+    }
+    return Rcpp::List::create(); // #nocov never reaches
   }
 
   template< int RTYPE >
@@ -30,17 +54,18 @@ namespace shapes {
 
     R_xlen_t n = lst.size();
     R_xlen_t i;
-    R_xlen_t res( n );
-    R_xlen_t total_rows = 0;
+    Rcpp::List res( n );
+    //R_xlen_t total_rows = 0;
     for( i = 0; i < n; ++i ) {
-      Rcpp::Matrix< RTYPE > mat = lst[ i ];
-      total_rows = total_rows + mat.nrow();
-      res[ i ] = matrix_to_list< RTYPE >( mat, geometry_rows );
+      SEXP mat = lst[i];
+      //total_rows = total_rows + mat.nrow();
+      res[ i ] = matrix_to_list( mat, geometry_rows );
     }
-    geometry_rows = total_rows;
-    res = collapse_list< RTYPE >( res, geometry_rows );
+    //geometry_rows = total_rows;
+    res = geometries::utils::collapse_list< RTYPE >( res, geometry_rows );
     return res;
   }
+
 
 
 } // shapes

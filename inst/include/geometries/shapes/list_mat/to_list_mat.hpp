@@ -320,14 +320,6 @@ namespace shapes {
     return Rcpp::List::create(); // never reaches
   }
 
-  // inline SEXP to_listMat(
-  //     SEXP& x,
-  //     SEXP& cols,
-  //     Rcpp::StringVector& id_col
-  // ){
-  //
-  // }
-
   inline SEXP to_listMat(
     SEXP& x,
     SEXP& cols,  // stringvector or integervector

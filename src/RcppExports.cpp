@@ -55,13 +55,24 @@ BEGIN_RCPP
 END_RCPP
 }
 // rcpp_coordinates
-SEXP rcpp_coordinates(Rcpp::List& sfc);
-RcppExport SEXP _geometries_rcpp_coordinates(SEXP sfcSEXP) {
+SEXP rcpp_coordinates(Rcpp::List& geometries);
+RcppExport SEXP _geometries_rcpp_coordinates(SEXP geometriesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List& >::type sfc(sfcSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_coordinates(sfc));
+    Rcpp::traits::input_parameter< Rcpp::List& >::type geometries(geometriesSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_coordinates(geometries));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rcpp_from_listMat
+SEXP rcpp_from_listMat(Rcpp::List lst);
+RcppExport SEXP _geometries_rcpp_from_listMat(SEXP lstSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type lst(lstSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_from_listMat(lst));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -72,6 +83,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_to_mat", (DL_FUNC) &_geometries_rcpp_to_mat, 2},
     {"_geometries_rcpp_get_list_mat", (DL_FUNC) &_geometries_rcpp_get_list_mat, 3},
     {"_geometries_rcpp_coordinates", (DL_FUNC) &_geometries_rcpp_coordinates, 1},
+    {"_geometries_rcpp_from_listMat", (DL_FUNC) &_geometries_rcpp_from_listMat, 1},
     {NULL, NULL, 0}
 };
 

@@ -17,7 +17,10 @@ namespace coordinates {
       SEXP& geom,
       R_xlen_t& geom_count,
       R_xlen_t& geom_dimension,
-      R_xlen_t& nest
+      R_xlen_t& nest,
+      R_xlen_t& max_dimension,
+      R_xlen_t& max_nest,
+      SEXPTYPE& rtype
   ) {
 
     // assuming the nesting level is the same for all matrices in a list,
@@ -28,8 +31,9 @@ namespace coordinates {
     //Rcpp::Rcout << "nest +1 " << nest << std::endl;
 
     switch( TYPEOF( geom ) ) {
-    case INTSXP: {}
+    case INTSXP: { rtype = INTSXP; }
     case REALSXP: {
+      rtype = REALSXP;
       nest -= 1;
       //Rcpp::Rcout << "nest -1 " << nest << std::endl;
       if( !Rf_isMatrix( geom ) ) {
@@ -59,7 +63,7 @@ namespace coordinates {
       for( i = 0; i < n; ++i ) {
       //nest = nest + 1;
         SEXP tmp_geom = lst[i];
-        geometry_dimension( tmp_geom, geom_count, geom_dimension, nest );  // recurse
+        geometry_dimension( tmp_geom, geom_count, geom_dimension, nest, max_dimension, max_nest, rtype );  // recurse
       }
       //nest = nest - 1;
       break;
@@ -69,6 +73,9 @@ namespace coordinates {
     }
     }
 
+    max_dimension = geom_dimension > max_dimension ? geom_dimension : max_dimension;
+    max_nest = nest > max_nest ? nest : max_nest;
+
   }
 
   inline void geometry_dimension(
@@ -77,18 +84,23 @@ namespace coordinates {
   ) {
     R_xlen_t dimension = 0;
     R_xlen_t nest = 1;
-    geometry_dimension( geom, geom_count, dimension, nest );
+    R_xlen_t max_dimension = 0;
+    R_xlen_t max_nest = 0;
+    SEXPTYPE rtype;
+    geometry_dimension( geom, geom_count, dimension, nest, max_dimension, max_nest, rtype );
   }
 
   /*
-   * Returns a matrix giving the start and end indices of each coordinate
+   * Returns a list
+   *
+   * one element is a matrix giving the start and end indices of each coordinate
    * in a geometry.
    *
    * If the geometry is a list of three matrices, it will return 3x2 matrix
    * Where column 0 is the start index, and column 1 is the end index
    *
    */
-  inline Rcpp::IntegerMatrix geometry_dimensions(
+  inline SEXP geometry_dimensions(
       Rcpp::List& geometries
   ) {
 
@@ -98,23 +110,36 @@ namespace coordinates {
 
     R_xlen_t cumulative_coords = 0;
     R_xlen_t n = geometries.size();
-    Rcpp::IntegerMatrix res( n, 4 );
+    Rcpp::IntegerMatrix res( n, 5 );
     R_xlen_t i;
+
+    R_xlen_t max_dimension = 0;
+    R_xlen_t max_nest = 0;
 
     for( i = 0; i < n; ++i ) {
       R_xlen_t geom_counter = 0;
       R_xlen_t geom_dimension = 0;
       R_xlen_t nest = 1;
+      SEXPTYPE rtype;
       SEXP geom = geometries[i];
-      geometries::coordinates::geometry_dimension( geom, geom_counter, geom_dimension, nest );
+      geometries::coordinates::geometry_dimension(
+        geom, geom_counter, geom_dimension, nest, max_dimension, max_nest, rtype
+        );
 
       res( i, 0 ) = cumulative_coords;
       cumulative_coords += geom_counter;
       res( i, 1 ) = cumulative_coords - 1;
       res( i, 2 ) = geom_dimension;
       res( i, 3 ) = nest;
+      res( i, 4 ) = rtype;
     }
-    return res;
+
+    return Rcpp::List::create(
+      Rcpp::_["dimensions"] = res,
+      Rcpp::_["max_dimension"] = max_dimension,
+      Rcpp::_["max_nest"] = max_nest
+    );
+
   }
 
 
@@ -127,24 +152,26 @@ namespace coordinates {
    * the result matrix is 1x2
    *
    */
-  inline Rcpp::IntegerMatrix geometry_dimensions(
+  inline SEXP geometry_dimensions(
     SEXP& geometries
   ) {
 
     if( Rf_isMatrix( geometries ) ) {
-      Rcpp::IntegerMatrix im(1, 4);
+      Rcpp::IntegerMatrix im(1, 5);
       im(0, 1) = geometries::utils::sexp_n_row( geometries ) - 1;
       im(0, 2) = geometries::utils::get_sexp_n_col( geometries );
       im(0, 3) = 0;
+      im(0, 4) = TYPEOF( geometries );
       return im;
     } else if( Rf_isNewList( geometries ) ) {
       Rcpp::List lst = Rcpp::as< Rcpp::List >( geometries );
       return geometry_dimensions( lst );
     } else if ( TYPEOF( geometries ) == INTSXP || TYPEOF( geometries ) == REALSXP ) {
       // vectors - start and end at the same place
-      Rcpp::IntegerMatrix im(1,4); // initialise (0,0) matrix
+      Rcpp::IntegerMatrix im(1,5); // initialise (0,0) matrix
       im(0, 2) = geometries::utils::get_sexp_length( geometries );
       im(0, 3) = 0;
+      im(0, 4) = TYPEOF( geometries );
       return im;
     }
 
