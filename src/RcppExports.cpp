@@ -76,6 +76,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// tests
+SEXP tests();
+RcppExport SEXP _geometries_tests() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(tests());
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_calculate_bbox", (DL_FUNC) &_geometries_rcpp_calculate_bbox, 2},
@@ -84,6 +94,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_get_list_mat", (DL_FUNC) &_geometries_rcpp_get_list_mat, 3},
     {"_geometries_rcpp_coordinates", (DL_FUNC) &_geometries_rcpp_coordinates, 1},
     {"_geometries_rcpp_from_listMat", (DL_FUNC) &_geometries_rcpp_from_listMat, 1},
+    {"_geometries_tests", (DL_FUNC) &_geometries_tests, 0},
     {NULL, NULL, 0}
 };
 

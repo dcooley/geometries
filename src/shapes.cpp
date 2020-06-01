@@ -86,12 +86,12 @@ SEXP rcpp_coordinates(
     // the 'nest' says which of the 'from_listMat()' tyep functions I Need to call.
 
     R_xlen_t nest = dimension[3];
-    SEXPTYPE rtype = dimension[4];
+    int rtype = dimension[4];
 
     Rcpp::List geom;
     if( nest == 1 ) {
-      Rcpp::List l = Rcpp::as< Rcpp::List>( geometry );  // we know, because it's a nested object
-      geom = geometries::shapes::from_listMat< rtype >( l, geometry_rows );
+      Rcpp::List l = Rcpp::as< Rcpp::List >( geometry );  // we know, because it's a nested object
+      geom = geometries::shapes::from_listMat< REALSXP >( l, geometry_rows );
     } else if ( nest == 2 ) {
       // geom = geometries::shapes::from_listListMat() :
     }

@@ -25,3 +25,7 @@ rcpp_from_listMat <- function(lst) {
     .Call(`_geometries_rcpp_from_listMat`, lst)
 }
 
+.tests <- function() {
+    .Call(`_geometries_tests`)
+}
+
