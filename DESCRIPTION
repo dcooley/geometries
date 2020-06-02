@@ -22,5 +22,5 @@ Roxygen: list(markdown = TRUE)
 Suggests: 
     knitr,
     rmarkdown,
-    testthat
+    tinytest
 VignetteBuilder: knitr

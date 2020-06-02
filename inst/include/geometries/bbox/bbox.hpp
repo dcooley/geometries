@@ -26,16 +26,19 @@ namespace bbox {
     }
   }
 
-  // TODO: - template bbox type
+  template< int RTYPE >
   inline void make_bbox(
-      Rcpp::NumericVector& bbox,
-      Rcpp::NumericVector& x,
-      Rcpp::NumericVector& y
+      Rcpp::Vector< RTYPE >& bbox,
+      Rcpp::Vector< RTYPE >& x,
+      Rcpp::Vector< RTYPE >& y
   ) {
-    double xmin = Rcpp::min( x );
-    double ymin = Rcpp::min( y );
-    double xmax = Rcpp::max( x );
-    double ymax = Rcpp::max( y );
+
+    typedef typename Rcpp::traits::storage_type< RTYPE >::type T;
+
+    T xmin = Rcpp::min( x );
+    T ymin = Rcpp::min( y );
+    T xmax = Rcpp::max( x );
+    T ymax = Rcpp::max( y );
 
     bbox[0] = std::min( xmin, bbox[0] );
     bbox[2] = std::max( xmax, bbox[2] );
@@ -44,6 +47,7 @@ namespace bbox {
     bbox[3] = std::max( ymax, bbox[3] );
   }
 
+  // TODO: - template bbox type
   inline void calculate_bbox(
       Rcpp::NumericVector& bbox,
       double& lon,

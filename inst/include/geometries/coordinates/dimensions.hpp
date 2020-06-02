@@ -26,12 +26,11 @@ namespace coordinates {
     // assuming the nesting level is the same for all matrices in a list,
     // we only need the 'last' nesting level,
     // and not the cumulative
-    //R_xlen_t inner_nest = 0;
-    //nest += 1;
-    //Rcpp::Rcout << "nest +1 " << nest << std::endl;
 
     switch( TYPEOF( geom ) ) {
-    case INTSXP: { rtype = INTSXP; }
+    case INTSXP: {
+      //rtype = INTSXP;
+      }
     case REALSXP: {
       rtype = REALSXP;
       nest -= 1;
@@ -122,6 +121,7 @@ namespace coordinates {
       R_xlen_t nest = 1;
       SEXPTYPE rtype;
       SEXP geom = geometries[i];
+
       geometries::coordinates::geometry_dimension(
         geom, geom_counter, geom_dimension, nest, max_dimension, max_nest, rtype
         );
