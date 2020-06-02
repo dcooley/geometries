@@ -93,7 +93,7 @@ cppFunction(
   depends = 'geometries'
   , includes = '#include "geometries/coordinates/dimensions.hpp"'
   , code = '
-    Rcpp::IntegerMatrix geometry_dimensions( SEXP x ) {
+    SEXP geometry_dimensions( SEXP x ) {
       return geometries::coordinates::geometry_dimensions( x );
     }
   '
@@ -110,7 +110,7 @@ geometry_dimensions( m )
 l <- list(
   matrix(1:20, ncol = 2 )
   , matrix(1:6, ncol = 2)
-  , matrix(1:10, ncol = 2)
+  , list( matrix(1:10, ncol = 2) )
 )
 
 geometry_dimensions( l )

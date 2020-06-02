@@ -134,6 +134,7 @@ namespace coordinates {
       res( i, 4 ) = rtype;
     }
 
+    //return res;
     return Rcpp::List::create(
       Rcpp::_["dimensions"] = res,
       Rcpp::_["max_dimension"] = max_dimension,
@@ -156,23 +157,50 @@ namespace coordinates {
     SEXP& geometries
   ) {
 
+    Rcpp::Rcout << "geometry_dimensions" << std::endl;
     if( Rf_isMatrix( geometries ) ) {
-      Rcpp::IntegerMatrix im(1, 5);
+      Rcpp::IntegerMatrix im(1, 5); // initialise a (0,0) matrix
+      // one row, because it's only one geometry
+      // column '0' will start with 0, so no need to fill it
+      R_xlen_t max_nest = 0;
+      R_xlen_t max_dimension = geometries::utils::get_sexp_n_col( geometries );
       im(0, 1) = geometries::utils::sexp_n_row( geometries ) - 1;
-      im(0, 2) = geometries::utils::get_sexp_n_col( geometries );
-      im(0, 3) = 0;
+      im(0, 2) = max_dimension;
+      im(0, 3) = max_nest; // level of nesting (a matrix is not nested in a list)
       im(0, 4) = TYPEOF( geometries );
-      return im;
+
+
+      return Rcpp::List::create(
+        Rcpp::_["dimensions"] = im,
+        Rcpp::_["max_dimension"] = max_dimension,
+        Rcpp::_["max_nest"] = max_nest
+      );
+
+
+      //return im;
     } else if( Rf_isNewList( geometries ) ) {
+
       Rcpp::List lst = Rcpp::as< Rcpp::List >( geometries );
       return geometry_dimensions( lst );
+
     } else if ( TYPEOF( geometries ) == INTSXP || TYPEOF( geometries ) == REALSXP ) {
       // vectors - start and end at the same place
       Rcpp::IntegerMatrix im(1,5); // initialise (0,0) matrix
-      im(0, 2) = geometries::utils::get_sexp_length( geometries );
-      im(0, 3) = 0;
+
+      R_xlen_t max_nest = 0;
+      R_xlen_t max_dimension = geometries::utils::get_sexp_length( geometries );
+
+      im(0, 2) = max_dimension;
+      im(0, 3) = max_nest;
       im(0, 4) = TYPEOF( geometries );
-      return im;
+
+      return Rcpp::List::create(
+        Rcpp::_["dimensions"] = im,
+        Rcpp::_["max_dimension"] = max_dimension,
+        Rcpp::_["max_nest"] = max_nest
+      );
+
+      //return im;
     }
 
     Rcpp::stop("geometries - unsupported type for counting coordinates");

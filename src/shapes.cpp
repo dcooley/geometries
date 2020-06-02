@@ -44,6 +44,7 @@ SEXP rcpp_coordinates(
   ) {
 
   Rcpp::List dimensions = geometries::coordinates::geometry_dimensions( geometries );
+  return dimensions;
 
   // If I know max_nesting
   // and max dimeions
@@ -64,6 +65,8 @@ SEXP rcpp_coordinates(
   R_xlen_t n_cols = max_nest + max_dimension;
   Rcpp::List res( n_cols );
   R_xlen_t i, j;
+
+
   for( i = 0; i < n_cols; ++i ) {
     Rcpp::NumericVector nv( total_coordinates, Rcpp::NumericVector::get_na() );
     res[ i ] = nv;
@@ -82,28 +85,28 @@ SEXP rcpp_coordinates(
     // 2 = dimension
     // 3 = nest
     // 4 = RTYPE
-    //Rcpp::Rcout << dimension[0] << ", " << dimension[1] << ", " << dimension[2] << ", " << dimension[3] << ", " << dimension[4] << std::endl;
+    Rcpp::Rcout << dimension[0] << ", " << dimension[1] << ", " << dimension[2] << ", " << dimension[3] << ", " << dimension[4] << std::endl;
     // the 'nest' says which of the 'from_listMat()' tyep functions I Need to call.
 
     R_xlen_t nest = dimension[3];
     int rtype = dimension[4];
 
     Rcpp::List geom;
-    if( nest == 1 ) {
-      Rcpp::List l = Rcpp::as< Rcpp::List >( geometry );  // we know, because it's a nested object
-      geom = geometries::shapes::from_listMat< REALSXP >( l, geometry_rows );
-    } else if ( nest == 2 ) {
-      // geom = geometries::shapes::from_listListMat() :
-    }
-
-    R_xlen_t n_col = dimension[3];
-    for( j = 0; j < n_col; ++j ) {
-      // res( n_cols ) has already been defined with the right number of columns.
-      // now all I need is to
-      Rcpp::Vector< REALSXP > v = geom[ j ];
-      Rcpp::Rcout << v << std::endl;
-
-    }
+    // if( nest == 1 ) {
+    //   Rcpp::List l = Rcpp::as< Rcpp::List >( geometry );  // we know, because it's a nested object
+    //   geom = geometries::shapes::from_listMat< REALSXP >( l, geometry_rows );
+    // } else if ( nest == 2 ) {
+    //   // geom = geometries::shapes::from_listListMat() :
+    // }
+    //
+    // R_xlen_t n_col = dimension[3];
+    // for( j = 0; j < n_col; ++j ) {
+    //   // res( n_cols ) has already been defined with the right number of columns.
+    //   // now all I need is to
+    //   Rcpp::Vector< REALSXP > v = geom[ j ];
+    //   Rcpp::Rcout << v << std::endl;
+    //
+    // }
 
     total_rows += geometry_rows;
 
