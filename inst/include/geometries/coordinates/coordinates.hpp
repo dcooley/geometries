@@ -64,14 +64,18 @@ namespace coordinates {
   ) {
     R_xlen_t i;
     R_xlen_t n = geometry.length();
-    R_xlen_t total_rows = 0;
     Rcpp::List res( n );
     for(i = 0; i < n; ++i ) {
+      R_xlen_t total_rows = 0;
       SEXP inner_geometry = geometry[ i ];
       res[ i ] = coordinates( inner_geometry, total_rows );
+      //Rcpp::Rcout << "total_rows: " << total_rows << std::endl;
+      geometry_rows += total_rows;
     }
-    geometry_rows += total_rows;
-    Rcpp::Rcout << "geometry_rows: " << geometry_rows << std::endl;
+    //Rcpp::Rcout << "geometry_rows: " << geometry_rows << std::endl;
+
+    // geometry_rows is required because 'collapse_list' needs to know how long
+    // each vector needs to be
     return geometries::utils::collapse_list< REALSXP >( res, geometry_rows );
   }
 
@@ -102,11 +106,13 @@ namespace coordinates {
       if( Rf_isNewList( geometry ) ) {
         Rcpp::List lst = Rcpp::as< Rcpp::List >( geometry );
         return coordinates( lst, geometry_rows );
-      } else {
-        Rcpp::stop("geometries - case not handled");
       }
     }
+    default: {
+      Rcpp::stop("geometries - can't access coordinates for this object");
     }
+    }
+    return Rcpp::List::create(); // #nocov never reaches
   }
 
 

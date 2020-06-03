@@ -7,6 +7,39 @@
 gm_coordinates(x)
 }
 \description{
+gm_coordinates
+}
+\examples{
+
 x <- 1:3
 gm_coordinates( x )
+
+m <- matrix(1:12, ncol = 3)
+gm_coordinates( m )
+
+l <- list(
+  matrix(1:12, ncol = 2 )
+)
+gm_coordinates( l )
+
+l <- list(
+  matrix(1:12, ncol = 4 )
+)
+gm_coordinates( l )
+
+l <- list(
+  list(
+    matrix(1:12, ncol = 2)
+  )
+)
+gm_coordinates( l )
+
+l <- list(
+  list(
+    matrix(1:12, ncol = 2)
+    , matrix(1:4, ncol = 2)
+  )
+)
+gm_coordinates( l )
+
 }
