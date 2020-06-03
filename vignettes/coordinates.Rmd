@@ -88,7 +88,7 @@ geometry_dimension( poly )
 
 ## Coordinate indices
 ##
-## gives the start and end indices of geometries
+## gives the start and end indices of geometries 
 cppFunction(
   depends = 'geometries'
   , includes = '#include "geometries/coordinates/dimensions.hpp"'
@@ -99,6 +99,17 @@ cppFunction(
   '
 )
 
+## i.e., calculates the dimension for each list element.
+## and returns a list with three elements, 
+## $dimensions is a matrix giving the 
+## - start index
+## - end index
+## - dimenson (number of values in a coordinate)
+## - nesting (depth of element, e.g. list[[ mat ]] == depth 1)
+## - RTYPE (13 = int, 14 = numeric)
+
+
+
 x <- 1:2
 
 geometry_dimensions( x )
@@ -107,17 +118,32 @@ m <- matrix(1:6, ncol = 2)
 
 geometry_dimensions( m )
 
+## list represing single geometry of polygon
+l <- list(
+  matrix(1:20, ncol = 2 )
+  , matrix(1:6, ncol = 2)
+  , matrix(1:10, ncol = 2)
+)
+
+## 3 list elements, rows of the matrix
+geometry_dimensions( l )
+
+## list representing three geometries of line, line, polygon
 l <- list(
   matrix(1:20, ncol = 2 )
   , matrix(1:6, ncol = 2)
   , list( matrix(1:10, ncol = 2) )
 )
-
+## 3 list elements, one is nested deeper
 geometry_dimensions( l )
 
+## one list element
 l <- list( l )
 geometry_dimensions( l )
 
+## still one list element, but nested a bit deeper
+l <- list( l )
+geometry_dimensions( l )
 
 ```
 

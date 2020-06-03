@@ -30,6 +30,7 @@ Including this header will give you all the functions for creating 'shapes' from
 - `geometries::shapes::to_vec()` - creates a vector
 - `geometries::shapes::to_mat()` - creates a matrix
 - `geometries::shapes::to_listMat()` - creates lists of matrices
+- `geometries::shapes::from_listMat()` - 
 - `geometries::shapes::to_listListMat()` - creates lists of lists of matrices
 
 All these examples show you how to include the header and call the functions using Rcpp code. The same principles apply in a .cpp file in a package.

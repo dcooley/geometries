@@ -1,0 +1,54 @@
+#' gm_dimensions
+#'
+#' Calculates the dimensions of geometries.
+#'
+#' @return
+#' A list containing
+#' \itemize{
+#'   \item{dimensions - a 5-column matrix where \itemize{
+#'     \item{column 1 - the start-index of the geometry}
+#'     \item{column 2 - the end-index of the geometry}
+#'     \item{column 3 - the dimension of the geometry}
+#'     \item{column 4 - the nesting level of the geometry}
+#'     \item{column 5 - the SEXP type of the geometry}
+#'     }
+#'   }
+#'   \item{max_dimension - the maximum dimension in all the geometries}
+#'   \item{max_nest - the maximum nesting level in all the geometries}
+#' }
+#'
+#' @examples
+#'
+#' ## A vector (representing an POINT)
+#' x <- 1:2
+#' gm_dimensions( x )
+#'
+#' ## A matrix (representing a LINE)
+#' m <- matrix(1:6, ncol = 2 )
+#' gm_dimensions( m )
+#'
+#' ## A list (representing a POLYGON)
+#' l <- list( m )
+#' gm_dimensions( l )
+#'
+#' ## A list of lists (representing a MULTIPOLYGON)
+#' l <- list( l )
+#' gm_dimensions( l )
+#'
+#' ## A list of matrices, points and lists (representing multiple, mixed geometries)
+#' l <- list( x, m, list( m ) )
+#' gm_dimensions( l )
+#'
+#' @export
+gm_dimensions <- function( x ) rcpp_geometry_dimensions( x )
+
+
+#' gm_coordinates
+#'
+#' x <- 1:3
+#' gm_coordinates( x )
+#'
+#' @export
+gm_coordinates <- function( x ) rcpp_coordinates( x )
+
+

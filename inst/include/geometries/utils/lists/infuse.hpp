@@ -21,8 +21,7 @@ namespace utils {
       return lst; // #nocov
     }
 
-    R_xlen_t i;
-    R_xlen_t j;
+    R_xlen_t i, j;
 
     Rcpp::List first_list = lst[ 0 ];
     R_xlen_t n_vectors = first_list.length() + 1; // vector for each matrix column, and an id column

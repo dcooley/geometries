@@ -33,7 +33,7 @@ namespace coordinates {
       }
     case REALSXP: {
       rtype = REALSXP;
-      nest -= 1;
+      //nest -= 1;
       //Rcpp::Rcout << "nest -1 " << nest << std::endl;
       if( !Rf_isMatrix( geom ) ) {
       // it's a vector, right?
@@ -157,7 +157,7 @@ namespace coordinates {
     SEXP& geometries
   ) {
 
-    Rcpp::Rcout << "geometry_dimensions" << std::endl;
+    // Rcpp::Rcout << "geometry_dimensions" << std::endl;
     if( Rf_isMatrix( geometries ) ) {
       Rcpp::IntegerMatrix im(1, 5); // initialise a (0,0) matrix
       // one row, because it's only one geometry

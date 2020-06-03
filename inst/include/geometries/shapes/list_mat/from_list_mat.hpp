@@ -46,6 +46,10 @@ namespace shapes {
   //   return Rcpp::List::create(); // #nocov never reaches
   // }
 
+
+  /*
+   * Takes a list of matrices and converts to a single list object
+   */
   template< int RTYPE >
   inline Rcpp::List from_listMat(
       Rcpp::List& lst,
@@ -57,7 +61,7 @@ namespace shapes {
     Rcpp::List res( n );
     //R_xlen_t total_rows = 0;
     for( i = 0; i < n; ++i ) {
-      Rcpp::Matrix< RTYPE > mat = Rcpp::as< Rcpp::Matrix< RTYPE > >( lst[i] );
+      Rcpp::Matrix< RTYPE > mat = Rcpp::as< Rcpp::Matrix< RTYPE > >( lst[ i ] );
       //total_rows = total_rows + mat.nrow();
       res[ i ] = matrix_to_list< RTYPE >( mat, geometry_rows );
     }
