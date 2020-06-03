@@ -65,6 +65,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rcpp_geometry_coordinates
+Rcpp::List rcpp_geometry_coordinates(SEXP& geometry);
+RcppExport SEXP _geometries_rcpp_geometry_coordinates(SEXP geometrySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP& >::type geometry(geometrySEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_geometry_coordinates(geometry));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rcpp_coordinates
 SEXP rcpp_coordinates(Rcpp::List& geometries);
 RcppExport SEXP _geometries_rcpp_coordinates(SEXP geometriesSEXP) {
@@ -104,6 +115,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_get_vec", (DL_FUNC) &_geometries_rcpp_get_vec, 2},
     {"_geometries_rcpp_to_mat", (DL_FUNC) &_geometries_rcpp_to_mat, 2},
     {"_geometries_rcpp_get_list_mat", (DL_FUNC) &_geometries_rcpp_get_list_mat, 3},
+    {"_geometries_rcpp_geometry_coordinates", (DL_FUNC) &_geometries_rcpp_geometry_coordinates, 1},
     {"_geometries_rcpp_coordinates", (DL_FUNC) &_geometries_rcpp_coordinates, 1},
     {"_geometries_rcpp_from_listMat", (DL_FUNC) &_geometries_rcpp_from_listMat, 1},
     {"_geometries_tests", (DL_FUNC) &_geometries_tests, 0},

@@ -2,7 +2,9 @@
 
 #include "geometries/shapes/shapes.hpp"
 
+
 #include "geometries/coordinates/dimensions.hpp"
+#include "geometries/coordinates/coordinates.hpp"
 
 
 // POINTS -----------
@@ -38,10 +40,35 @@ SEXP rcpp_get_list_mat(
 // iterate and get all dimensions.
 //
 
+// TODO:
+// a 'coordinates()' function for lists, vectors, matrices etc.
+
+/*
+ * Returns the coordinates of a single geometry
+ */
+// [[Rcpp::export]]
+Rcpp::List rcpp_geometry_coordinates(
+  SEXP& geometry
+) {
+  R_xlen_t geometry_rows = 0;
+  return geometries::coordinates::coordinates( geometry, geometry_rows );
+}
+
+
 // [[Rcpp::export]]
 SEXP rcpp_coordinates(
     Rcpp::List& geometries
   ) {
+
+  // switch( TYPEOF( geometries ) ) {
+  // case VECSXP: {
+  //   if( Rf_isNewList( geometries ) ) {
+  //     Rcpp::List g = Rcpp::as< Rcpp::List >( geometries );
+  //     // TODO
+  //     // return ///
+  //   }
+  // }
+  // }
 
   Rcpp::List dimensions = geometries::coordinates::geometry_dimensions( geometries );
   //return dimensions;
@@ -106,9 +133,14 @@ SEXP rcpp_coordinates(
 
     Rcpp::List geom;
 
+    // TODO:
+    // handle nest == 0 (i.e., it's not a list)
+
     if( nest == 1 ) {
 
+      Rcpp::Rcout << "nest == 1 " << std::endl;
       // no nesting - it is already a matrix
+      // TODO: handle vector
       Rcpp::Matrix< REALSXP > mat = Rcpp::as< Rcpp::Matrix< REALSXP > >( geometry );
       // so need to make each column into a vector and fill 'geom' list
       Rcpp::List l( mat.ncol() );

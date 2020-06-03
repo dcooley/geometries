@@ -40,15 +40,50 @@
 #' gm_dimensions( l )
 #'
 #' @export
-gm_dimensions <- function( x ) rcpp_geometry_dimensions( x )
-
+gm_dimensions <- function( x ) {
+  rcpp_geometry_dimensions( x )
+}
 
 #' gm_coordinates
+#'
+#' @examples
 #'
 #' x <- 1:3
 #' gm_coordinates( x )
 #'
+#' m <- matrix(1:12, ncol = 3)
+#' gm_coordinates( m )
+#'
+#' l <- list(
+#'   matrix(1:12, ncol = 2 )
+#' )
+#' gm_coordinates( l )
+#'
+#' l <- list(
+#'   matrix(1:12, ncol = 4 )
+#' )
+#' gm_coordinates( l )
+#'
+#' l <- list(
+#'   list(
+#'     matrix(1:12, ncol = 2)
+#'   )
+#' )
+#' gm_coordinates( l )
+#'
+#' l <- list(
+#'   list(
+#'     matrix(1:12, ncol = 2)
+#'     , matrix(1:4, ncol = 2)
+#'   )
+#' )
+#' gm_coordinates( l )
+#'
 #' @export
-gm_coordinates <- function( x ) rcpp_coordinates( x )
+gm_coordinates <- function( x ) {
+  rcpp_geometry_coordinates( x )
+}
+
+
 
 
