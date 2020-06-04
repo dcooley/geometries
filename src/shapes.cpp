@@ -118,81 +118,90 @@ SEXP rcpp_coordinates(
     // 2 = dimension
     // 3 = nest
     // 4 = RTYPE
-    //Rcpp::Rcout << dimension[0] << ", " << dimension[1] << ", " << dimension[2] << ", " << dimension[3] << ", " << dimension[4] << std::endl;
+    Rcpp::Rcout << dimension[0] << ", " << dimension[1] << ", " << dimension[2] << ", " << dimension[3] << ", " << dimension[4] << std::endl;
     // the 'nest' says which of the 'from_listMat()' tyep functions I Need to call.
 
-    R_xlen_t start_index = dimension[0];
-    R_xlen_t end_index = dimension[1];
+    R_xlen_t start_row_idx = dimension[0];
+    R_xlen_t end_row_idx = dimension[1];
     R_xlen_t dim = dimension[2];
     R_xlen_t nest = dimension[3];
     int rtype = dimension[4];
+    R_xlen_t start_col_idx = max_nest - nest + 1;
 
-    Rcpp::List geom = geometries::coordinates::coordinates( geometry, geometry_rows );
-    total_rows += geometry_rows;
+    Rcpp::Rcout << "start_col_idx: " << start_col_idx << std::endl;
+    Rcpp::Rcout << "max_nest: " << max_nest << std::endl;
+    Rcpp::Rcout << "res_length: " << res.length() << std::endl;
+    Rcpp::Rcout << "dim: " << dim << std::endl;
+
+    // TODO
+    // - can I put the coordinates directly into 'res',
+    // - inside the 'coordinates()' routines?
+    // - which means leave coordinates() as they are, as stand-alone modules
+    // - but have a different set of void coodinates() functions, which take as input
+    // - the output list, column idx, and they fill there and then.
+
+    //Rcpp::List geom = geometries::coordinates::coordinates( geometry, geometry_rows );
+    double id = 1;
+    geometries::coordinates::coordinates(geometry, res, start_row_idx, start_col_idx, id );
+    //total_rows += geometry_rows;
     //return geom;
     // Rcpp::Rcout << "total_rows: " << total_rows << std::endl;
 
 
-    R_xlen_t n_col = geom.length(); //dimension[2] + dimension[3];
-    R_xlen_t geometry_columns = dim + nest;
-    R_xlen_t vector_size = end_index - start_index + 1;
-
-    // the nesting & dimension will tell us which column of 'res' this vector needs to go in
-    // col 0 == id
-    // col 1:(nest+1) = geometry ids
-    // col (nest+1+1) = coordinates
-    //R_xlen_t max_nest;  // start from the middle and fill-towards-left
-    R_xlen_t coord_start_index = max_nest + 1; // start from the middle and fill-towards-left
+    // R_xlen_t n_col = geom.length(); //dimension[2] + dimension[3];
+    // R_xlen_t geometry_columns = dim + nest;
+    // R_xlen_t vector_size = end_index - start_index + 1;
+    //
+    // // the nesting & dimension will tell us which column of 'res' this vector needs to go in
+    // // col 0 == id
+    // // col 1:(nest+1) = geometry ids
+    // // col (nest+1+1) = coordinates
+    // //R_xlen_t max_nest;  // start from the middle and fill-towards-left
+    // R_xlen_t coord_start_index = max_nest + 1; // start from the middle and fill-towards-left
 
     // nest ids
     // only lists have nest values
     // Rcpp::Rcout << "nest columns " << std::endl;
-    for( j = 0; j < nest; ++j ) {
-      // Rcpp::Rcout << "j: " << j << std::endl;
-      // j is the 'nest col'
-      Rcpp::Vector< REALSXP > new_vector = geom[ j ];
-      R_xlen_t res_col = max_nest - ( max_nest - j ) + 1 ;
-      //R_xlen_t res_col = 0;
-      //R_xlen_t res_col = j;
-
-      // Rcpp::Rcout << "res_col: " << res_col << std::endl;
-      // Rcpp::Rcout << "new_vector : " << new_vector << std::endl;
-
-      Rcpp::Vector< REALSXP > current_vector = res[ res_col ];
-      // Rcpp::Rcout << "current_vector: " << current_vector << std::endl;
-
-      res[ res_col ] = geometries::utils::fill_vector( current_vector, new_vector, start_index );
-    }
+    // for( j = 0; j < nest; ++j ) {
+    //   // Rcpp::Rcout << "j: " << j << std::endl;
+    //   // j is the 'nest col'
+    //   Rcpp::Vector< REALSXP > new_vector = geom[ j ];
+    //   R_xlen_t res_col = max_nest - ( max_nest - j ) + 1 ;
+    //   //R_xlen_t res_col = 0;
+    //   //R_xlen_t res_col = j;
+    //
+    //   // Rcpp::Rcout << "res_col: " << res_col << std::endl;
+    //   // Rcpp::Rcout << "new_vector : " << new_vector << std::endl;
+    //
+    //   Rcpp::Vector< REALSXP > current_vector = res[ res_col ];
+    //   // Rcpp::Rcout << "current_vector: " << current_vector << std::endl;
+    //
+    //   res[ res_col ] = geometries::utils::fill_vector( current_vector, new_vector, start_index );
+    // }
 
     //coordinates
-    // Rcpp::Rcout << "coordinate columns " << std::endl;
-    // Rcpp::Rcout << "max_nest: " << max_nest << std::endl;
-    // Rcpp::Rcout << "res_length: " << res.length() << std::endl;
-    // Rcpp::Rcout << "dim: " << dim << std::endl;
-    // Rcpp::Rcout << "start_index: " << start_index << std::endl;
-    // Rcpp::Rcout << "geom_length: " << geom.length() << std::endl;
     // from 1 to <= dim, because inside ::coordinates(), I've shifted the coodinates one-column
     // to the right, to add on an extra id column
-    Rcpp::Vector< REALSXP > new_vector;
-    for( j = 0; j < dim; ++j ) {
-
-      // res( n_cols ) has already been defined with the right number of columns.
-      // now all I need is to fill the vectors
-      new_vector = geom[ j + nest ];
-      // Rcpp::Rcout << "new_vector: " << new_vector << std::endl;
-      R_xlen_t res_col = j + max_nest + 1;
-      // Rcpp::Rcout << "res_col: " << res_col << std::endl;
-      Rcpp::NumericVector current_vector = res[ res_col ];
-      // Rcpp::Rcout << "current_vector: " << current_vector << std::endl;
-      res[ res_col ] = geometries::utils::fill_vector( current_vector, new_vector, start_index );
-    }
+    // Rcpp::Vector< REALSXP > new_vector;
+    // for( j = 0; j < dim; ++j ) {
+    //
+    //   // res( n_cols ) has already been defined with the right number of columns.
+    //   // now all I need is to fill the vectors
+    //   new_vector = geom[ j + nest ];
+    //   // Rcpp::Rcout << "new_vector: " << new_vector << std::endl;
+    //   R_xlen_t res_col = j + max_nest + 1;
+    //   // Rcpp::Rcout << "res_col: " << res_col << std::endl;
+    //   Rcpp::NumericVector current_vector = res[ res_col ];
+    //   // Rcpp::Rcout << "current_vector: " << current_vector << std::endl;
+    //   res[ res_col ] = geometries::utils::fill_vector( current_vector, new_vector, start_index );
+    // }
 
     // shape id
-    double id = i;
-    Rcpp::Vector< REALSXP > current_id_vector = res[ 0 ];
-    Rcpp::NumericVector new_id_vector = Rcpp::rep( id, vector_size );
-
-    res[ 0 ] = geometries::utils::fill_vector( current_id_vector, new_id_vector, start_index );
+    // double id = i;
+    // Rcpp::Vector< REALSXP > current_id_vector = res[ 0 ];
+    // Rcpp::NumericVector new_id_vector = Rcpp::rep( id, vector_size );
+    //
+    // res[ 0 ] = geometries::utils::fill_vector( current_id_vector, new_id_vector, start_index );
   } // ++i
 
   return res;
