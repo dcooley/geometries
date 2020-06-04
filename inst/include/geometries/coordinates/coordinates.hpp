@@ -20,23 +20,54 @@ namespace coordinates {
    */
 
   // each of these functions turn the geometries into a list
-  //
+  // of coordinates and ids
 
   inline Rcpp::List coordinates( SEXP& geometry, R_xlen_t& geometry_rows );  // forward declaration
 
   // vectors - no need for an id column
+  template< int RTYPE, typename T >
+  inline Rcpp::List coordinates(
+    Rcpp::Vector< RTYPE >& geometry,
+    R_xlen_t& geometry_rows,
+    T& id
+  ) {
+    R_xlen_t n = geometry.length();
+    R_xlen_t i;
+    Rcpp::List res( n + 1 );
+    Rcpp::Vector< RTYPE > idv = Rcpp::rep( id, n );
+    res[0] = idv;
+    for( i = 0; i < n; ++i ) {
+      res[i + 1] = geometry[i];
+    }
+    geometry_rows = 1;
+    return res;
+  }
+
   template< int RTYPE >
   inline Rcpp::List coordinates(
     Rcpp::Vector< RTYPE >& geometry,
     R_xlen_t& geometry_rows
   ) {
-    R_xlen_t n = geometry.length();
+    typedef typename Rcpp::traits::storage_type< RTYPE >::type T;
+    T id = 1;
+    return coordinates( geometry, geometry_rows, id );
+  }
+
+  template< int RTYPE, typename T >
+  inline Rcpp::List coordinates(
+    Rcpp::Matrix< RTYPE >& geometry,
+    R_xlen_t& geometry_rows,
+    T& id
+  ) {
+    R_xlen_t n = geometry.ncol();
     R_xlen_t i;
-    Rcpp::List res( n );
+    Rcpp::List res( n + 1 );
+    Rcpp::Vector< RTYPE > idv = Rcpp::rep( id, n );
+    res[0] = idv;
     for( i = 0; i < n; ++i ) {
-      res[i] = geometry[i];
+      res[ i + 1 ] = geometry( Rcpp::_, i );
     }
-    geometry_rows = 1;
+    geometry_rows = geometry.nrow();
     return res;
   }
 
@@ -45,14 +76,9 @@ namespace coordinates {
     Rcpp::Matrix< RTYPE >& geometry,
     R_xlen_t& geometry_rows
   ) {
-    R_xlen_t n = geometry.ncol();
-    R_xlen_t i;
-    Rcpp::List res( n );
-    for( i = 0; i < n; ++i ) {
-      res[ i ] = geometry( Rcpp::_, i );
-    }
-    geometry_rows = geometry.nrow();
-    return res;
+    typedef typename Rcpp::traits::storage_type< RTYPE >::type T;
+    T id = 1;
+    return coordinates( geometry, geometry_rows, id );
   }
 
   // a single geometry which is in a list should
@@ -69,11 +95,8 @@ namespace coordinates {
       R_xlen_t total_rows = 0;
       SEXP inner_geometry = geometry[ i ];
       res[ i ] = coordinates( inner_geometry, total_rows );
-      //Rcpp::Rcout << "total_rows: " << total_rows << std::endl;
       geometry_rows += total_rows;
     }
-    //Rcpp::Rcout << "geometry_rows: " << geometry_rows << std::endl;
-
     // geometry_rows is required because 'collapse_list' needs to know how long
     // each vector needs to be
     return geometries::utils::collapse_list< REALSXP >( res, geometry_rows );

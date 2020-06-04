@@ -46,6 +46,7 @@ gm_dimensions <- function( x ) {
 
 #' gm_coordinates
 #'
+#'
 #' @examples
 #'
 #' x <- 1:3
@@ -79,9 +80,17 @@ gm_dimensions <- function( x ) {
 #' )
 #' gm_coordinates( l )
 #'
+#' l <- list(
+#'   matrix(1:4, ncol = 2)
+#'   , list(
+#'     matrix(1:9, ncol = 3)
+#'   )
+#' )
+#' gm_coordinates( l )
+#'
 #' @export
 gm_coordinates <- function( x ) {
-  rcpp_geometry_coordinates( x )
+  rcpp_coordinates( x )
 }
 
 

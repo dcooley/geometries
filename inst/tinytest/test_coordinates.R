@@ -50,5 +50,71 @@ expect_true( all(dims[, 3] == c(3,2,3,4)))
 expect_true( all(dims[, 4] == c(1,1,2,1)))
 
 
-# res <- geometries::gm_dimensions( mapdeck::roads$geometry )
+x <- 1:3
+res <- gm_coordinates( x )
+expect_true( length(res) == 3 )
+
+m <- matrix(1:12, ncol = 3)
+res <- gm_coordinates( m )
+expect_true( length(res) == 3 )
+
+l <- list(
+  matrix(1:12, ncol = 2 )
+)
+res <- gm_coordinates( l )
+expect_true( length( res ) == 3 )  ## nested in a list gets an id?
+
+l <- list(
+  matrix(1:12, ncol = 4 )
+)
+res <- gm_coordinates( l )
+expect_true( length( res ) == 5 )
+
+l <- list(
+  list(
+    matrix(1:12, ncol = 2)
+  )
+)
+res <- gm_coordinates( l )
+expect_true( length( res ) == 4 )
+
+l <- list(
+  list(
+    matrix(1:12, ncol = 2)
+    , matrix(1:4, ncol = 2)
+  )
+)
+res <- gm_coordinates( l )
+expect_true( length( res ) == 4 )
+expect_true( unique( res[[1]] ) == 1 )  ## first vector is id of the geometry
+expect_equal( unique( res[[2]] ), c(1,2) )  ## second vector is id of shape within the geometry
+
+## nesting depth
+l <- list(
+  list(
+    list(
+      list(
+        list(
+          matrix(1:9, ncol = 2)
+        )
+      )
+    )
+  )
+)
+res <- gm_coordinates( l )
+expect_equal( length( res ), 7 )
+
+## and nesting works on dimenions
+res <- gm_dimensions( l )
+expect_equal( res$dimensions[, 3], 2 )
+expect_equal( res$dimensions[, 4], 5 )
+
+## TODO: collections
+# l <- list(
+#   matrix(1:4, ncol = 2)
+#   , list(
+#     matrix(1:9, ncol = 3)
+#   )
+# )
+# gm_coordinates( l )
 

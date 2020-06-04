@@ -60,20 +60,10 @@ SEXP rcpp_coordinates(
     Rcpp::List& geometries
   ) {
 
-  // switch( TYPEOF( geometries ) ) {
-  // case VECSXP: {
-  //   if( Rf_isNewList( geometries ) ) {
-  //     Rcpp::List g = Rcpp::as< Rcpp::List >( geometries );
-  //     // TODO
-  //     // return ///
-  //   }
-  // }
-  // }
-
   Rcpp::List dimensions = geometries::coordinates::geometry_dimensions( geometries );
   //return dimensions;
 
-  Rcpp::Rcout << "coordinates " << std::endl;
+  // Rcpp::Rcout << "coordinates " << std::endl;
 
   // If I know max_nesting
   // and max dimeions
@@ -100,21 +90,27 @@ SEXP rcpp_coordinates(
     res[ i ] = nv;
   }
 
-  Rcpp::Rcout << "i loop " << std::endl;
+  // Rcpp::Rcout << "i loop " << std::endl;
   // Rcpp::NumericMatrix res( total_coordinates, max_nest + max_dimension );
 
   // iterate through each geometry
   // and fill the elements of the list
+  R_xlen_t total_rows = 0;
+
   for( i = 0; i < n_geometries; ++i ) {
-    Rcpp::Rcout << "i: " << i << std::endl;
+    // Rcpp::Rcout << "i: " << i << std::endl;
 
     R_xlen_t geometry_rows = 0; // reset for each geometry
     // based on the nes of the row, it will call one of the 'from_listMat()', 'from_listListMat()', etc?
     // or can I make this even more generic?
+    //Rcpp::List geometry(1);
     SEXP geometry = geometries[ i ];
+    // putting it into a list because...
+    // it keeps / adds required nesting?
+    //geometry[0] = geometries[i];
     Rcpp::IntegerVector dimension = dim( i, Rcpp::_ );
 
-    Rcpp::Rcout << "dimension: " << dimension << std::endl;
+    // Rcpp::Rcout << "dimension: " << dimension << std::endl;
 
 
     // 0 = start index
@@ -131,45 +127,10 @@ SEXP rcpp_coordinates(
     R_xlen_t nest = dimension[3];
     int rtype = dimension[4];
 
-    Rcpp::List geom;
 
-    // TODO:
-    // handle nest == 0 (i.e., it's not a list)
-
-    if( nest == 1 ) {
-
-      Rcpp::Rcout << "nest == 1 " << std::endl;
-      // no nesting - it is already a matrix
-      // TODO: handle vector
-      Rcpp::Matrix< REALSXP > mat = Rcpp::as< Rcpp::Matrix< REALSXP > >( geometry );
-      // so need to make each column into a vector and fill 'geom' list
-      Rcpp::List l( mat.ncol() );
-      for(j = 0; j < mat.ncol(); ++j ) {
-        Rcpp::Vector< REALSXP > v = mat( Rcpp::_, j );
-        l[ j ] = v;
-      }
-
-      geom = l;
-
-    } else if( nest == 2 ) {
-
-      Rcpp::Rcout << "nest: 2 " << std::endl;
-
-      Rcpp::List l = Rcpp::as< Rcpp::List >( geometry );  // we know, because it's a nested object
-      Rcpp::Rcout << "from_listMat() " << std::endl;
-      geom = geometries::shapes::from_listMat< REALSXP >( l, geometry_rows );
-      //return geom;
-    } else if ( nest == 3 ) {
-      Rcpp::Rcout << "nest 3 : " << std::endl;
-
-      // Rcpp::List l = Rcpp::as< Rcpp::List >( geometry );
-      // geom = geometries::shapes::from_listListMat( l, geometry_rows );
-
-
-    } else {
-        // currently not handling more than 2 nests
-        Rcpp::stop("geometries - geometry objecct is nested too deep");
-    }
+    Rcpp::List geom = geometries::coordinates::coordinates( geometry, total_rows );
+    //return geom;
+    // Rcpp::Rcout << "total_rows: " << total_rows << std::endl;
 
 
     R_xlen_t n_col = geom.length(); //dimension[2] + dimension[3];
@@ -184,32 +145,42 @@ SEXP rcpp_coordinates(
     R_xlen_t coord_start_index = max_nest + 1; // start from the middle and fill-towards-left
 
     // nest ids
-    Rcpp::Rcout << "nest columns " << std::endl;
+    // only lists have nest values
+    // Rcpp::Rcout << "nest columns " << std::endl;
     for( j = 0; j < nest; ++j ) {
-      Rcpp::Rcout << "j: " << j << std::endl;
+      // Rcpp::Rcout << "j: " << j << std::endl;
       // j is the 'nest col'
       Rcpp::Vector< REALSXP > new_vector = geom[ j ];
       R_xlen_t res_col = max_nest - j;
 
-      Rcpp::Rcout << "res_col: " << res_col << std::endl;
-
-      Rcpp::Rcout << "new_vector : " << new_vector << std::endl;
+      // Rcpp::Rcout << "res_col: " << res_col << std::endl;
+      // Rcpp::Rcout << "new_vector : " << new_vector << std::endl;
 
       Rcpp::Vector< REALSXP > current_vector = res[ res_col ];
-      Rcpp::Rcout << "current_vector: " << current_vector << std::endl;
+      // Rcpp::Rcout << "current_vector: " << current_vector << std::endl;
 
       res[ res_col ] = geometries::utils::fill_vector( current_vector, new_vector, start_index );
     }
 
-    // coordinates
-    Rcpp::Rcout << "coordinate columns " << std::endl;
+    //coordinates
+    // Rcpp::Rcout << "coordinate columns " << std::endl;
+    // Rcpp::Rcout << "max_nest: " << max_nest << std::endl;
+    // Rcpp::Rcout << "res_length: " << res.length() << std::endl;
+    // Rcpp::Rcout << "dim: " << dim << std::endl;
+    // Rcpp::Rcout << "start_index: " << start_index << std::endl;
+    // Rcpp::Rcout << "geom_length: " << geom.length() << std::endl;
+    // from 1 to <= dim, because inside ::coordinates(), I've shifted the coodinates one-column
+    // to the right, to add on an extra id column
     for( j = 0; j < dim; ++j ) {
 
       // res( n_cols ) has already been defined with the right number of columns.
       // now all I need is to fill the vectors
-      Rcpp::Vector< REALSXP > new_vector = geom[ j ];
+      Rcpp::Vector< REALSXP > new_vector = geom[ j + nest ];
+      // Rcpp::Rcout << "new_vector: " << new_vector << std::endl;
       R_xlen_t res_col = j + max_nest + 1;
+      // Rcpp::Rcout << "res_col: " << res_col << std::endl;
       Rcpp::NumericVector current_vector = res[ res_col ];
+      // Rcpp::Rcout << "current_vector: " << current_vector << std::endl;
       res[ res_col ] = geometries::utils::fill_vector( current_vector, new_vector, start_index );
     }
 
@@ -219,8 +190,6 @@ SEXP rcpp_coordinates(
     Rcpp::NumericVector new_id_vector = Rcpp::rep( id, vector_size );
 
     res[ 0 ] = geometries::utils::fill_vector( current_id_vector, new_id_vector, start_index );
-
-
   } // ++i
 
   return res;

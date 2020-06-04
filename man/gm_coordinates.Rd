@@ -42,4 +42,12 @@ l <- list(
 )
 gm_coordinates( l )
 
+l <- list(
+  matrix(1:4, ncol = 2)
+  , list(
+    matrix(1:9, ncol = 3)
+  )
+)
+gm_coordinates( l )
+
 }
