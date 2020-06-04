@@ -31,12 +31,13 @@ namespace coordinates {
     R_xlen_t& geometry_rows,
     T& id
   ) {
-    R_xlen_t n = geometry.length();
+    R_xlen_t n_col = geometry.length();
+    R_xlen_t n_row = 1;
     R_xlen_t i;
-    Rcpp::List res( n + 1 );
-    Rcpp::Vector< RTYPE > idv = Rcpp::rep( id, n );
+    Rcpp::List res( n_col + 1 );
+    Rcpp::Vector< RTYPE > idv = Rcpp::rep( id, n_row );
     res[0] = idv;
-    for( i = 0; i < n; ++i ) {
+    for( i = 0; i < n_col; ++i ) {
       res[i + 1] = geometry[i];
     }
     geometry_rows = 1;
@@ -59,12 +60,13 @@ namespace coordinates {
     R_xlen_t& geometry_rows,
     T& id
   ) {
-    R_xlen_t n = geometry.ncol();
+    R_xlen_t n_col = geometry.ncol();
+    R_xlen_t n_row = geometry.nrow();
     R_xlen_t i;
-    Rcpp::List res( n + 1 );
-    Rcpp::Vector< RTYPE > idv = Rcpp::rep( id, n );
+    Rcpp::List res( n_col + 1 );
+    Rcpp::Vector< RTYPE > idv = Rcpp::rep( id, n_row );
     res[0] = idv;
-    for( i = 0; i < n; ++i ) {
+    for( i = 0; i < n_col; ++i ) {
       res[ i + 1 ] = geometry( Rcpp::_, i );
     }
     geometry_rows = geometry.nrow();

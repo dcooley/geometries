@@ -127,8 +127,8 @@ SEXP rcpp_coordinates(
     R_xlen_t nest = dimension[3];
     int rtype = dimension[4];
 
-
-    Rcpp::List geom = geometries::coordinates::coordinates( geometry, total_rows );
+    Rcpp::List geom = geometries::coordinates::coordinates( geometry, geometry_rows );
+    total_rows += geometry_rows;
     //return geom;
     // Rcpp::Rcout << "total_rows: " << total_rows << std::endl;
 
@@ -151,7 +151,9 @@ SEXP rcpp_coordinates(
       // Rcpp::Rcout << "j: " << j << std::endl;
       // j is the 'nest col'
       Rcpp::Vector< REALSXP > new_vector = geom[ j ];
-      R_xlen_t res_col = max_nest - j;
+      R_xlen_t res_col = max_nest - ( max_nest - j ) + 1 ;
+      //R_xlen_t res_col = 0;
+      //R_xlen_t res_col = j;
 
       // Rcpp::Rcout << "res_col: " << res_col << std::endl;
       // Rcpp::Rcout << "new_vector : " << new_vector << std::endl;
@@ -171,11 +173,12 @@ SEXP rcpp_coordinates(
     // Rcpp::Rcout << "geom_length: " << geom.length() << std::endl;
     // from 1 to <= dim, because inside ::coordinates(), I've shifted the coodinates one-column
     // to the right, to add on an extra id column
+    Rcpp::Vector< REALSXP > new_vector;
     for( j = 0; j < dim; ++j ) {
 
       // res( n_cols ) has already been defined with the right number of columns.
       // now all I need is to fill the vectors
-      Rcpp::Vector< REALSXP > new_vector = geom[ j + nest ];
+      new_vector = geom[ j + nest ];
       // Rcpp::Rcout << "new_vector: " << new_vector << std::endl;
       R_xlen_t res_col = j + max_nest + 1;
       // Rcpp::Rcout << "res_col: " << res_col << std::endl;
