@@ -77,10 +77,15 @@ SEXP rcpp_coordinates(
   R_xlen_t total_coordinates = dim( n_geometries - 1, 1 );
   total_coordinates = total_coordinates + 1;
 
+  // the coordinate column start index in the result list is the same
+  // for every geometry, regadless of dimension
+  // i.e., so all the "X" coords line up, and all the "Y"s, then any extra follow from there
+  R_xlen_t coord_col_idx = max_nest + 1;
+
   //R_xlen_t total_rows = 0;    // keeping track of total rows
 
   // set up result list
-  R_xlen_t n_cols = max_nest + max_dimension + 1;  // +1 == the shape_id column
+  R_xlen_t n_cols = max_nest + max_dimension + 1;
   Rcpp::List res( n_cols );
   R_xlen_t i, j;
 
@@ -122,13 +127,14 @@ SEXP rcpp_coordinates(
     // the 'nest' says which of the 'from_listMat()' tyep functions I Need to call.
 
     R_xlen_t start_row_idx = dimension[0];
-    R_xlen_t end_row_idx = dimension[1];
+    //R_xlen_t end_row_idx = dimension[1];
     R_xlen_t dim = dimension[2];
     R_xlen_t nest = dimension[3];
     int rtype = dimension[4];
-    R_xlen_t start_col_idx = max_nest - nest + 1;
+    //R_xlen_t start_col_idx = max_nest - nest + 1;  // +1 for id
 
-    Rcpp::Rcout << "start_col_idx: " << start_col_idx << std::endl;
+
+    Rcpp::Rcout << "coord_col_idx: " << coord_col_idx << std::endl;
     Rcpp::Rcout << "max_nest: " << max_nest << std::endl;
     Rcpp::Rcout << "res_length: " << res.length() << std::endl;
     Rcpp::Rcout << "dim: " << dim << std::endl;
@@ -141,8 +147,10 @@ SEXP rcpp_coordinates(
     // - the output list, column idx, and they fill there and then.
 
     //Rcpp::List geom = geometries::coordinates::coordinates( geometry, geometry_rows );
+    // coord_col_idx is the index where the coordinates begin
     double id = 1;
-    geometries::coordinates::coordinates(geometry, res, start_row_idx, start_col_idx, id );
+    geometries::coordinates::coordinates(geometry, res, start_row_idx, coord_col_idx, id );
+
     //total_rows += geometry_rows;
     //return geom;
     // Rcpp::Rcout << "total_rows: " << total_rows << std::endl;
