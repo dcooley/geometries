@@ -23,5 +23,6 @@ Roxygen: list(markdown = TRUE)
 Suggests: 
     knitr,
     rmarkdown,
-    tinytest
+    tinytest,
+    covr
 VignetteBuilder: knitr

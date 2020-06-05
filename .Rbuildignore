@@ -11,3 +11,4 @@
 ^vignettes/geometries.Rmd
 ^vignettes/shapes.Rmd
 ^vignettes/utils.Rmd
+^codecov\.yml$
