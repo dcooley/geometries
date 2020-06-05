@@ -45,11 +45,11 @@ Take for example, the
 [LinkingTo](https://github.com/dcooley/geometries/blob/master/DESCRIPTION#L17)
 section in the DESCRIPTION field of this package
 
-![](./vignettes/images/LinkingTo.png)
+![](./docs/articles/images/LinkingTo.png)
 
 This tells the compiler I want to link to Rcpp’s. Which means I can use
 all the [Rcpp
 code](https://github.com/RcppCore/Rcpp/tree/master/inst/include/Rcpp) by
 including whichever header file I want.
 
-… To be continued…
+## What sort of things can I do with this package?
