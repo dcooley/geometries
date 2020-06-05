@@ -1,6 +1,7 @@
 Package: geometries
 Type: Package
 Title: Convert Between R Objects and Geometric Structures
+Date: 2020-06-05
 Version: 0.1.0
 Authors@R: c(
     person("David", "Cooley", ,"david.cooley.au@gmail.com", role = c("aut", "cre"))
