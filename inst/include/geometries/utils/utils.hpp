@@ -10,6 +10,7 @@
 #include "geometries/utils/subset/subset.hpp"
 #include "geometries/utils/unique/unique.hpp"
 #include "geometries/utils/vectors/vectors.hpp"
+#include "geometries/utils/dataframe/dataframe.hpp"
 
 namespace geometries {
 namespace utils {

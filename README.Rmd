@@ -54,4 +54,10 @@ Take for example, the [LinkingTo](https://github.com/dcooley/geometries/blob/mas
 This tells the compiler I want to link to Rcpp's. Which means I can use all the [Rcpp code](https://github.com/RcppCore/Rcpp/tree/master/inst/include/Rcpp) by including whichever header file I want.
 
 
-... To be continued...
+## What sort of things can I do with this package?
+
+
+
+
+
+

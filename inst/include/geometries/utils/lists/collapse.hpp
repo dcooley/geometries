@@ -83,6 +83,13 @@ namespace utils {
     return lst_res;
   }
 
+  inline Rcpp::List collapse_list(
+      Rcpp::List& lst,
+      R_xlen_t& total_rows
+  ) {
+    return collapse_list< REALSXP >( lst, total_rows );
+  }
+
   // collapse_list - user-supplied 'id', incremented for each list element.
   template< int RTYPE >
   inline Rcpp::List collapse_list(
@@ -142,6 +149,14 @@ namespace utils {
       ++id;
     }
     return lst_res;
+  }
+
+  inline Rcpp::List collapse_list(
+      Rcpp::List& lst,
+      R_xlen_t& total_rows,
+      double& id
+  ) {
+    return collapse_list< REALSXP >( lst, total_rows, id );
   }
 
 } // utils

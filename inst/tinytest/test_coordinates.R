@@ -52,23 +52,23 @@ expect_true( all(dims[, 4] == c(1,1,2,1)))
 
 x <- 1:3
 res <- gm_coordinates( x )
-expect_true( length(res) == 3 )
+expect_true( ncol(res) == 4 )
 
 m <- matrix(1:12, ncol = 3)
 res <- gm_coordinates( m )
-expect_true( length(res) == 3 )
+expect_true( ncol(res) == 4 )
 
 l <- list(
   matrix(1:12, ncol = 2 )
 )
 res <- gm_coordinates( l )
-expect_true( length( res ) == 3 )  ## nested in a list gets an id?
+expect_true( ncol( res ) == 4 )  ## nested in a list gets an id?
 
 l <- list(
   matrix(1:12, ncol = 4 )
 )
 res <- gm_coordinates( l )
-expect_true( length( res ) == 5 )
+expect_true( ncol( res ) == 6 )
 
 l <- list(
   list(
@@ -76,7 +76,7 @@ l <- list(
   )
 )
 res <- gm_coordinates( l )
-expect_true( length( res ) == 4 )
+expect_true( ncol( res ) == 5 )
 
 l <- list(
   list(
@@ -85,9 +85,9 @@ l <- list(
   )
 )
 res <- gm_coordinates( l )
-expect_true( length( res ) == 4 )
-expect_true( unique( res[[1]] ) == 1 )  ## first vector is id of the geometry
-expect_equal( unique( res[[2]] ), c(1,2) )  ## second vector is id of shape within the geometry
+expect_true( ncol( res ) == 5 )
+expect_true( unique( res$id ) == 0 )  ## first vector is id of the geometry
+expect_equal( unique( res$id1 ), c(1,2) )  ## second vector is id of shape within the geometry
 
 ## nesting depth
 l <- list(
@@ -95,26 +95,35 @@ l <- list(
     list(
       list(
         list(
-          matrix(1:9, ncol = 2)
+          matrix(1:6, ncol = 2)
         )
       )
     )
   )
 )
 res <- gm_coordinates( l )
-expect_equal( length( res ), 7 )
+expect_equal( ncol( res ), 8 )
 
 ## and nesting works on dimenions
 res <- gm_dimensions( l )
 expect_equal( res$dimensions[, 3], 2 )
 expect_equal( res$dimensions[, 4], 5 )
 
-## TODO: collections
-# l <- list(
-#   matrix(1:4, ncol = 2)
-#   , list(
-#     matrix(1:9, ncol = 3)
-#   )
-# )
-# gm_coordinates( l )
+l <- list(
+  matrix(1:4, ncol = 2)
+  , list(
+    matrix(1:9, ncol = 3)
+  )
+)
+res <- gm_coordinates( l )
+expect_true( ncol( res ) == 6 )
 
+expect_equal(
+  l[[1]]
+  , unname( as.matrix( res[1:2, c("c1","c2") ] ) )
+)
+
+expect_equal(
+  l[[2]][[1]]
+  , unname( as.matrix( res[3:5, c("c1","c2", "c3") ] ) )
+)

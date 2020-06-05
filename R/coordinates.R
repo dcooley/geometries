@@ -39,6 +39,8 @@
 #' l <- list( x, m, list( m ) )
 #' gm_dimensions( l )
 #'
+#' @param x object representing a geometry shape (e.g., list of matrices)
+#'
 #' @export
 gm_dimensions <- function( x ) {
   rcpp_geometry_dimensions( x )
@@ -46,6 +48,19 @@ gm_dimensions <- function( x ) {
 
 #' gm_coordinates
 #'
+#' Converts all coordinates from various geometric shapes into a single data.frame.
+#'
+#' @details
+#'
+#' The data.frame returned will always have an 'id' column. Then will follow an
+#' 'id+counter' column for every level of nesting the geometry is within.
+#'
+#' The coordinates always start in column 'c1', the first column after all the id columns.
+#' Then there is a column 'c+counter' for every coordinate in the geometry.
+#'
+#' This function is designed to handle multiple and different nested of geometry structures.
+#'
+#' @param x object representing geometry shapes (e.g., list of matrices)
 #'
 #' @examples
 #'
@@ -81,12 +96,53 @@ gm_dimensions <- function( x ) {
 #' gm_coordinates( l )
 #'
 #' l <- list(
+#'   list(
+#'     matrix(1:12, ncol = 2)
+#'     , matrix(1:4, ncol = 2)
+#'   )
+#'   , 1:5
+#'   , 1:2
+#'   , matrix(1:9, ncol = 3)
+#' )
+#' gm_coordinates( l )
+#'
+#' l <- list(
 #'   matrix(1:4, ncol = 2)
 #'   , list(
 #'     matrix(1:9, ncol = 3)
 #'   )
 #' )
 #' gm_coordinates( l )
+#'
+#' l <- list(
+#'   list(
+#'     list(
+#'       matrix(1:12, ncol = 2)
+#'     )
+#'   )
+#'   , list(
+#'     list(
+#'      matrix(1:24, ncol = 2)
+#'    )
+#'   )
+#' )
+#' gm_coordinates( l )
+#'
+#' l <- list(
+#'   list(
+#'     list(
+#'       matrix(1:12, ncol = 2)
+#'     )
+#'   )
+#'   , list(
+#'     list(
+#'       matrix(1:3, ncol = 3)
+#'      , matrix(1:24, ncol = 2)
+#'    )
+#'   )
+#' )
+#' gm_coordinates( l )
+#'
 #'
 #' @export
 gm_coordinates <- function( x ) {

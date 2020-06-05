@@ -6,6 +6,9 @@
 \usage{
 gm_dimensions(x)
 }
+\arguments{
+\item{x}{object representing a geometry shape (e.g., list of matrices)}
+}
 \value{
 A list containing
 \itemize{

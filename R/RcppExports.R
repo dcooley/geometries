@@ -21,10 +21,6 @@ rcpp_get_list_mat <- function(x, cols, id) {
     .Call(`_geometries_rcpp_get_list_mat`, x, cols, id)
 }
 
-rcpp_geometry_coordinates <- function(geometry) {
-    .Call(`_geometries_rcpp_geometry_coordinates`, geometry)
-}
-
 rcpp_coordinates <- function(geometries) {
     .Call(`_geometries_rcpp_coordinates`, geometries)
 }

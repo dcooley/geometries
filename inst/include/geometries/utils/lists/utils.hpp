@@ -10,7 +10,7 @@ namespace utils {
   template< int RTYPE >
   inline Rcpp::Vector< RTYPE > fill_vector(
       Rcpp::Vector< RTYPE >& vec_1,
-      Rcpp::Vector< RTYPE >& vec_2,
+      const Rcpp::Vector< RTYPE >& vec_2,
       R_xlen_t& start_idx
   ) {
     // fills vec_1 with vec_2, starting at 'start_idx'
