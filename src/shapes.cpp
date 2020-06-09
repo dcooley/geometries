@@ -51,3 +51,32 @@ SEXP rcpp_from_listMat( Rcpp::List lst ) {
   return geometries::shapes::from_listMat< REALSXP >( lst, geometry_rows );
 }
 
+
+// [[Rcpp::export]]
+SEXP nest( SEXP x, int depth ) {
+  if( depth < 1 ) {
+    return x;
+  }
+  // need to iterate depth-times
+  //return nest_impl( x, depth );
+  Rcpp::List res(1);
+  res[0] = x;   // first level
+  depth = depth - 1;
+  while( depth > 0 ) {
+    //Rcpp::List out(1);
+    return nest( res, depth - 1 );
+    depth--;
+  }
+  return res;
+}
+
+
+
+
+
+
+
+
+
+
+
