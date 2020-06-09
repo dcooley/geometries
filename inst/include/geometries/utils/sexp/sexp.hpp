@@ -90,11 +90,11 @@ namespace utils {
   }
 
   template <int RTYPE>
-  inline int sexp_length(Rcpp::Vector<RTYPE> v) {
+  inline R_xlen_t sexp_length(Rcpp::Vector<RTYPE> v) {
     return v.length();
   }
 
-  inline int get_sexp_length( SEXP s ) {
+  inline R_xlen_t get_sexp_length( SEXP s ) {
 
     switch( TYPEOF(s) ) {
     case LGLSXP:

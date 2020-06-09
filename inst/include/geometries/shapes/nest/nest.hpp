@@ -353,25 +353,6 @@ namespace shapes {
 
 // #nocov end
 
-
-inline Rcpp::List nest( SEXP& x ) {
-  Rcpp::List res(1);
-  res[0] = x;
-  return res;
-}
-
-inline Rcpp::List nest(
-  Rcpp::List& lst,
-  int depth
-) {
-  int i;
-  Rcpp::List res(1);
-  for( i = 0; i < depth; ++i ) {
-    res[0] = nest( lst, depth - 1 );
-  }
-  return res;
-}
-
 // template< int RTYPE >
 // inline Rcpp::List nest(
 //   Rcpp::Matrix< RTYPE >& x,

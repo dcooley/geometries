@@ -39,10 +39,3 @@ SEXP tests() {
   );
 }
 
-
-#include "geometries/shapes/nest/nest.hpp"
-
-// [[Rcpp::export]]
-Rcpp::List nest( Rcpp::List lst, int depth ) {
-  return geometries::shapes::nest( lst, depth );
-}

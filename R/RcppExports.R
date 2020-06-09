@@ -9,6 +9,10 @@ rcpp_geometry_dimensions <- function(geometries) {
     .Call(`_geometries_rcpp_geometry_dimensions`, geometries)
 }
 
+rcpp_coordinates <- function(geometries) {
+    .Call(`_geometries_rcpp_coordinates`, geometries)
+}
+
 rcpp_get_vec <- function(x, cols) {
     .Call(`_geometries_rcpp_get_vec`, x, cols)
 }
@@ -21,23 +25,11 @@ rcpp_get_list_mat <- function(x, cols, id) {
     .Call(`_geometries_rcpp_get_list_mat`, x, cols, id)
 }
 
-rcpp_coordinates <- function(geometries) {
-    .Call(`_geometries_rcpp_coordinates`, geometries)
-}
-
-rcpp_from_listMat <- function(lst) {
-    .Call(`_geometries_rcpp_from_listMat`, lst)
-}
-
-nest <- function(x, depth) {
-    .Call(`_geometries_nest`, x, depth)
+rcpp_nest <- function(x, depth) {
+    .Call(`_geometries_rcpp_nest`, x, depth)
 }
 
 .tests <- function() {
     .Call(`_geometries_tests`)
-}
-
-nest <- function(lst, depth) {
-    .Call(`_geometries_nest`, lst, depth)
 }
 
