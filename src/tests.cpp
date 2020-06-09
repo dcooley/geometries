@@ -31,16 +31,18 @@ SEXP make_box() {
 
 }
 
-// SEXP calculate_bbox( SEXP x ) {
-//
-// }
-
-
 // [[Rcpp::export(.tests)]]
 SEXP tests() {
-
   Rcpp::List mb = make_box();
   return Rcpp::List::create(
     Rcpp::_["make_box"] = mb
   );
+}
+
+
+#include "geometries/shapes/nest/nest.hpp"
+
+// [[Rcpp::export]]
+Rcpp::List nest( Rcpp::List lst, int depth ) {
+  return geometries::shapes::nest( lst, depth );
 }

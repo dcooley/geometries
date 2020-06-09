@@ -97,6 +97,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// nest
+Rcpp::List nest(Rcpp::List lst, int depth);
+RcppExport SEXP _geometries_nest(SEXP lstSEXP, SEXP depthSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type lst(lstSEXP);
+    Rcpp::traits::input_parameter< int >::type depth(depthSEXP);
+    rcpp_result_gen = Rcpp::wrap(nest(lst, depth));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_calculate_bbox", (DL_FUNC) &_geometries_rcpp_calculate_bbox, 2},
@@ -107,6 +119,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_coordinates", (DL_FUNC) &_geometries_rcpp_coordinates, 1},
     {"_geometries_rcpp_from_listMat", (DL_FUNC) &_geometries_rcpp_from_listMat, 1},
     {"_geometries_tests", (DL_FUNC) &_geometries_tests, 0},
+    {"_geometries_nest", (DL_FUNC) &_geometries_nest, 2},
     {NULL, NULL, 0}
 };
 

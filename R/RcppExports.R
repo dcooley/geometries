@@ -33,3 +33,7 @@ rcpp_from_listMat <- function(lst) {
     .Call(`_geometries_tests`)
 }
 
+nest <- function(lst, depth) {
+    .Call(`_geometries_nest`, lst, depth)
+}
+

@@ -59,13 +59,10 @@ namespace shapes {
     R_xlen_t n = lst.size();
     R_xlen_t i;
     Rcpp::List res( n );
-    //R_xlen_t total_rows = 0;
     for( i = 0; i < n; ++i ) {
       Rcpp::Matrix< RTYPE > mat = Rcpp::as< Rcpp::Matrix< RTYPE > >( lst[ i ] );
-      //total_rows = total_rows + mat.nrow();
       res[ i ] = matrix_to_list< RTYPE >( mat, geometry_rows );
     }
-    //geometry_rows = total_rows;
     res = geometries::utils::collapse_list< RTYPE >( res, geometry_rows );
     return res;
   }
