@@ -79,6 +79,12 @@ SEXP unnest( SEXP x, R_xlen_t depth ) {
   return res;
 }
 
+
+// Nest to accept a vector of ids
+// if id.length() == depth
+// then subset & for-loop over the ids
+// and run nest() on the inner objects (with one less id column)
+
 // [[Rcpp::export]]
 SEXP rcpp_nest( SEXP x, R_xlen_t depth ) {
   // extract each inner-list element
