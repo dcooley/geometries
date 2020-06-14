@@ -78,9 +78,9 @@ namespace utils {
     }
     case VECSXP: {
       if( Rf_inherits( x, "data.frame" ) ) {
-      Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-      return df.nrow();
-    }
+        Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
+        return df.nrow();
+      }
     }
     default: {
       Rcpp::stop("geometries - can't determine the number of rows");

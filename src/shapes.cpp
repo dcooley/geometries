@@ -157,6 +157,146 @@ SEXP nest2(
 }
 
 
+// another new approach
+// find the row-indexes for the inner-most id column
+// but need to know the depth, becaues the inner-most id
+// is not guaranteed to be conitnuously unique
+
+// TODO:
+// get the rleid() of each group of id columns, starting from the most inner
+// so the first rleid() result is where the data.frame needs to be subest
+// then all the others say how nested they need to be
+
+// and record the 'depth' level ?
+// [[Rcpp::export]]
+SEXP rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids ) {
+
+  // reference: data.table
+  // https://github.com/Rdatatable/data.table/blob/8b93bb22715b45d38acf185f40d573bda8748cb4/src/uniqlist.c#L164
+
+  Rcpp::StringVector df_names = l.names();
+
+  R_xlen_t i;
+  R_xlen_t n_rows = l.nrow(); //geometries::utils::sexp_n_row( l );
+  R_xlen_t n_cols = Rf_length( l );
+  R_xlen_t n_id_cols = Rf_length( ids );
+  Rcpp::IntegerVector ians( n_rows );
+  int grp = 1;
+  ians[ 0 ] = grp;
+
+  // values for keeping track of the indexes of 'l' (rows) which form the individual geometries;
+  int start = 0;
+  int end = 0;
+  Rcpp::List res( n_rows ); // arbitrarily start it at the max possible?
+
+  if( n_cols > 1 ) {
+    for( i = 1; i < n_rows; ++i ) {
+      bool same = true;
+      int j = n_id_cols;
+      while( --j >= 0 && same ) {
+        SEXP jcol = VECTOR_ELT( l, ids[j] );
+        switch( TYPEOF( jcol ) ) {
+          case LGLSXP: {}
+          case INTSXP: {
+            same = INTEGER( jcol )[ i ] == INTEGER( jcol )[ i - 1 ];
+            break;
+          }
+          case REALSXP: {
+            long long *ll = (long long *)REAL( jcol );
+            same = ll[ i ] == ll[ i - 1 ];
+            break;
+          }
+          case STRSXP: {
+            same = STRING_ELT( jcol, i) == STRING_ELT( jcol, i - 1 );
+            break;
+          }
+          default: {
+            Rcpp::stop("geometries - unsupported id column type");
+          }
+        }
+      }
+      // at this point we now have a run-length-encoded vector
+      ians[ i ] = ( grp += !same );
+      // at the point where same == 0 we have a new rleid
+      //
+      if( !same ) {
+        end = i - 1;
+        res[ i ] = geometries::utils::subset_dataframe( l, df_names, start, end );
+        start = i;
+      }
+      // Rcpp::Rcout << "same: " << same << std::endl;
+      // Rcpp::Rcout << "grp: " << grp << std::endl;
+      // Rcpp::Rcout << "i: " << i << std::endl;
+      // Rcpp::Rcout << "ians: " <<  ians << std::endl;
+    }
+  } else {
+    SEXP jcol = VECTOR_ELT( l, ids[0] );
+    switch( TYPEOF( jcol ) ) {
+    case LGLSXP: {}
+    case INTSXP: {
+      int *ijcol = INTEGER( jcol );
+      for( i = 1; i < n_rows; ++i ) {
+        bool same = ijcol[ i ] == ijcol[ i - 1 ];
+        ians[ i ] = ( grp != !same );
+      }
+      break;
+    }
+    case REALSXP: {
+      long long *lljcol = ( long long *)REAL( jcol );
+      for( i = 1; i < n_rows; ++i ) {
+        bool same = lljcol[ i ] == lljcol[ i - 1 ];
+        ians[ i ] = ( grp != !same );
+      }
+      break;
+    }
+    case STRSXP: {
+      const SEXP *jd = STRING_PTR( jcol );
+      for( i = 1; i < n_rows; ++i ) {
+        bool same = jd[ i ] == jd[ i - 1 ];
+        ians[ i ] = ( grp != same );
+      }
+      break;
+    }
+    default: {
+      Rcpp::stop("geometries - unsupported id column type");
+    }
+    }
+  }
+  return res;
+  return ians;
+}
+
+// this is basically the rleid()
+// [[Rcpp::export]]
+Rcpp::IntegerMatrix id_positions( Rcpp::IntegerVector ids ) {
+  R_xlen_t n = ids.length();
+  if( n == 0 ) {
+    Rcpp::stop("geometries - not enough id values");
+  }
+  R_xlen_t i;
+  Rcpp::IntegerMatrix res( Rcpp::no_init( n, 2 ) ); // start with n-rows, then filter the rows based on number of id values
+
+  // set up the first one
+  int current_id = ids[ 0 ];
+  R_xlen_t n_ids = 0;  // keeps count of the number of different IDs.
+  res( 0, 0 ) = 0;
+  R_xlen_t counter = 0;
+  for( i = 1; i < n; ++i ) {
+    int this_id = ids[ i ];
+    if( this_id != current_id ) {
+      res( counter, 1 ) = i;
+      counter++;
+      res( counter, 0 ) = i + 1;
+      current_id = this_id;
+    }
+  }
+  // we can now remove the non-used rows
+  Rcpp::IntegerMatrix indices = res( Rcpp::Range(0, counter - 1 ), Rcpp::_ );
+
+}
+
+
+
 // while n_id_columns > 1
 // - get next id column
 // - get line positions

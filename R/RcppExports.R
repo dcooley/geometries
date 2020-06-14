@@ -25,6 +25,14 @@ rcpp_get_list_mat <- function(x, cols, id) {
     .Call(`_geometries_rcpp_get_list_mat`, x, cols, id)
 }
 
+rcpp_rleid <- function(l, ids) {
+    .Call(`_geometries_rcpp_rleid`, l, ids)
+}
+
+id_positions <- function(ids) {
+    .Call(`_geometries_id_positions`, ids)
+}
+
 rcpp_nest2 <- function(df, id_cols, depth) {
     .Call(`_geometries_rcpp_nest2`, df, id_cols, depth)
 }
