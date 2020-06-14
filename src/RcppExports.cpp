@@ -76,14 +76,27 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rcpp_nest2
+SEXP rcpp_nest2(Rcpp::DataFrame df, Rcpp::StringVector id_cols, int depth);
+RcppExport SEXP _geometries_rcpp_nest2(SEXP dfSEXP, SEXP id_colsSEXP, SEXP depthSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type df(dfSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type id_cols(id_colsSEXP);
+    Rcpp::traits::input_parameter< int >::type depth(depthSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_nest2(df, id_cols, depth));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rcpp_nest
-SEXP rcpp_nest(SEXP x, R_xlen_t depth);
+SEXP rcpp_nest(SEXP x, int depth);
 RcppExport SEXP _geometries_rcpp_nest(SEXP xSEXP, SEXP depthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< R_xlen_t >::type depth(depthSEXP);
+    Rcpp::traits::input_parameter< int >::type depth(depthSEXP);
     rcpp_result_gen = Rcpp::wrap(rcpp_nest(x, depth));
     return rcpp_result_gen;
 END_RCPP
@@ -106,6 +119,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_get_vec", (DL_FUNC) &_geometries_rcpp_get_vec, 2},
     {"_geometries_rcpp_to_mat", (DL_FUNC) &_geometries_rcpp_to_mat, 2},
     {"_geometries_rcpp_get_list_mat", (DL_FUNC) &_geometries_rcpp_get_list_mat, 3},
+    {"_geometries_rcpp_nest2", (DL_FUNC) &_geometries_rcpp_nest2, 3},
     {"_geometries_rcpp_nest", (DL_FUNC) &_geometries_rcpp_nest, 2},
     {"_geometries_tests", (DL_FUNC) &_geometries_tests, 0},
     {NULL, NULL, 0}
