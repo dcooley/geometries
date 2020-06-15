@@ -188,7 +188,8 @@ Rcpp::IntegerVector rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids ) {
   int start = 0;
   int end = 0;
   Rcpp::List res( n_rows ); // arbitrarily start it at the max possible?
-  R_xlen_t res_counter = 0;
+  //R_xlen_t res_counter = 1;
+  R_xlen_t n_elements = 0;
 
   //if( n_cols > 1 ) {
     for( i = 1; i < n_rows; ++i ) {
@@ -216,6 +217,7 @@ Rcpp::IntegerVector rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids ) {
           }
         }
       }
+      n_elements++;
       // at this point we now have a run-length-encoded vector
       ians[ i ] = ( grp += !same );
       // at the point where same == 0 we have a new rleid
@@ -223,11 +225,13 @@ Rcpp::IntegerVector rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids ) {
       // can I put this into the correct list structure
       // based on the id-level I'm at?
       if( !same ) {
+        Rcpp::Rcout << "n_elements: " << n_elements << std::endl;
+        n_elements = 1;
         // Rcpp::Rcout << "filling list" << std::endl;
         // end = i - 1;
         // Rcpp::List subset_df = geometries::utils::subset_dataframe( l, df_names, start, end );
         // res[ res_counter ] = subset_df;
-        // res_counter++;
+        //res_counter++;
         // start = i;
 
         // loop back outwards from j to j == 0
@@ -290,7 +294,7 @@ Rcpp::IntegerVector rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids ) {
   //Rcpp::Rcout << "rleid: " << ians << std::endl;
 
   // now how can I pack up the 'res' so it is in the correct structure?
-  // Rcpp::Rcout << "res_counter: " << res_counter << std::endl;
+  //Rcpp::Rcout << "res_counter: " << res_counter << std::endl;
   //Rcpp::IntegerVector res_idx = Rcpp::seq( 0, res_counter - 1 );
   //Rcpp::List lst = VECTOR_ELT( res, res_idx );
   //Rcpp::List lst = res[ res_idx ];
