@@ -29,8 +29,8 @@ rcpp_rleid <- function(l, ids) {
     .Call(`_geometries_rcpp_rleid`, l, ids)
 }
 
-id_positions <- function(ids) {
-    .Call(`_geometries_id_positions`, ids)
+rcpp_nested_rleid <- function(l, ids) {
+    .Call(`_geometries_rcpp_nested_rleid`, l, ids)
 }
 
 rcpp_nest2 <- function(df, id_cols, depth) {

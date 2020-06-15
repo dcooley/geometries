@@ -60,10 +60,19 @@ namespace utils {
       Rcpp::String this_col = cols[ i ];
 
       SEXP this_vec = df[ this_col ];
-      df_subset[ i ] = geometries::utils::subset_vector( this_vec, start, end );
+      df_subset[ i ] = subset_vector( this_vec, start, end );
     }
     df_subset.names() = cols;
     return df_subset;
+  }
+
+  inline Rcpp::List subset_dataframe(
+      Rcpp::DataFrame& df,
+      int& start,
+      int& end
+  ) {
+    Rcpp::StringVector cols = df.names();
+    return subset_dataframe( df, cols, start, end );
   }
 
 } // utils
