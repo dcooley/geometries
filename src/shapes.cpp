@@ -169,18 +169,23 @@ SEXP nest2(
 
 // and record the 'depth' level ?
 // [[Rcpp::export]]
-Rcpp::IntegerVector rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids ) {
+SEXP rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids, bool last = false ) {
+
+  // Rcpp::Rcout << "---------------" << std::endl;
 
   // reference: data.table
   // https://github.com/Rdatatable/data.table/blob/8b93bb22715b45d38acf185f40d573bda8748cb4/src/uniqlist.c#L164
 
-  //Rcpp::StringVector df_names = l.names();
+  Rcpp::StringVector df_names = l.names();
 
   R_xlen_t i;
   R_xlen_t n_rows = l.nrow(); //geometries::utils::sexp_n_row( l );
   R_xlen_t n_cols = Rf_length( l );
   R_xlen_t n_id_cols = Rf_length( ids );
   Rcpp::IntegerVector ians( n_rows );
+
+  Rcpp::IntegerVector nelems( n_rows );
+
   int grp = 1;
   ians[ 0 ] = grp;
 
@@ -188,139 +193,122 @@ Rcpp::IntegerVector rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids ) {
   int start = 0;
   int end = 0;
   Rcpp::List res( n_rows ); // arbitrarily start it at the max possible?
-  //R_xlen_t res_counter = 1;
-  R_xlen_t n_elements = 0;
+  R_xlen_t res_counter = 0;
+  R_xlen_t n_elements = 1;
 
-  //if( n_cols > 1 ) {
-    for( i = 1; i < n_rows; ++i ) {
-      bool same = true;
-      int j = n_id_cols;
-      while( --j >= 0 && same ) {
-        SEXP jcol = VECTOR_ELT( l, ids[j] );
-        switch( TYPEOF( jcol ) ) {
-          case LGLSXP: {}
-          case INTSXP: {
-            same = INTEGER( jcol )[ i ] == INTEGER( jcol )[ i - 1 ];
-            break;
-          }
-          case REALSXP: {
-            long long *ll = (long long *)REAL( jcol );
-            same = ll[ i ] == ll[ i - 1 ];
-            break;
-          }
-          case STRSXP: {
-            same = STRING_ELT( jcol, i) == STRING_ELT( jcol, i - 1 );
-            break;
-          }
-          default: {
-            Rcpp::stop("geometries - unsupported id column type");
-          }
+  for( i = 1; i < n_rows; ++i ) {
+    bool same = true;
+    int j = n_id_cols;
+    while( --j >= 0 && same ) {
+      SEXP jcol = VECTOR_ELT( l, ids[ j ] );
+      switch( TYPEOF( jcol ) ) {
+        case LGLSXP: {}
+        case INTSXP: {
+          same = INTEGER( jcol )[ i ] == INTEGER( jcol )[ i - 1 ];
+          break;
+        }
+        case REALSXP: {
+          long long *ll = (long long *)REAL( jcol );
+          same = ll[ i ] == ll[ i - 1 ];
+          break;
+        }
+        case STRSXP: {
+          same = STRING_ELT( jcol, i ) == STRING_ELT( jcol, i - 1 );
+          break;
+        }
+        default: {
+          Rcpp::stop("geometries - unsupported id column type");
         }
       }
-      n_elements++;
-      // at this point we now have a run-length-encoded vector
-      ians[ i ] = ( grp += !same );
-      // at the point where same == 0 we have a new rleid
-      //
-      // can I put this into the correct list structure
-      // based on the id-level I'm at?
-      if( !same ) {
-        Rcpp::Rcout << "n_elements: " << n_elements << std::endl;
-        n_elements = 1;
-        // Rcpp::Rcout << "filling list" << std::endl;
-        // end = i - 1;
-        // Rcpp::List subset_df = geometries::utils::subset_dataframe( l, df_names, start, end );
-        // res[ res_counter ] = subset_df;
-        //res_counter++;
-        // start = i;
+    }  // while end
 
-        // loop back outwards from j to j == 0
-        // and stop at the first point where this ID !== previous
+    // at this point we now have a run-length-encoded vector
+    ians[ i ] = ( grp += !same );
+    // Rcpp::Rcout << "ians: " << ians << std::endl;
+    n_elements += same;
+    // at the point where same == 0 we have a new rleid
+    //
+    // can I put this into the correct list structure
+    // based on the id-level I'm at?
+    if( !same ) {
 
-        //j = n_id_cols; // start at current j.
-        // iff j == 0, we're at the outer-most ID.
-        // while( --j >= 0 && same ) {
-        //   // loop back outwards and find the nearest id column
-        //   // whose value now is different to the previous one.
-        //
-        //
-        // }
+      nelems[ res_counter ] = n_elements;
+      n_elements = 1;
 
-        // do an n_id_cols x rleid() call,
-        // where each one adds a new id-column into the rleid
-        // to generate a n_row x n_id_cols matrix of group levels.
-        // these then become the indices of where to nest the data.
-
+      if( last ) {
+        end = i - 1;
+        Rcpp::List subset_df = geometries::utils::subset_dataframe( l, df_names, start, end );
+        res[ res_counter ] = subset_df;
+        start = i;
       }
-      // Rcpp::Rcout << "same: " << same << std::endl;
-      // Rcpp::Rcout << "grp: " << grp << std::endl;
-      // Rcpp::Rcout << "i: " << i << std::endl;
-      // Rcpp::Rcout << "ians: " <<  ians << std::endl;
+      //elem_idx++;
+      res_counter++;
     }
-  // } else {
-  //   SEXP jcol = VECTOR_ELT( l, ids[0] );
-  //   switch( TYPEOF( jcol ) ) {
-  //   case LGLSXP: {}
-  //   case INTSXP: {
-  //     int *ijcol = INTEGER( jcol );
-  //     for( i = 1; i < n_rows; ++i ) {
-  //       bool same = ijcol[ i ] == ijcol[ i - 1 ];
-  //       ians[ i ] = ( grp != !same );
-  //     }
-  //     break;
-  //   }
-  //   case REALSXP: {
-  //     long long *lljcol = ( long long *)REAL( jcol );
-  //     for( i = 1; i < n_rows; ++i ) {
-  //       bool same = lljcol[ i ] == lljcol[ i - 1 ];
-  //       ians[ i ] = ( grp != !same );
-  //     }
-  //     break;
-  //   }
-  //   case STRSXP: {
-  //     const SEXP *jd = STRING_PTR( jcol );
-  //     for( i = 1; i < n_rows; ++i ) {
-  //       bool same = jd[ i ] == jd[ i - 1 ];
-  //       ians[ i ] = ( grp != same );
-  //     }
-  //     break;
-  //   }
-  //   default: {
-  //     Rcpp::stop("geometries - unsupported id column type");
-  //   }
-  //   }
-  // }
+  }
+
+  // Rcpp::Rcout << "end n_elements: " << n_elements << std::endl;
+  nelems[ res_counter ] = n_elements;
+  //res_counter++;
+
+  Rcpp::Range rng( 0, res_counter );
 
   //Rcpp::Rcout << "rleid: " << ians << std::endl;
 
-  // now how can I pack up the 'res' so it is in the correct structure?
-  //Rcpp::Rcout << "res_counter: " << res_counter << std::endl;
-  //Rcpp::IntegerVector res_idx = Rcpp::seq( 0, res_counter - 1 );
-  //Rcpp::List lst = VECTOR_ELT( res, res_idx );
-  //Rcpp::List lst = res[ res_idx ];
-  //return lst;
-
-
   //return res;
-  return ians;
+  //return ians;
+
+  if( last ) {
+    end = i - 1;
+    Rcpp::Rcout << "start: " << start << ", end: " << end << std::endl;
+    Rcpp::List subset_df = geometries::utils::subset_dataframe( l, df_names, start, end );
+    res[ res_counter ] = subset_df;
+    return res;
+    // return Rcpp::List::create(
+    //   Rcpp::_["rle"] = ians,
+    //   Rcpp::_["nelems"] = res
+    // );
+  }
+
+  return Rcpp::List::create(
+    Rcpp::_["rle"] = ians,
+    Rcpp::_["nelems"] = nelems[ rng ]
+  );
+  //return nelems[ rng ];
 }
 
 // [[Rcpp::export]]
-Rcpp::IntegerMatrix rcpp_nested_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids ) {
+SEXP rcpp_nested_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids ) {
 
   R_xlen_t i;
   R_xlen_t n_rows = l.nrow(); //geometries::utils::sexp_n_row( l );
   R_xlen_t n_cols = Rf_length( l );
   R_xlen_t n_id_cols = Rf_length( ids );
 
-  Rcpp::IntegerMatrix rleid( n_rows, n_id_cols );
+  //Rcpp::IntegerMatrix rleid( n_rows, n_id_cols );
+  Rcpp::List rleid( n_id_cols );
 
-  for( i = 0; i < n_id_cols; ++i ) {
+  for( i = n_id_cols - 1; i >= 0; --i ) {
     Rcpp::Range rng(0, i);
     Rcpp::IntegerVector rle_ids = ids[ rng ];
-    rleid( Rcpp::_, i )  = rcpp_rleid( l, rle_ids );
-    // the last value in each column is the number of list elements
+    //rleid( Rcpp::_, i )  = rcpp_rleid( l, rle_ids );
+    bool last = i == n_id_cols - 1;
+    rleid( i ) = rcpp_rleid( l, rle_ids, last );
   }
+
+  // // now fill up the results
+  Rcpp::List first_list = rleid[0];
+  Rcpp::IntegerVector first_idx = first_list["nelems"];
+
+  Rcpp::List out( first_idx.length() );
+  R_xlen_t j;
+  // for( i = 0; i < first_idx.length(); ++i ) {
+  //
+  // }
+  for( i = n_id_cols - 1; i >= 0; --i ) {
+
+  }
+
+
   return rleid;
 }
 

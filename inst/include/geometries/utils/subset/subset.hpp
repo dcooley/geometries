@@ -45,7 +45,7 @@ namespace utils {
     return Rcpp::List::create(); // never reaches
   }
 
-  inline Rcpp::List subset_dataframe(
+  inline Rcpp::DataFrame subset_dataframe(
     Rcpp::DataFrame& df,
     Rcpp::StringVector& cols,
     int& start,

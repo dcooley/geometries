@@ -77,19 +77,20 @@ BEGIN_RCPP
 END_RCPP
 }
 // rcpp_rleid
-Rcpp::IntegerVector rcpp_rleid(Rcpp::DataFrame l, Rcpp::IntegerVector ids);
-RcppExport SEXP _geometries_rcpp_rleid(SEXP lSEXP, SEXP idsSEXP) {
+SEXP rcpp_rleid(Rcpp::DataFrame l, Rcpp::IntegerVector ids, bool last);
+RcppExport SEXP _geometries_rcpp_rleid(SEXP lSEXP, SEXP idsSEXP, SEXP lastSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::DataFrame >::type l(lSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type ids(idsSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_rleid(l, ids));
+    Rcpp::traits::input_parameter< bool >::type last(lastSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_rleid(l, ids, last));
     return rcpp_result_gen;
 END_RCPP
 }
 // rcpp_nested_rleid
-Rcpp::IntegerMatrix rcpp_nested_rleid(Rcpp::DataFrame l, Rcpp::IntegerVector ids);
+SEXP rcpp_nested_rleid(Rcpp::DataFrame l, Rcpp::IntegerVector ids);
 RcppExport SEXP _geometries_rcpp_nested_rleid(SEXP lSEXP, SEXP idsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -143,7 +144,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_get_vec", (DL_FUNC) &_geometries_rcpp_get_vec, 2},
     {"_geometries_rcpp_to_mat", (DL_FUNC) &_geometries_rcpp_to_mat, 2},
     {"_geometries_rcpp_get_list_mat", (DL_FUNC) &_geometries_rcpp_get_list_mat, 3},
-    {"_geometries_rcpp_rleid", (DL_FUNC) &_geometries_rcpp_rleid, 2},
+    {"_geometries_rcpp_rleid", (DL_FUNC) &_geometries_rcpp_rleid, 3},
     {"_geometries_rcpp_nested_rleid", (DL_FUNC) &_geometries_rcpp_nested_rleid, 2},
     {"_geometries_rcpp_nest2", (DL_FUNC) &_geometries_rcpp_nest2, 3},
     {"_geometries_rcpp_nest", (DL_FUNC) &_geometries_rcpp_nest, 2},

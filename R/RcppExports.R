@@ -25,8 +25,8 @@ rcpp_get_list_mat <- function(x, cols, id) {
     .Call(`_geometries_rcpp_get_list_mat`, x, cols, id)
 }
 
-rcpp_rleid <- function(l, ids) {
-    .Call(`_geometries_rcpp_rleid`, l, ids)
+rcpp_rleid <- function(l, ids, last = FALSE) {
+    .Call(`_geometries_rcpp_rleid`, l, ids, last)
 }
 
 rcpp_nested_rleid <- function(l, ids) {

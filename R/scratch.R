@@ -3,9 +3,10 @@
 #
 # df <- data.frame(
 #   id1 = c(1,1,1,2,2,2,3,3,3,4,4)
-#   , id2 = c(1,1,2,1,1,1,1,1,2,1,2)
-#   , id3 = c(1,2,3,1,2,3,1,2,3,1,2)
+#   , id2 = c(1,1,2,1,1,1,1,1,2,1,1)
+#   , id3 = c(1,2,3,1,2,3,1,2,3,1,1)
 # )
+# geometries:::rcpp_nested_rleid( df, c(0))
 # geometries:::rcpp_nested_rleid( df, c(0,1,2))
 #
 # ## iff we're on the last ID col, do the subsetting also
@@ -17,12 +18,17 @@
 #
 # #
 # #
-# # df <- data.frame(
-# #   id1 = c(1,1,1,2,2,2,2,3,3,4,4)
-# #   , id2 = c(1,1,2,1,1,2,2,1,1,1,1)
-# #   , x = 1:11
-# #   , y = 1:11
-# # )
+# df <- data.frame(
+#   id1 = c(1,1,1,2,2,2,2,3,3,4,4)
+#   , id2 = c(1,1,2,1,1,2,2,1,1,1,1)
+#   , x = 1:11
+#   , y = 1:11
+# )
+# df
+#
+# geometries:::rcpp_nested_rleid( df, c(0,1) )
+
+
 # #
 # # geometries:::rcpp_nest2( df, c("id1","id2"), 2)
 # # rl <- geometries:::rcpp_rleid( df, c(0,1) )
