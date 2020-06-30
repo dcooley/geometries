@@ -185,6 +185,7 @@ SEXP rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids, bool last = false )
   Rcpp::IntegerVector ians( n_rows );
 
   Rcpp::IntegerVector nelems( n_rows );
+  Rcpp::IntegerVector sums( n_rows );
 
   int grp = 1;
   ians[ 0 ] = grp;
@@ -195,6 +196,7 @@ SEXP rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids, bool last = false )
   Rcpp::List res( n_rows ); // arbitrarily start it at the max possible?
   R_xlen_t res_counter = 0;
   R_xlen_t n_elements = 1;
+  R_xlen_t cumulative_size = 0;
 
   for( i = 1; i < n_rows; ++i ) {
     bool same = true;
@@ -233,14 +235,18 @@ SEXP rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids, bool last = false )
     if( !same ) {
 
       nelems[ res_counter ] = n_elements;
+
+      cumulative_size = n_elements + cumulative_size;
+
+      sums[ res_counter ] = cumulative_size;
       n_elements = 1;
 
-      if( last ) {
-        end = i - 1;
-        Rcpp::List subset_df = geometries::utils::subset_dataframe( l, df_names, start, end );
-        res[ res_counter ] = subset_df;
-        start = i;
-      }
+      // if( last ) {
+      //   end = i - 1;
+      //   Rcpp::List subset_df = geometries::utils::subset_dataframe( l, df_names, start, end );
+      //   res[ res_counter ] = subset_df;
+      //   start = i;
+      // }
       //elem_idx++;
       res_counter++;
     }
@@ -248,6 +254,9 @@ SEXP rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids, bool last = false )
 
   // Rcpp::Rcout << "end n_elements: " << n_elements << std::endl;
   nelems[ res_counter ] = n_elements;
+
+  cumulative_size = n_elements + cumulative_size;
+  sums[ res_counter ] = cumulative_size;
   //res_counter++;
 
   Rcpp::Range rng( 0, res_counter );
@@ -257,21 +266,22 @@ SEXP rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids, bool last = false )
   //return res;
   //return ians;
 
-  if( last ) {
-    end = i - 1;
-    Rcpp::Rcout << "start: " << start << ", end: " << end << std::endl;
-    Rcpp::List subset_df = geometries::utils::subset_dataframe( l, df_names, start, end );
-    res[ res_counter ] = subset_df;
-    return res;
-    // return Rcpp::List::create(
-    //   Rcpp::_["rle"] = ians,
-    //   Rcpp::_["nelems"] = res
-    // );
-  }
+  // if( last ) {
+  //   end = i - 1;
+  //   // Rcpp::Rcout << "start: " << start << ", end: " << end << std::endl;
+  //   Rcpp::List subset_df = geometries::utils::subset_dataframe( l, df_names, start, end );
+  //   res[ res_counter ] = subset_df;
+  //   return res;
+  //   // return Rcpp::List::create(
+  //   //   Rcpp::_["rle"] = ians,
+  //   //   Rcpp::_["nelems"] = res
+  //   // );
+  // }
 
   return Rcpp::List::create(
     Rcpp::_["rle"] = ians,
-    Rcpp::_["nelems"] = nelems[ rng ]
+    Rcpp::_["nelems"] = nelems[ rng ],
+    Rcpp::_["sums"] = sums[ rng ]
   );
   //return nelems[ rng ];
 }
@@ -279,7 +289,7 @@ SEXP rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids, bool last = false )
 // [[Rcpp::export]]
 SEXP rcpp_nested_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids ) {
 
-  R_xlen_t i;
+  R_xlen_t i, j, k;
   R_xlen_t n_rows = l.nrow(); //geometries::utils::sexp_n_row( l );
   R_xlen_t n_cols = Rf_length( l );
   R_xlen_t n_id_cols = Rf_length( ids );
@@ -293,23 +303,91 @@ SEXP rcpp_nested_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids ) {
     //rleid( Rcpp::_, i )  = rcpp_rleid( l, rle_ids );
     bool last = i == n_id_cols - 1;
     rleid( i ) = rcpp_rleid( l, rle_ids, last );
+
+    // here the rleid(i) tells us which elements of rleid(i+1)
+    // belong in which "package"
+    if( i != ( n_id_cols - 1 ) ) {
+      Rcpp::List prev = rleid( i + 1 );
+      Rcpp::List curr = rleid( i );
+      Rcpp::IntegerVector nelems = curr["nelems"];
+      Rcpp::IntegerVector curr_sums = curr["sums"];
+      Rcpp::IntegerVector prev_sums = prev["sums"];
+      // Rcpp::Rcout << "curr_nelems: " << nelems << std::endl;
+      // Rcpp::Rcout << "curr_sums: " << curr_sums << std::endl;
+      // Rcpp::Rcout << "prev_sums: " << prev_sums << std::endl;
+
+      Rcpp::List curr_res( nelems.size() );
+      R_xlen_t prev_idx = 0;
+      R_xlen_t out_size;
+
+      for( j = 0; j < nelems.size(); ++j ) {
+        R_xlen_t curr_sum = curr_sums[ j ];
+        R_xlen_t start_prev_idx = prev_idx;
+        R_xlen_t prev_sum = prev_sums[ prev_idx ];
+        out_size = 1;
+        // if( curr_sum == prev_sum ) {
+        //   out_size++;
+        //   prev_idx++;
+        // } else {
+          while( prev_sum != curr_sum ) { // prev_sum will always start <= to curr_sum
+            prev_idx++;
+            out_size++;
+            prev_sum = prev_sums[ prev_idx ];
+          }
+          prev_idx++;
+        //}
+
+        // Rcpp::Rcout << "prev_idx: " << prev_idx << std::endl;
+        // Rcpp::Rcout << "out list size: " << out_size << std::endl;
+        Rcpp::List inner_list( out_size );
+
+        // and fill?
+        // Rcpp::Rcout << "fill with previous list from " << start_prev_idx << ", to " << prev_idx - 1 << std::endl;
+        R_xlen_t idx = prev_idx - 1;
+        for( k = 0; k < out_size; ++k ) {
+          //inner_list[ k ] = prev( idx );
+          Rcpp::List dummy(1);
+          inner_list[ k ] = dummy;  // fill with a dummy list until I work out what I'm doing
+          idx++;
+        }
+        curr_res( j ) = inner_list;
+      }
+      rleid( i ) = Rcpp::List::create(
+        Rcpp::_["nelems"] = nelems,
+        Rcpp::_["sums"] = curr_sums,
+        Rcpp::_["res"] = curr_res
+      );
+    }
+
+
   }
 
   // // now fill up the results
-  Rcpp::List first_list = rleid[0];
-  Rcpp::IntegerVector first_idx = first_list["nelems"];
+  // Rcpp::List first_list = rleid[0];
+  // Rcpp::IntegerVector first_idx = first_list["nelems"];
+  //
+  // Rcpp::List out( first_idx.length() );
+  // R_xlen_t j;
 
-  Rcpp::List out( first_idx.length() );
-  R_xlen_t j;
+  // // the nelems vector.length() says how many list objects are needed
+  // // the value in nelems says which cumsum indicies I need
+  // for( i = 1; i < n_id_cols; ++i ) {
+  //   // loop forwards and pacakge everything up
+  //   // need a recursive loop....
+  //   // to go down the rleid object as many depths as required
+  //   // can I do this inside the rleid code??
+  // }
+
+
   // for( i = 0; i < first_idx.length(); ++i ) {
   //
   // }
-  for( i = n_id_cols - 1; i >= 0; --i ) {
+  // for( i = n_id_cols - 1; i >= 0; --i ) {
+  //
+  // }
 
-  }
 
-
-  return rleid;
+  return rleid[0];
 }
 
 // need to know how many unique elements are in the id-column to the right...

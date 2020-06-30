@@ -4,10 +4,13 @@
 # df <- data.frame(
 #   id1 = c(1,1,1,2,2,2,3,3,3,4,4)
 #   , id2 = c(1,1,2,1,1,1,1,1,2,1,1)
-#   , id3 = c(1,2,3,1,2,3,1,2,3,1,1)
+#   , id3 = c(1,1,1,1,2,2,1,2,3,1,1)
+#   , x = 1
+#   , y = 2
 # )
-# geometries:::rcpp_nested_rleid( df, c(0))
+# geometries:::rcpp_nested_rleid( df, c(1))
 # geometries:::rcpp_nested_rleid( df, c(0,1,2))
+#
 #
 # ## iff we're on the last ID col, do the subsetting also
 # ## iff we're on teh first ID col keep track of the number of unique elements
@@ -107,3 +110,33 @@
 # #
 # #
 # #
+
+# library(wk)
+#
+# states_df <- ggplot2::map_data("state")
+# states_df$region <- factor(states_df$region)
+#
+# microbenchmark::microbenchmark(
+#   wk = { coords_polygon_translate_wkb(
+#     states_df$long,
+#     states_df$lat,
+#     feature_id = states_df$region,
+#     ring_id = states_df$group
+#   )
+#   },
+#
+#   wk_sxp = { coords_polygon_translate_wksxp(
+#     states_df$long,
+#     states_df$lat,
+#     feature_id = states_df$region,
+#     ring_id = states_df$group
+#   )
+#   },
+#
+#   geom = {
+#     geometries:::rcpp_nested_rleid(
+#       states_df
+#       , c( 4, 5 )
+#     )
+#   }
+# )
