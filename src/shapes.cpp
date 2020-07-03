@@ -270,20 +270,20 @@ SEXP rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids, Rcpp::IntegerVector
 
     Rcpp::Range row_rng( start, end );
 
-    Rcpp::Rcout << "row_rng: " << start << " - " << end << std::endl;
+    // Rcpp::Rcout << "row_rng: " << start << " - " << end << std::endl;
     Rcpp::NumericMatrix res_mat = nm( row_rng, Rcpp::_ );
-    Rcpp::Rcout << "res_mat: " << res_mat << std::endl;
+    // Rcpp::Rcout << "res_mat: " << res_mat << std::endl;
 
     res[ res_counter ] = res_mat;
 
     // we can remove any res elements AFTER res_counter
     // because by this point we've filled everything
-    //Rcpp::Range coord_rng( 0, res_counter );
+    Rcpp::Range coord_rng( 0, res_counter );
 
     return Rcpp::List::create(
       Rcpp::_["nelems"] = nelems[ rng ],
       Rcpp::_["sums"] = sums[ rng ],
-      Rcpp::_["coords"] = res
+      Rcpp::_["coords"] = res[ coord_rng ]
     );
   }
 
