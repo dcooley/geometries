@@ -157,38 +157,35 @@ SEXP nest2(
 }
 
 
-// another new approach
-// find the row-indexes for the inner-most id column
-// but need to know the depth, becaues the inner-most id
-// is not guaranteed to be conitnuously unique
 
-// TODO:
-// get the rleid() of each group of id columns, starting from the most inner
-// so the first rleid() result is where the data.frame needs to be subest
-// then all the others say how nested they need to be
 
-// and record the 'depth' level ?
 // [[Rcpp::export]]
-SEXP rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids, bool last = false ) {
+SEXP rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids, Rcpp::IntegerVector geometry_cols, bool last ) {
 
-  // Rcpp::Rcout << "---------------" << std::endl;
+  // TODO:
+  // - Convert the geometry columns into a matrix
+  // - subset matrix rather than subset_df
+  // -
 
   // reference: data.table
   // https://github.com/Rdatatable/data.table/blob/8b93bb22715b45d38acf185f40d573bda8748cb4/src/uniqlist.c#L164
 
   Rcpp::StringVector df_names = l.names();
 
+  Rcpp::NumericMatrix nm = geometries::shapes::to_mat( l, geometry_cols );
+
+  //Rcpp::Rcout << "mat: " << nm << std::endl;
+
   R_xlen_t i;
   R_xlen_t n_rows = l.nrow(); //geometries::utils::sexp_n_row( l );
-  R_xlen_t n_cols = Rf_length( l );
+  //R_xlen_t n_cols = Rf_length( l );
   R_xlen_t n_id_cols = Rf_length( ids );
-  Rcpp::IntegerVector ians( n_rows );
+  //Rcpp::IntegerVector ians( n_rows );  // I don't actually need to keep the rleid values
 
   Rcpp::IntegerVector nelems( n_rows );
   Rcpp::IntegerVector sums( n_rows );
 
-  int grp = 1;
-  ians[ 0 ] = grp;
+  //int grp = 1;
 
   // values for keeping track of the indexes of 'l' (rows) which form the individual geometries;
   int start = 0;
@@ -225,13 +222,10 @@ SEXP rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids, bool last = false )
     }  // while end
 
     // at this point we now have a run-length-encoded vector
-    ians[ i ] = ( grp += !same );
-    // Rcpp::Rcout << "ians: " << ians << std::endl;
+    //ians[ i ] = ( grp += !same );
     n_elements += same;
     // at the point where same == 0 we have a new rleid
-    //
-    // can I put this into the correct list structure
-    // based on the id-level I'm at?
+
     if( !same ) {
 
       nelems[ res_counter ] = n_elements;
@@ -243,39 +237,50 @@ SEXP rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids, bool last = false )
 
       if( last ) {
         end = i - 1;
-        Rcpp::List subset_df = geometries::utils::subset_dataframe( l, df_names, start, end );
-        res[ res_counter ] = subset_df;
+
+        // Rcpp::List subset_df = geometries::utils::subset_dataframe( l, df_names, start, end );
+        // res[ res_counter ] = subset_df;
+
+        Rcpp::Range row_rng( start, end );
+
+        // Rcpp::Rcout << "row_rng: " << start << " - " << end << std::endl;
+        Rcpp::NumericMatrix res_mat = nm( row_rng, Rcpp::_ );
+        // Rcpp::Rcout << "res_mat: " << res_mat << std::endl;
+
+        res[ res_counter ] = res_mat;
+
         start = i;
       }
-      //elem_idx++;
       res_counter++;
     }
   }
 
-  // Rcpp::Rcout << "end n_elements: " << n_elements << std::endl;
   nelems[ res_counter ] = n_elements;
 
   cumulative_size = n_elements + cumulative_size;
   sums[ res_counter ] = cumulative_size;
-  //res_counter++;
 
   Rcpp::Range rng( 0, res_counter );
 
   if( last ) {
     end = i - 1;
-    // Rcpp::Rcout << "start: " << start << ", end: " << end << std::endl;
-    Rcpp::List subset_df = geometries::utils::subset_dataframe( l, df_names, start, end );
-    res[ res_counter ] = subset_df;
+
+    // Rcpp::List subset_df = geometries::utils::subset_dataframe( l, df_names, start, end );
+    // res[ res_counter ] = subset_df;
+
+    Rcpp::Range row_rng( start, end );
+
+    Rcpp::Rcout << "row_rng: " << start << " - " << end << std::endl;
+    Rcpp::NumericMatrix res_mat = nm( row_rng, Rcpp::_ );
+    Rcpp::Rcout << "res_mat: " << res_mat << std::endl;
+
+    res[ res_counter ] = res_mat;
 
     // we can remove any res elements AFTER res_counter
     // because by this point we've filled everything
-    // Rcpp::Rcout << "result list size: " << n_rows << std::endl;
-    // Rcpp::Rcout << "result elements : " << res_counter << std::endl;
+    //Rcpp::Range coord_rng( 0, res_counter );
 
-
-    //return res;
     return Rcpp::List::create(
-      Rcpp::_["rle"] = ians,
       Rcpp::_["nelems"] = nelems[ rng ],
       Rcpp::_["sums"] = sums[ rng ],
       Rcpp::_["coords"] = res
@@ -283,32 +288,29 @@ SEXP rcpp_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids, bool last = false )
   }
 
   return Rcpp::List::create(
-    Rcpp::_["rle"] = ians,
     Rcpp::_["nelems"] = nelems[ rng ],
     Rcpp::_["sums"] = sums[ rng ]
   );
-  //return nelems[ rng ];
+
 }
 
 // [[Rcpp::export]]
-SEXP rcpp_nested_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids ) {
+SEXP rcpp_nested_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids, Rcpp::IntegerVector geometry_cols ) {
 
   R_xlen_t i, j, k;
-  R_xlen_t n_rows = l.nrow(); //geometries::utils::sexp_n_row( l );
-  R_xlen_t n_cols = Rf_length( l );
+  //R_xlen_t n_rows = l.nrow(); //geometries::utils::sexp_n_row( l );
+  //R_xlen_t n_cols = Rf_length( l );
   R_xlen_t n_id_cols = Rf_length( ids );
 
-  //Rcpp::IntegerMatrix rleid( n_rows, n_id_cols );
   Rcpp::List rleid( n_id_cols );
 
   for( i = n_id_cols - 1; i >= 0; --i ) {
-    // Rcpp::Rcout << "i: " << i << std::endl;
 
     Rcpp::Range rng(0, i);
     Rcpp::IntegerVector rle_ids = ids[ rng ];
 
     bool last = i == n_id_cols - 1;
-    rleid( i ) = rcpp_rleid( l, rle_ids, last );
+    rleid( i ) = rcpp_rleid( l, rle_ids, geometry_cols, last );
 
     // here the rleid(i) tells us which elements of rleid(i+1)
     // belong in which "package"
@@ -338,23 +340,22 @@ SEXP rcpp_nested_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids ) {
         }
         prev_idx++;
 
-        // Rcpp::Rcout << "prev_idx: " << prev_idx << std::endl;
-        // Rcpp::Rcout << "out list size: " << out_size << std::endl;
-        Rcpp::List inner_list( out_size );
+        //Rcpp::List inner_list( out_size );
 
         // and fill?
         // Rcpp::Rcout << "fill with previous list from " << start_prev_idx << ", to " << prev_idx - 1 << std::endl;
         // Rcpp::Rcout << "prev_res size: " << prev_res.size() << std::endl;
-        R_xlen_t idx = prev_idx - 1;
-        for( k = 0; k < out_size; ++k ) {
-          //inner_list[ k ] = prev( idx );
+        // R_xlen_t idx = prev_idx - 1;
+        // for( k = 0; k < out_size; ++k ) {
+        //   Rcpp::List inner_coords = prev_res[ start_prev_idx + k ];
+        //   inner_list[ k ] = inner_coords;
+        //   idx++;
+        // }
+        //curr_res( j ) = inner_list;
 
-          Rcpp::List inner_coords = prev_res[ start_prev_idx + k ];
-          inner_list[ k ] = inner_coords;
+        Rcpp::Range inner_rng( start_prev_idx, prev_idx - 1);
+        curr_res( j ) = prev_res[ inner_rng ];
 
-          idx++;
-        }
-        curr_res( j ) = inner_list;
       }
       rleid( i ) = Rcpp::List::create(
         Rcpp::_["nelems"] = nelems,
@@ -363,27 +364,21 @@ SEXP rcpp_nested_rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids ) {
       );
     } else {
       // need to fill with the coordinates inside ["coords"]
-      // Rcpp::Rcout << "i: " << i << " (last) " << std::endl;
       // it gets here first, because it works from the inside out
 
-      Rcpp::List coords = curr["coords"];
+      SEXP coords = curr["coords"];
 
       rleid( i ) = Rcpp::List::create(
         Rcpp::_["nelems"] = nelems,
         Rcpp::_["sums"] = curr_sums,
         Rcpp::_["res"] = coords
       );
-
-      //return rleid;
     }
-
-
   }
 
+  //return rleid;
   Rcpp::List out = rleid[0];
-  return out;
   return out["res"];
-  //return rleid[0];
 }
 
 // need to know how many unique elements are in the id-column to the right...

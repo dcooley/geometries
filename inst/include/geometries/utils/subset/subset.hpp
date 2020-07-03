@@ -45,6 +45,17 @@ namespace utils {
     return Rcpp::List::create(); // never reaches
   }
 
+  // template< int RTYPE >
+  // inline SEXP subset_matrix(
+  //   Rcpp::Matrix< RTYPE >& x,
+  //   R_xlen_t& start,
+  //   R_xlen_t& end
+  // ) {
+  //   // only subset by rows, not columns
+  //   Rcpp::Range rng( start, end );
+  //   return x( rng, Rcpp::_ );
+  // }
+
   inline Rcpp::List subset_dataframe(
     Rcpp::DataFrame& df,
     Rcpp::StringVector& cols,

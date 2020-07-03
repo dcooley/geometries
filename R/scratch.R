@@ -1,6 +1,22 @@
 
-## Nested RLEID: to tell me th elist element, and the level of nesting
+## Subsetting an Rcpp::List by a range?
+
+# library(Rcpp)
 #
+# cppFunction(
+#   code = '
+#     Rcpp::List subset_list( Rcpp::List l ) {
+#       Rcpp::Range rng(0,1);
+#       return l[rng];
+#     }
+#   '
+# )
+#
+# lst <- list(1,2,3)
+# subset_list( lst )
+
+# Nested RLEID: to tell me th elist element, and the level of nesting
+
 # df <- data.frame(
 #   id1 = c(1,1,1,2,2,2,3,3,3,4,4)
 #   , id2 = c(1,1,2,1,1,1,1,1,2,1,1)
@@ -9,8 +25,9 @@
 #   , y = 2
 # )
 # df
-# geometries:::rcpp_nested_rleid( df, c(1))
-# geometries:::rcpp_nested_rleid( df, c(0,1,2))
+#
+# geometries:::rcpp_nested_rleid( df, c(1), c(3,4))
+# geometries:::rcpp_nested_rleid( df, c(0,1,2), c(3,4))
 #
 #
 # ## iff we're on the last ID col, do the subsetting also
