@@ -1,5 +1,5 @@
-#
-# ## Nested RLEID: to tell me th elist element, and the level of nesting
+
+## Nested RLEID: to tell me th elist element, and the level of nesting
 #
 # df <- data.frame(
 #   id1 = c(1,1,1,2,2,2,3,3,3,4,4)
@@ -8,6 +8,7 @@
 #   , x = 1
 #   , y = 2
 # )
+# df
 # geometries:::rcpp_nested_rleid( df, c(1))
 # geometries:::rcpp_nested_rleid( df, c(0,1,2))
 #
@@ -117,24 +118,26 @@
 # states_df$region <- factor(states_df$region)
 #
 # microbenchmark::microbenchmark(
-#   wk = { coords_polygon_translate_wkb(
-#     states_df$long,
-#     states_df$lat,
-#     feature_id = states_df$region,
-#     ring_id = states_df$group
-#   )
+#   wk = {
+#     wk <- coords_polygon_translate_wkb(
+#       states_df$long,
+#       states_df$lat,
+#       feature_id = states_df$region,
+#       ring_id = states_df$group
+#     )
 #   },
 #
-#   wk_sxp = { coords_polygon_translate_wksxp(
-#     states_df$long,
-#     states_df$lat,
-#     feature_id = states_df$region,
-#     ring_id = states_df$group
-#   )
+#   wk_sxp = {
+#     wk_sxp <- coords_polygon_translate_wksxp(
+#       states_df$long,
+#       states_df$lat,
+#       feature_id = states_df$region,
+#       ring_id = states_df$group
+#     )
 #   },
 #
 #   geom = {
-#     geometries:::rcpp_nested_rleid(
+#     g <- geometries:::rcpp_nested_rleid(
 #       states_df
 #       , c( 4, 5 )
 #     )
