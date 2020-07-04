@@ -39,80 +39,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpp_get_vec
-SEXP rcpp_get_vec(SEXP x, SEXP cols);
-RcppExport SEXP _geometries_rcpp_get_vec(SEXP xSEXP, SEXP colsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type cols(colsSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_get_vec(x, cols));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpp_to_mat
-SEXP rcpp_to_mat(SEXP x, SEXP cols);
-RcppExport SEXP _geometries_rcpp_to_mat(SEXP xSEXP, SEXP colsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type cols(colsSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_to_mat(x, cols));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpp_get_list_mat
-SEXP rcpp_get_list_mat(SEXP x, SEXP cols, SEXP id);
-RcppExport SEXP _geometries_rcpp_get_list_mat(SEXP xSEXP, SEXP colsSEXP, SEXP idSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type cols(colsSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type id(idSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_get_list_mat(x, cols, id));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpp_rleid
-SEXP rcpp_rleid(Rcpp::DataFrame l, Rcpp::IntegerVector ids, Rcpp::IntegerVector geometry_cols, bool last);
-RcppExport SEXP _geometries_rcpp_rleid(SEXP lSEXP, SEXP idsSEXP, SEXP geometry_colsSEXP, SEXP lastSEXP) {
+// rcpp_make_geometry
+SEXP rcpp_make_geometry(Rcpp::DataFrame l, Rcpp::IntegerVector ids, Rcpp::IntegerVector geometry_cols, Rcpp::StringVector class_attribute);
+RcppExport SEXP _geometries_rcpp_make_geometry(SEXP lSEXP, SEXP idsSEXP, SEXP geometry_colsSEXP, SEXP class_attributeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::DataFrame >::type l(lSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type ids(idsSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type geometry_cols(geometry_colsSEXP);
-    Rcpp::traits::input_parameter< bool >::type last(lastSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_rleid(l, ids, geometry_cols, last));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpp_nested_rleid
-SEXP rcpp_nested_rleid(Rcpp::DataFrame l, Rcpp::IntegerVector ids, Rcpp::IntegerVector geometry_cols);
-RcppExport SEXP _geometries_rcpp_nested_rleid(SEXP lSEXP, SEXP idsSEXP, SEXP geometry_colsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type l(lSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type ids(idsSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type geometry_cols(geometry_colsSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_nested_rleid(l, ids, geometry_cols));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpp_nest2
-SEXP rcpp_nest2(Rcpp::DataFrame df, Rcpp::StringVector id_cols, int depth);
-RcppExport SEXP _geometries_rcpp_nest2(SEXP dfSEXP, SEXP id_colsSEXP, SEXP depthSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type df(dfSEXP);
-    Rcpp::traits::input_parameter< Rcpp::StringVector >::type id_cols(id_colsSEXP);
-    Rcpp::traits::input_parameter< int >::type depth(depthSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_nest2(df, id_cols, depth));
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type class_attribute(class_attributeSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_make_geometry(l, ids, geometry_cols, class_attribute));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -143,12 +80,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_calculate_bbox", (DL_FUNC) &_geometries_rcpp_calculate_bbox, 2},
     {"_geometries_rcpp_geometry_dimensions", (DL_FUNC) &_geometries_rcpp_geometry_dimensions, 1},
     {"_geometries_rcpp_coordinates", (DL_FUNC) &_geometries_rcpp_coordinates, 1},
-    {"_geometries_rcpp_get_vec", (DL_FUNC) &_geometries_rcpp_get_vec, 2},
-    {"_geometries_rcpp_to_mat", (DL_FUNC) &_geometries_rcpp_to_mat, 2},
-    {"_geometries_rcpp_get_list_mat", (DL_FUNC) &_geometries_rcpp_get_list_mat, 3},
-    {"_geometries_rcpp_rleid", (DL_FUNC) &_geometries_rcpp_rleid, 4},
-    {"_geometries_rcpp_nested_rleid", (DL_FUNC) &_geometries_rcpp_nested_rleid, 3},
-    {"_geometries_rcpp_nest2", (DL_FUNC) &_geometries_rcpp_nest2, 3},
+    {"_geometries_rcpp_make_geometry", (DL_FUNC) &_geometries_rcpp_make_geometry, 4},
     {"_geometries_rcpp_nest", (DL_FUNC) &_geometries_rcpp_nest, 2},
     {"_geometries_tests", (DL_FUNC) &_geometries_tests, 0},
     {NULL, NULL, 0}

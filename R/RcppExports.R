@@ -13,28 +13,8 @@ rcpp_coordinates <- function(geometries) {
     .Call(`_geometries_rcpp_coordinates`, geometries)
 }
 
-rcpp_get_vec <- function(x, cols) {
-    .Call(`_geometries_rcpp_get_vec`, x, cols)
-}
-
-rcpp_to_mat <- function(x, cols) {
-    .Call(`_geometries_rcpp_to_mat`, x, cols)
-}
-
-rcpp_get_list_mat <- function(x, cols, id) {
-    .Call(`_geometries_rcpp_get_list_mat`, x, cols, id)
-}
-
-rcpp_rleid <- function(l, ids, geometry_cols, last) {
-    .Call(`_geometries_rcpp_rleid`, l, ids, geometry_cols, last)
-}
-
-rcpp_nested_rleid <- function(l, ids, geometry_cols) {
-    .Call(`_geometries_rcpp_nested_rleid`, l, ids, geometry_cols)
-}
-
-rcpp_nest2 <- function(df, id_cols, depth) {
-    .Call(`_geometries_rcpp_nest2`, df, id_cols, depth)
+rcpp_make_geometry <- function(l, ids, geometry_cols, class_attribute) {
+    .Call(`_geometries_rcpp_make_geometry`, l, ids, geometry_cols, class_attribute)
 }
 
 rcpp_nest <- function(x, depth) {

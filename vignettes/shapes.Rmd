@@ -74,13 +74,16 @@ cppFunction(
   depends = "geometries"
   , includes = '#include "geometries/shapes/shapes.hpp"'
   , code = '
-    SEXP polygon( SEXP df, SEXP geometry_cols, SEXP line_id ) {
-      return geometries::shapes::to_listMat( df, geometry_cols, line_id );
+    SEXP polygon( DataFrame df, IntegerVector id_cols, IntegerVector geometry_cols, Rcpp::StringVector class_attribute ) {
+      return geometries::shapes::make_geometry( df, id_cols, geometry_cols, class_attribute );
     }
   '
 )
 
-polygon( df, c("x","y"), c("id") )
+polygon( df, c(5), c(0,1,2), "my_polygon")
+
+res <- polygon( df, c(5), c(0,1,2), c("XYZ", "POLYGON","sfg") )
+
 ```
 
 

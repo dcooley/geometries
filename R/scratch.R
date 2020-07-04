@@ -26,8 +26,9 @@
 # )
 # df
 #
-# geometries:::rcpp_nested_rleid( df, c(1), c(3,4))
-# geometries:::rcpp_nested_rleid( df, c(0,1,2), c(3,4))
+# res <- geometries:::rcpp_make_geometry( df, c(1), c(3,4), c("XY","POLYGON","sfg"))
+# res
+# geometries:::rcpp_make_geometry( df, c(0,1,2), c(3,4))
 #
 #
 # ## iff we're on the last ID col, do the subsetting also
@@ -47,7 +48,7 @@
 # )
 # df
 #
-# geometries:::rcpp_nested_rleid( df, c(0,1) )
+# geometries:::rcpp_make_geometry( df, c(0,1) )
 
 
 # #
@@ -154,7 +155,7 @@
 #   },
 #
 #   geom = {
-#     g <- geometries:::rcpp_nested_rleid(
+#     g <- geometries:::rcpp_make_geometry(
 #       states_df
 #       , c( 4, 5 )
 #     )
