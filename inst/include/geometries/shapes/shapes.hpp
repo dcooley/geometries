@@ -91,11 +91,17 @@ namespace shapes {
         if( last ) {
           end = i - 1;
 
+          Rcpp::Rcout << " set class? " << std::endl;
           // Rcpp::List subset_df = geometries::utils::subset_dataframe( l, df_names, start, end );
           // res[ res_counter ] = subset_df;
 
           Rcpp::Range row_rng( start, end );
           Rcpp::NumericMatrix res_mat = nm( row_rng, Rcpp::_ );
+
+          if( has_class && n_id_cols == 1 ) {
+            Rcpp::StringVector cls = {"class"};
+            Rf_setAttrib( res_mat, cls, class_attribute );
+          }
 
           res[ res_counter ] = res_mat;
 
@@ -127,7 +133,11 @@ namespace shapes {
       Rcpp::Range row_rng( start, end );
       Rcpp::NumericMatrix res_mat = nm( row_rng, Rcpp::_ );
 
-      //Rcpp::Rcout << " set class? " << std::endl;
+      Rcpp::Rcout << " set class? " << std::endl;
+      if( has_class && n_id_cols == 1 ) {
+        Rcpp::StringVector cls = {"class"};
+        Rf_setAttrib( res_mat, cls, class_attribute );
+      }
 
       res[ res_counter ] = res_mat;
 
@@ -150,6 +160,8 @@ namespace shapes {
   }
 
 
+  // works on the assumption that every different outer-id is a different geometry
+  // so any attributes are applied at the outer-id level
   inline SEXP make_geometry(
       Rcpp::DataFrame& l,
       Rcpp::IntegerVector ids,
@@ -175,6 +187,10 @@ namespace shapes {
       bool last = i == n_id_cols - 1;
       bool first = i == 0;
       Rcpp::Rcout << "i: " << i << ", first; " << first << std::endl;
+
+      // Iff there's only one ID coulmn, the attributes need to be assigned inside 'split'
+      // because once back here, a single-id column split doesn't get packaged up
+      // AND iff nesting == n_id_cols (1)
 
       rleid( i ) = split_by_id( l, rle_ids, geometry_cols, last, class_attribute );
 
@@ -211,14 +227,14 @@ namespace shapes {
           prev_idx++;
 
           Rcpp::Range inner_rng( start_prev_idx, prev_idx - 1);
-          //Rcpp::List obj = prev_res[ inner_rng ];
+          Rcpp::List obj = prev_res[ inner_rng ];
 
-          // if( has_class) {
-          //   Rcpp::Rcout << "set class" << std::endl;
-          //   Rcpp::StringVector cls = {"class"};
-          //   Rf_setAttrib( obj, cls, class_attribute );
-          // }
-          curr_res( j ) = prev_res[ inner_rng ];
+          if( first && has_class && n_id_cols != 1 ) {
+            Rcpp::Rcout << "set class" << std::endl;
+            Rcpp::StringVector cls = {"class"};
+            Rf_setAttrib( obj, cls, class_attribute );
+          }
+          curr_res( j ) = obj;
         }
 
         if( first ) {
@@ -236,11 +252,11 @@ namespace shapes {
         // it gets here first, because it works from the inside out
         SEXP coords = curr["coords"];
 
-        // if( has_class) {
-        //   Rcpp::Rcout << "set class" << std::endl;
-        //   Rcpp::StringVector cls = {"class"};
-        //   Rf_setAttrib( coords, cls, class_attribute );
-        // }
+        if( first && has_class && n_id_cols != 1  ) {
+          //Rcpp::Rcout << "set class" << std::endl;
+          Rcpp::StringVector cls = {"class"};
+          Rf_setAttrib( coords, cls, class_attribute );
+        }
 
         rleid( i ) = Rcpp::List::create(
           Rcpp::_["nelems"] = nelems,

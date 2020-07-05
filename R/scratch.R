@@ -26,7 +26,9 @@
 # )
 # df
 #
-# res <- geometries:::rcpp_make_geometry( df, c(1), c(3,4), c("XY","POLYGON","sfg"))
+# res <- geometries:::rcpp_make_geometry( df, c(1), c(3,4), c("my_polygon"))
+# # res
+# res <- geometries:::rcpp_make_geometry( df, c(0), c(3,4), c("XY","LINESTRING","sfg"))
 # res
 # geometries:::rcpp_make_geometry( df, c(0,1,2), c(3,4))
 #
