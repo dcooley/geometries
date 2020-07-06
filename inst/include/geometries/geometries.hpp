@@ -127,18 +127,10 @@ namespace geometries {
       Rcpp::Nullable< Rcpp::StringVector > class_attribute
   ) {
 
-    // Rcpp::Rcout << "x" << std::endl;
-    // Rcpp::Rcout << "Ids: " << ids << std::endl;
-    // Rcpp::Rcout << "geoms: " << geometry_cols << std::endl;
-
     if( Rf_isMatrix( x ) ) {
 
       Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-      // Rcpp::Rcout << "nm: " << nm << std::endl;
-
       Rcpp::DataFrame df = geometries::matrix::mat_to_df( nm );
-      // Rcpp::Rcout << "df made " << std::endl;
-
       return make_geometries( df, ids, geometry_cols, class_attribute );
 
     } else if ( Rf_inherits( x, "data.frame") ) {
