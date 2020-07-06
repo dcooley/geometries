@@ -39,17 +39,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpp_make_geometry
-SEXP rcpp_make_geometry(Rcpp::DataFrame l, Rcpp::IntegerVector ids, Rcpp::IntegerVector geometry_cols, Rcpp::StringVector class_attribute);
-RcppExport SEXP _geometries_rcpp_make_geometry(SEXP lSEXP, SEXP idsSEXP, SEXP geometry_colsSEXP, SEXP class_attributeSEXP) {
+// rcpp_make_geometries
+SEXP rcpp_make_geometries(Rcpp::DataFrame df, Rcpp::IntegerVector id_cols, Rcpp::IntegerVector geometry_cols, Rcpp::Nullable< Rcpp::StringVector > class_attributes);
+RcppExport SEXP _geometries_rcpp_make_geometries(SEXP dfSEXP, SEXP id_colsSEXP, SEXP geometry_colsSEXP, SEXP class_attributesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type l(lSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type ids(idsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type df(dfSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type id_cols(id_colsSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type geometry_cols(geometry_colsSEXP);
-    Rcpp::traits::input_parameter< Rcpp::StringVector >::type class_attribute(class_attributeSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_make_geometry(l, ids, geometry_cols, class_attribute));
+    Rcpp::traits::input_parameter< Rcpp::Nullable< Rcpp::StringVector > >::type class_attributes(class_attributesSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_make_geometries(df, id_cols, geometry_cols, class_attributes));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -80,7 +80,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_calculate_bbox", (DL_FUNC) &_geometries_rcpp_calculate_bbox, 2},
     {"_geometries_rcpp_geometry_dimensions", (DL_FUNC) &_geometries_rcpp_geometry_dimensions, 1},
     {"_geometries_rcpp_coordinates", (DL_FUNC) &_geometries_rcpp_coordinates, 1},
-    {"_geometries_rcpp_make_geometry", (DL_FUNC) &_geometries_rcpp_make_geometry, 4},
+    {"_geometries_rcpp_make_geometries", (DL_FUNC) &_geometries_rcpp_make_geometries, 4},
     {"_geometries_rcpp_nest", (DL_FUNC) &_geometries_rcpp_nest, 2},
     {"_geometries_tests", (DL_FUNC) &_geometries_tests, 0},
     {NULL, NULL, 0}

@@ -1,0 +1,167 @@
+---
+title: "geometries"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{geometries}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#"
+)
+```
+
+```{r setup }
+library(geometries)
+library(Rcpp)
+```
+
+
+### Header
+
+```
+#include "geometries/geometries.hpp"
+```
+
+### Functions
+
+```
+SEXP make_geometries()
+```
+
+## data as geometries
+
+When one thinks of geometries in `R`, one of the most common data structures is the matrix. For example, in the `sf` world, an POINT is a single-row matrix (i.e, a vector)
+
+
+```
+sf::st_point( 1:2 )
+POINT (1 2)
+```
+
+A LINESTRING is a matrix
+
+```
+sf::st_linestring( matrix( c(1,1,1,2,2,2,2,1,1,1), ncol = 2, byrow = T) )
+LINESTRING (1 1, 1 2, 2 2, 2 1, 1 1)
+```
+
+and a POLYGON is a list of matrices
+
+
+```
+sf::st_polygon( list( matrix( c(1,1,1,2,2,2,2,1,1,1), ncol = 2, byrow = T) ) )
+POLYGON ((1 1, 1 2, 2 2, 2 1, 1 1))
+```
+
+And to group these into a **collection** you would put each geometry inside a list
+
+```
+
+sf::st_sfc(
+  list(
+    sf::st_linestring( matrix( c(1,1,1,2,2,2,2,1,1,1), ncol = 2, byrow = T) )
+    , sf::st_polygon( list( matrix( c(1,1,1,2,2,2,2,1,1,1), ncol = 2, byrow = T) ) )
+  )
+)
+
+Geometry set for 2 features 
+geometry type:  GEOMETRY
+dimension:      XY
+bbox:           xmin: 1 ymin: 1 xmax: 2 ymax: 2
+CRS:            NA
+LINESTRING (1 1, 1 2, 2 2, 2 1, 1 1)
+POLYGON ((1 1, 1 2, 2 2, 2 1, 1 1))
+```
+
+
+---
+
+
+From my limited research (i.e., practically none), I estimate most users will have a `data.frame` and will want to convert it into a collection of geometries. 
+
+For example, take a `data.frame` of `x` and `y` coordinates, and two `id` columns. 
+
+
+```{r}
+
+df <- data.frame(
+  id1 = c( rep(1,12), rep(2, 12) )
+  , id2 = c( rep(1:4, each = 3), rep(1:4, each = 3) )
+  , x = 1:24
+  , y = 24:1
+)
+
+df
+
+```
+
+You can think of the ID columns in this example as
+
+- `id1` defines a polygon
+- `id2` is each ring inside the polygon
+
+Calling `geometries::make_geometries()` will split this data.frame by these ID columns and put the resulting matrices inside list elements.
+
+```{r}
+cppFunction(
+  depends = "geometries"
+  , includes = '#include "geometries/geometries.hpp"'
+  , code = '
+    SEXP my_shape( DataFrame df, IntegerVector id_cols, IntegerVector geometry_cols ) {
+      return geometries::make_geometries( df, id_cols, geometry_cols );
+    }
+  '
+)
+
+my_shape( df, c(0,1), c(2,3) )
+```
+
+
+If you want to define a class for each geometry you can supply a "class" vector as the 4th argument
+
+```{r}
+
+cppFunction(
+  depends = "geometries"
+  , includes = '#include "geometries/geometries.hpp"'
+  , code = '
+    SEXP my_shape( Rcpp::DataFrame df, Rcpp::IntegerVector id_cols, Rcpp::IntegerVector geometry_cols, Rcpp::StringVector class_attributes ) {
+      return geometries::make_geometries( df, id_cols, geometry_cols, class_attributes );
+    }
+  '
+)
+
+my_shape( df, c(0,1), c(2,3), "my_polygon")
+
+```
+
+Notice here that each list element now has a `"my_polygon"` class.
+
+And if you have `library(sf)` loaded, setting the class as `sfg` `POLYGON`, you should see each elemented printed in the usual `sf` way
+
+```{r}
+
+my_shape( df, c(0,1), c(2,3), c("XY", "POLYGON","sfg") )
+
+```
+
+You can use this function to define any shape you want. The number of `id` columns you supply will determine how deeply nested the matrices are. If I add two more `id` columns, this will nest each matrix 2-levels deeper
+
+
+```{r}
+
+df$id0 <- 1
+df$id00 <- 1
+head( df ) 
+
+my_shape( df, c(0,1,4,5), c(2,3), "my_new_shape")
+
+```
+
+

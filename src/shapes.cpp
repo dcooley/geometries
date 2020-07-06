@@ -3,9 +3,10 @@
 //#include "geometries/shapes/shapes.hpp"
 //#include "geometries/utils/dataframe/dataframe.hpp"
 
+#include "geometries/geometries.hpp"
 #include "geometries/shapes/nest/nest.hpp"
 #include "geometries/coordinates/dimensions.hpp"
-#include "geometries/shapes/shapes.hpp"
+//#include "geometries/shapes/shapes.hpp"
 
 // Nest to accept a vector of ids
 // if id.length() == depth
@@ -97,16 +98,16 @@
 //   //return mpl;
 // }
 
-
-// [[Rcpp::export]]
-SEXP rcpp_make_geometry(
-    Rcpp::DataFrame l,
-    Rcpp::IntegerVector ids,
-    Rcpp::IntegerVector geometry_cols,
-    Rcpp::StringVector class_attribute
-  ) {
-  return geometries::shapes::make_geometry( l, ids, geometry_cols, class_attribute );
-}
+//
+// // [[Rcpp::export]]
+// SEXP rcpp_make_geometry(
+//     Rcpp::DataFrame l,
+//     Rcpp::IntegerVector ids,
+//     Rcpp::IntegerVector geometry_cols,
+//     Rcpp::StringVector class_attribute
+//   ) {
+//   return geometries::make_geometries( l, ids, geometry_cols, class_attribute );
+// }
 
 
 // SEXP nest3( Rcpp::DataFrame df, Rcpp::StringVector id_cols, int depth ) {

@@ -1,6 +1,6 @@
 #include <Rcpp.h>
 
-#include "geometries/geometries.hpp"
+#include "geometries/bbox/bbox.hpp"
 
 // ----------------------------
 // bbox.hpp

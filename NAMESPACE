@@ -2,5 +2,6 @@
 
 export(gm_coordinates)
 export(gm_dimensions)
+export(gm_make_geometries)
 importFrom(Rcpp,sourceCpp)
 useDynLib(geometries, .registration = TRUE)
