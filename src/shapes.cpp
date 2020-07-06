@@ -98,16 +98,6 @@
 //   //return mpl;
 // }
 
-//
-// // [[Rcpp::export]]
-// SEXP rcpp_make_geometry(
-//     Rcpp::DataFrame l,
-//     Rcpp::IntegerVector ids,
-//     Rcpp::IntegerVector geometry_cols,
-//     Rcpp::StringVector class_attribute
-//   ) {
-//   return geometries::make_geometries( l, ids, geometry_cols, class_attribute );
-// }
 
 
 // SEXP nest3( Rcpp::DataFrame df, Rcpp::StringVector id_cols, int depth ) {
@@ -189,6 +179,12 @@
 //   return nest3( df, id_cols, depth );
 // }
 
+#include "geometries/utils/rleid/rleid.hpp"
+
+// [[Rcpp::export]]
+Rcpp::IntegerVector rcpp_rleid( Rcpp::DataFrame df, Rcpp::IntegerVector ids ) {
+  return geometries::utils::rleid( df, ids );
+}
 
 
 // [[Rcpp::export]]

@@ -145,14 +145,14 @@ namespace utils {
 
       return Rcpp::List::create(
         Rcpp::_["nelems"] = nelems[ rng ],
-                                  Rcpp::_["sums"] = sums[ rng ],
-                                                        Rcpp::_["coords"] = res[ coord_rng ]
+        Rcpp::_["sums"] = sums[ rng ],
+        Rcpp::_["coords"] = res[ coord_rng ]
       );
     }
 
     return Rcpp::List::create(
       Rcpp::_["nelems"] = nelems[ rng ],
-                                Rcpp::_["sums"] = sums[ rng ]
+      Rcpp::_["sums"] = sums[ rng ]
     );
 
   }

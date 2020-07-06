@@ -53,6 +53,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rcpp_rleid
+Rcpp::IntegerVector rcpp_rleid(Rcpp::DataFrame df, Rcpp::IntegerVector ids);
+RcppExport SEXP _geometries_rcpp_rleid(SEXP dfSEXP, SEXP idsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type df(dfSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type ids(idsSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_rleid(df, ids));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rcpp_nest
 SEXP rcpp_nest(SEXP x, int depth);
 RcppExport SEXP _geometries_rcpp_nest(SEXP xSEXP, SEXP depthSEXP) {
@@ -81,6 +93,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_geometry_dimensions", (DL_FUNC) &_geometries_rcpp_geometry_dimensions, 1},
     {"_geometries_rcpp_coordinates", (DL_FUNC) &_geometries_rcpp_coordinates, 1},
     {"_geometries_rcpp_make_geometries", (DL_FUNC) &_geometries_rcpp_make_geometries, 4},
+    {"_geometries_rcpp_rleid", (DL_FUNC) &_geometries_rcpp_rleid, 2},
     {"_geometries_rcpp_nest", (DL_FUNC) &_geometries_rcpp_nest, 2},
     {"_geometries_tests", (DL_FUNC) &_geometries_tests, 0},
     {NULL, NULL, 0}

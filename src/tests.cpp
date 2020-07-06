@@ -8,7 +8,7 @@
 /*
  * testing Numeric and Integer bboxes are created
  */
-SEXP make_box() {
+SEXP test_bbox() {
 
   Rcpp::NumericVector nv(4);  // xmin, ymin, xmax, ymax
   nv(0) = nv(1) = nv(2) = nv(3) = 0;
@@ -31,11 +31,47 @@ SEXP make_box() {
 
 }
 
+// ----------------------------
+// rleid.hpp
+
+#include "geometries/utils/rleid/rleid.hpp"
+
+SEXP test_rleid() {
+
+  Rcpp::NumericVector x = {1,1,2,2,2,3};
+  Rcpp::NumericVector y = {1,1,1,2,2,2};
+  Rcpp::NumericVector z = {1,2,3,4,5,6};
+
+  Rcpp::List l = Rcpp::List::create(
+    Rcpp::_["x"] = x,
+    Rcpp::_["y"] = y,
+    Rcpp::_["z"] = z
+  );
+  Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( l );
+
+  Rcpp::IntegerVector id1 = {0};
+  Rcpp::IntegerVector id2 = {0,1};
+  Rcpp::IntegerVector id3 = {0,1,2};
+
+  Rcpp::IntegerVector xx = geometries::utils::rleid( df, id1 );
+  Rcpp::IntegerVector xy = geometries::utils::rleid( df, id2 );
+  Rcpp::IntegerVector xyz = geometries::utils::rleid( df, id3 );
+
+  return Rcpp::List::create(
+    Rcpp::_["x"] = xx,
+    Rcpp::_["y"] = xy,
+    Rcpp::_["z"] = xyz
+  );
+
+}
+
 // [[Rcpp::export(.tests)]]
 SEXP tests() {
-  Rcpp::List mb = make_box();
+  Rcpp::List mb = test_bbox();
+  Rcpp::List rleid = test_rleid();
   return Rcpp::List::create(
-    Rcpp::_["make_box"] = mb
+    Rcpp::_["test_bbox"] = mb,
+    Rcpp::_["test_rleid"] = rleid
   );
 }
 

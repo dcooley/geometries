@@ -17,6 +17,10 @@ rcpp_make_geometries <- function(df, id_cols, geometry_cols, class_attributes = 
     .Call(`_geometries_rcpp_make_geometries`, df, id_cols, geometry_cols, class_attributes)
 }
 
+rcpp_rleid <- function(df, ids) {
+    .Call(`_geometries_rcpp_rleid`, df, ids)
+}
+
 rcpp_nest <- function(x, depth) {
     .Call(`_geometries_rcpp_nest`, x, depth)
 }
