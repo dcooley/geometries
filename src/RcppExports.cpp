@@ -40,16 +40,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // rcpp_make_geometries
-SEXP rcpp_make_geometries(Rcpp::DataFrame df, Rcpp::IntegerVector id_cols, Rcpp::IntegerVector geometry_cols, Rcpp::Nullable< Rcpp::StringVector > class_attributes);
-RcppExport SEXP _geometries_rcpp_make_geometries(SEXP dfSEXP, SEXP id_colsSEXP, SEXP geometry_colsSEXP, SEXP class_attributesSEXP) {
+SEXP rcpp_make_geometries(SEXP x, SEXP id_cols, SEXP geometry_cols, Rcpp::Nullable< Rcpp::StringVector > class_attributes);
+RcppExport SEXP _geometries_rcpp_make_geometries(SEXP xSEXP, SEXP id_colsSEXP, SEXP geometry_colsSEXP, SEXP class_attributesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type df(dfSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type id_cols(id_colsSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type geometry_cols(geometry_colsSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type id_cols(id_colsSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type geometry_cols(geometry_colsSEXP);
     Rcpp::traits::input_parameter< Rcpp::Nullable< Rcpp::StringVector > >::type class_attributes(class_attributesSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_make_geometries(df, id_cols, geometry_cols, class_attributes));
+    rcpp_result_gen = Rcpp::wrap(rcpp_make_geometries(x, id_cols, geometry_cols, class_attributes));
     return rcpp_result_gen;
 END_RCPP
 }

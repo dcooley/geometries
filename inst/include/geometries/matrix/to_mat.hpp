@@ -5,13 +5,7 @@
 #include "geometries/utils/utils.hpp"
 
 namespace geometries {
-namespace shapes {
-
-  // #nocov start
-
-  // TODO
-  // add method for conerting list[[ list[[ mat ]] ]] into a mat
-  // which also adds an ID column
+namespace matrix {
 
   /*
    * to_listMat
@@ -220,8 +214,6 @@ namespace shapes {
     }
     }
   }
-
-  // #nocov end
 
 } // shapes
 } // geometries

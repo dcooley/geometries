@@ -5,8 +5,7 @@
 #include "geometries/utils/utils.hpp"
 
 namespace geometries {
-namespace shapes {
-
+namespace nest {
 
   inline SEXP nest( SEXP x, int depth ) {
     if( depth < 1 ) {

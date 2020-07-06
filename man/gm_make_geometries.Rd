@@ -4,10 +4,10 @@
 \alias{gm_make_geometries}
 \title{make geometries}
 \usage{
-gm_make_geometries(df, id_cols, geometry_cols, class_attributes = NULL)
+gm_make_geometries(obj, id_cols, geometry_cols, class_attributes = NULL)
 }
 \arguments{
-\item{df}{data.frame}
+\item{obj}{data.frame}
 
 \item{id_cols}{vector of id columns (iether integer or string)}
 
@@ -26,7 +26,7 @@ df <- data.frame(
   , y = 10:1
 )
 
-gm_make_geometries(df, id_cols = c(1), geometry_cols = c(2,3))
+gm_make_geometries(df, id_cols = c(1L), geometry_cols = c(2L,3L))
 
 ## Adding a class attribute
 gm_make_geometries(df, id_cols = c(1), geometry_cols = c(2,3), "my_line_object")
@@ -37,5 +37,10 @@ gm_make_geometries(df, id_cols = c(1,4), geometry_cols = c(2,3), "my_multiline_o
 
 ## Using character column names
 gm_make_geometries(df, id_cols = c("id","id1"), geometry_cols = c("x","y") )
+
+## matrix input
+m <- as.matrix( df )
+gm_make_geometries( m, id_cols = c("id","id1"), geometry_cols = c("x","y") )
+gm_make_geometries( m, id_cols = c(1,4), geometry_cols = c(2,3) )
 
 }

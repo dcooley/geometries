@@ -6,13 +6,13 @@ namespace utils {
 
   // from data.table
   // https://github.com/Rdatatable/data.table/blob/8b93bb22715b45d38acf185f40d573bda8748cb4/src/uniqlist.c#L164
-  inline Rcpp::IntegerVector rleid( Rcpp::DataFrame l, Rcpp::IntegerVector ids ) {
+  inline Rcpp::IntegerVector rleid( Rcpp::DataFrame& df, Rcpp::IntegerVector& ids ) {
     R_xlen_t i;
-    R_xlen_t n_rows = l.nrow();
+    R_xlen_t n_rows = df.nrow();
     //R_xlen_t n_cols = Rf_length( l );
     R_xlen_t n_id_cols = Rf_length( ids );
 
-    Rcpp::IntegerVector ians( n_rows );  // I don't actually need to keep the rleid values
+    Rcpp::IntegerVector ians( n_rows );
     int grp = 1;
     ians[0] = grp;
 
@@ -20,7 +20,7 @@ namespace utils {
       bool same = true;
       int j = n_id_cols;
       while( --j >= 0 && same ) {
-        SEXP jcol = VECTOR_ELT( l, ids[ j ] );
+        SEXP jcol = VECTOR_ELT( df, ids[ j ] );
         switch( TYPEOF( jcol ) ) {
         case LGLSXP: {}
         case INTSXP: {
@@ -47,7 +47,6 @@ namespace utils {
     }
 
     return ians;
-
   }
 
 } // utils

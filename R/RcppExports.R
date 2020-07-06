@@ -13,8 +13,8 @@ rcpp_coordinates <- function(geometries) {
     .Call(`_geometries_rcpp_coordinates`, geometries)
 }
 
-rcpp_make_geometries <- function(df, id_cols, geometry_cols, class_attributes = NULL) {
-    .Call(`_geometries_rcpp_make_geometries`, df, id_cols, geometry_cols, class_attributes)
+rcpp_make_geometries <- function(x, id_cols, geometry_cols, class_attributes = NULL) {
+    .Call(`_geometries_rcpp_make_geometries`, x, id_cols, geometry_cols, class_attributes)
 }
 
 rcpp_rleid <- function(df, ids) {
