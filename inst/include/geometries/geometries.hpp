@@ -22,6 +22,7 @@ namespace geometries {
     // Rcpp::Rcout << "Ids: " << ids << std::endl;
     // Rcpp::Rcout << "geoms: " << geometry_cols << std::endl;
     bool has_class = !Rf_isNull( class_attribute );
+    // Rcpp::Rcout << "has_class: " << has_class << std::endl;
 
     R_xlen_t i, j;
     R_xlen_t n_id_cols = Rf_length( ids );
