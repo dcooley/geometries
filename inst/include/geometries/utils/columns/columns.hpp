@@ -464,21 +464,6 @@ namespace utils {
     return iv;
   }
 
-  // // Adds a column of 1s
-  // // and returns the string / int column reference
-  // // depending on the type specified
-  // inline void add_id_columns(
-  //   Rcpp::DataFrame& df,
-  //   Rcpp::IntegerVector& id_column
-  // ) {
-  //
-  //   // IFF x is a data.frame & id_column is an IntegerVector
-  //   // cbind a new columns and add the the id_column vector
-  //
-  //
-  //
-  // }
-
 } // utils
 } // geometries
 

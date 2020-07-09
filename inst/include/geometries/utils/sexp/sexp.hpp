@@ -108,6 +108,9 @@ namespace utils {
     Rcpp::DataFrame& df,
     SEXP& v
   ) {
+
+    Rcpp::Rcout << "typeof: " << TYPEOF( v ) << std::endl;
+
     switch( TYPEOF( v ) ) {
     case INTSXP: {
       return Rcpp::as< Rcpp::IntegerVector >( v );

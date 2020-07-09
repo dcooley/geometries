@@ -70,10 +70,8 @@ gm_geometries <- function( obj, id_cols, geometry_cols, class_attributes = NULL 
 
 
 ## convert R-index to c++-index integer
-index_correct <- function( obj, cols ) UseMethod("correct_index")
-
-#' @export
-correct_index.data.frame <- function( obj, cols ) {
+index_correct <- function( obj, cols ) {
+  if( inherits( obj, "data.frame" ) ) {
     if( is.numeric( cols ) ) {
       return( as.integer( cols ) - 1L )
     }
@@ -81,10 +79,8 @@ correct_index.data.frame <- function( obj, cols ) {
       return( which(names(obj) %in% cols ) - 1L )
     }
     return( cols )
-}
-
-#' @export
-correct_index.matrix <- function( obj, cols ) {
+  } else {
+    ## matrix
     if( is.numeric( cols ) ) {
       return( as.integer( cols ) - 1L )
     }
@@ -93,4 +89,7 @@ correct_index.matrix <- function( obj, cols ) {
       return( which(n %in% cols ) - 1L )
     }
     return( cols )
+  }
+  return( cols )
 }
+
