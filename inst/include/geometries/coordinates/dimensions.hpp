@@ -34,10 +34,10 @@ namespace coordinates {
       if( !Rf_isMatrix( geom ) ) {
         // it's a vector, right?
         geom_count += 1;
-        geom_dimension = geometries::utils::get_sexp_length( geom );
+        geom_dimension = geometries::utils::sexp_length( geom );
       } else {
         geom_count += geometries::utils::sexp_n_row( geom );
-        geom_dimension = geometries::utils::get_sexp_n_col( geom );
+        geom_dimension = geometries::utils::sexp_n_col( geom );
       }
     break;
     }
@@ -154,7 +154,7 @@ namespace coordinates {
       // one row, because it's only one geometry
       // column '0' will start with 0, so no need to fill it
       R_xlen_t max_nest = 0;
-      R_xlen_t max_dimension = geometries::utils::get_sexp_n_col( geometries );
+      R_xlen_t max_dimension = geometries::utils::sexp_n_col( geometries );
       im(0, 1) = geometries::utils::sexp_n_row( geometries ) - 1;
       im(0, 2) = max_dimension;
       im(0, 3) = max_nest; // level of nesting (a matrix is not nested in a list)
@@ -176,7 +176,7 @@ namespace coordinates {
       Rcpp::IntegerMatrix im(1,5); // initialise (0,0) matrix
 
       R_xlen_t max_nest = 0;
-      R_xlen_t max_dimension = geometries::utils::get_sexp_length( geometries );
+      R_xlen_t max_dimension = geometries::utils::sexp_length( geometries );
 
       im(0, 2) = max_dimension;
       im(0, 3) = max_nest;

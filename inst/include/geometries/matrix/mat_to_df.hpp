@@ -1,5 +1,5 @@
-#ifndef R_GEOMETRIES_SHAPES_MAT_TO_DF_H
-#define R_GEOMETRIES_SHAPES_MAT_TO_DF_H
+#ifndef R_GEOMETRIES_SHAPES_MATRIX_TO_DF_H
+#define R_GEOMETRIES_SHAPES_MATRIX_TO_DF_H
 
 #include <Rcpp.h>
 #include "geometries/utils/dataframe/dataframe.hpp"
@@ -8,7 +8,7 @@ namespace geometries {
 namespace matrix {
 
   template < int RTYPE >
-  inline Rcpp::DataFrame mat_to_df( Rcpp::Matrix< RTYPE >& mat ) {
+  inline Rcpp::DataFrame matrix_to_df( Rcpp::Matrix< RTYPE >& mat ) {
 
     Rcpp::StringVector names = Rcpp::colnames( mat );
     bool has_names = names.length() > 0;

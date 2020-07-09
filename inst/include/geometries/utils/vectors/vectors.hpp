@@ -72,12 +72,12 @@ namespace utils {
     case REALSXP: {}
     case INTSXP: {
       Rcpp::IntegerVector values = Rcpp::as< Rcpp::IntegerVector >( values_to_find );
-      Rcpp::IntegerVector look_in = geometries::utils::get_sexp_length( x );
+      Rcpp::IntegerVector look_in = geometries::utils::sexp_length( x );
       return where_is( values, look_in );
     }
     case STRSXP: {
       Rcpp::StringVector values = Rcpp::as< Rcpp::StringVector >( values_to_find );
-      Rcpp::StringVector look_in = geometries::utils::get_sexp_col_names( x );
+      Rcpp::StringVector look_in = geometries::utils::sexp_col_names( x );
       return where_is( values, look_in );
     }
     default: {

@@ -412,7 +412,7 @@ namespace utils {
       Rcpp::StringVector& cols
   ) {
 
-    Rcpp::StringVector m_names = geometries::utils::get_sexp_col_names( nm );
+    Rcpp::StringVector m_names = geometries::utils::sexp_col_names( nm );
     R_xlen_t n_col = cols.size();
 
     Rcpp::IntegerVector iv( n_col );
@@ -429,7 +429,7 @@ namespace utils {
       Rcpp::StringVector& cols
   ) {
 
-    Rcpp::StringVector m_names = geometries::utils::get_sexp_col_names( im );
+    Rcpp::StringVector m_names = geometries::utils::sexp_col_names( im );
     R_xlen_t n_col = cols.size();
 
     Rcpp::IntegerVector iv( n_col );
@@ -452,7 +452,7 @@ namespace utils {
       Rcpp::stop("geometries - expecting matrix when finding column positions");  // #nocov
     }
 
-    Rcpp::StringVector m_names = geometries::utils::get_sexp_col_names( x );
+    Rcpp::StringVector m_names = geometries::utils::sexp_col_names( x );
     R_xlen_t n_col = cols.size();
 
     Rcpp::IntegerVector iv( n_col );
@@ -464,6 +464,20 @@ namespace utils {
     return iv;
   }
 
+  // // Adds a column of 1s
+  // // and returns the string / int column reference
+  // // depending on the type specified
+  // inline void add_id_columns(
+  //   Rcpp::DataFrame& df,
+  //   Rcpp::IntegerVector& id_column
+  // ) {
+  //
+  //   // IFF x is a data.frame & id_column is an IntegerVector
+  //   // cbind a new columns and add the the id_column vector
+  //
+  //
+  //
+  // }
 
 } // utils
 } // geometries

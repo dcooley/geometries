@@ -16,15 +16,15 @@ namespace geometries {
 namespace utils {
 
   inline void geometry_column_check( SEXP x ) {
-    R_xlen_t n = geometries::utils::get_sexp_length( x );
+    R_xlen_t n = geometries::utils::sexp_length( x );
     if( n < 2 || n > 4) {
       Rcpp::stop("geometries - incorrect number of geometry columns");
     }
   }
 
   inline void column_check( SEXP x, SEXP cols ) {
-    R_xlen_t n_col = geometries::utils::get_sexp_n_col( x );
-    R_xlen_t n = geometries::utils::get_sexp_length( cols );
+    R_xlen_t n_col = geometries::utils::sexp_n_col( x );
+    R_xlen_t n = geometries::utils::sexp_length( cols );
     if( n > n_col ) {
       Rcpp::stop("geometries - number of columns requested is greater than those available");
     }
@@ -41,7 +41,7 @@ namespace utils {
 
   // checks if an integer column index exists
   inline void column_exists( SEXP x, int& id_col ) {
-    R_xlen_t n_col = geometries::utils::get_sexp_n_col( x );
+    R_xlen_t n_col = geometries::utils::sexp_n_col( x );
     if( id_col > ( n_col - 1 ) ) {
       Rcpp::stop("geometries - id column index doesn't exist");
     }

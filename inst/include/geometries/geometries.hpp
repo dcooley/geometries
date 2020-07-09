@@ -3,7 +3,9 @@
 
 #include "geometries/utils/split/split.hpp"
 #include "geometries/matrix/mat_to_df.hpp"
-#include "geometries/utils/dataframe/dataframe.hpp"
+// #include "geometries/utils/dataframe/dataframe.hpp"
+#include "geometries/utils/sexp/sexp.hpp"
+#include "geometries/utils/lists/as_list.hpp"
 
 namespace geometries {
 
@@ -11,7 +13,7 @@ namespace geometries {
   // works on the assumption that every different outer-id is a different geometry
   // so any attributes are applied at the outer-id level
   inline SEXP make_geometries(
-      Rcpp::DataFrame& df,
+      Rcpp::List& l,
       Rcpp::IntegerVector& ids,
       Rcpp::IntegerVector& geometry_cols,
       Rcpp::Nullable< Rcpp::StringVector > class_attribute
@@ -19,7 +21,6 @@ namespace geometries {
 
     // Rcpp::Rcout << "Ids: " << ids << std::endl;
     // Rcpp::Rcout << "geoms: " << geometry_cols << std::endl;
-
     bool has_class = !Rf_isNull( class_attribute );
 
     R_xlen_t i, j;
@@ -39,7 +40,9 @@ namespace geometries {
       // because once back here, a single-id column split doesn't get packaged up
       // AND iff nesting == n_id_cols (1)
 
-      rleid( i ) = geometries::utils::split_by_id( df, rle_ids, geometry_cols, last, class_attribute );
+      // Rcpp::Rcout << "splitting" << std::endl;
+      rleid( i ) = geometries::utils::split_by_id( l, rle_ids, geometry_cols, last, class_attribute );
+      // Rcpp::Rcout << "split" << std::endl;
 
       // here the rleid(i) tells us which elements of rleid(i+1)
       // belong in which "package"
@@ -109,64 +112,6 @@ namespace geometries {
   }
 
   inline SEXP make_geometries(
-      Rcpp::DataFrame& df,
-      Rcpp::StringVector& ids,
-      Rcpp::StringVector& geometry_cols,
-      Rcpp::Nullable< Rcpp::StringVector > class_attribute
-  ) {
-      Rcpp::StringVector df_names = df.names();
-      Rcpp::IntegerVector int_ids = geometries::utils::int_names( df_names, ids );
-      Rcpp::IntegerVector int_geoms = geometries::utils::int_names( df_names, geometry_cols );
-      return make_geometries( df, int_ids, int_geoms, class_attribute );
-  }
-
-  inline SEXP make_geometries(
-      SEXP& x,
-      Rcpp::IntegerVector& ids,
-      Rcpp::IntegerVector& geometry_cols,
-      Rcpp::Nullable< Rcpp::StringVector > class_attribute
-  ) {
-
-    if( Rf_isMatrix( x ) ) {
-
-      Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-      Rcpp::DataFrame df = geometries::matrix::mat_to_df( nm );
-      return make_geometries( df, ids, geometry_cols, class_attribute );
-
-    } else if ( Rf_inherits( x, "data.frame") ) {
-
-      Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-      return make_geometries( df, ids, geometry_cols, class_attribute );
-    }
-    Rcpp::stop("geometries - expecting a matrix or data.frame input");
-
-    return Rcpp::List::create();
-  }
-
-  inline SEXP make_geometries(
-    SEXP& x,
-    Rcpp::StringVector& ids,
-    Rcpp::StringVector& geometry_cols,
-    Rcpp::Nullable< Rcpp::StringVector > class_attribute
-  ) {
-
-    if( Rf_isMatrix( x ) ) {
-
-      Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-      Rcpp::DataFrame df = geometries::matrix::mat_to_df( nm );
-      return make_geometries( df, ids, geometry_cols, class_attribute );
-
-    } else if ( Rf_inherits( x, "data.frame") ) {
-
-      Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-      return make_geometries( df, ids, geometry_cols, class_attribute );
-    }
-    Rcpp::stop("geometries - expecting a matrix or data.frame input");
-
-    return Rcpp::List::create();
-  }
-
-  inline SEXP make_geometries(
     SEXP& x,
     SEXP& ids,
     SEXP& geometry_cols,
@@ -176,24 +121,13 @@ namespace geometries {
       Rcpp::stop("geometries - id_columns and geometry_columns must be the same type");
     }
 
-    switch( TYPEOF( ids ) ) {
-    case INTSXP: {
-      Rcpp::IntegerVector iids = Rcpp::as< Rcpp::IntegerVector >( ids );
-      Rcpp::IntegerVector igeoms = Rcpp::as< Rcpp::IntegerVector >( geometry_cols );
-      return make_geometries( x, iids, igeoms, class_attribute );
-    }
-    case STRSXP: {
-      Rcpp::StringVector sids = Rcpp::as< Rcpp::StringVector >( ids );
-      Rcpp::StringVector sgeoms = Rcpp::as< Rcpp::StringVector >( geometry_cols );
-      return make_geometries( x, sids, sgeoms, class_attribute );
-    }
-    default: {
-      Rcpp::stop("geometries - unsupported column types");
-    }
-    }
-    return Rcpp::List::create();
-  }
 
+    Rcpp::IntegerVector int_ids = geometries::utils::sexp_col_int( x, ids );
+    Rcpp::IntegerVector int_geom = geometries::utils::sexp_col_int( x, geometry_cols );
+
+    Rcpp::List lst = geometries::utils::as_list( x );
+    return make_geometries( lst, int_ids, int_geom, class_attribute );
+  }
 
 } // geometries
 

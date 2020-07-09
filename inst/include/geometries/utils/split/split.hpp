@@ -14,7 +14,7 @@ namespace utils {
   // - does it get added to the list, or to the matrix?
 
   inline SEXP split_by_id(
-      Rcpp::DataFrame& l,
+      Rcpp::List& l,
       Rcpp::IntegerVector& ids,
       Rcpp::IntegerVector& geometry_cols,
       bool last,
@@ -24,10 +24,13 @@ namespace utils {
     bool has_class = !Rf_isNull( class_attribute );
 
     // matrix of geometries
-    Rcpp::NumericMatrix geometry_mat = geometries::matrix::to_mat( l, geometry_cols );
+    // Rcpp::Rcout << "to_matrix" << std::endl;
+    Rcpp::NumericMatrix geometry_mat = geometries::matrix::to_matrix( l, geometry_cols );
+    // Rcpp::Rcout << "matriced" << std::endl;
 
     R_xlen_t i;
-    R_xlen_t n_rows = geometry_mat.nrow(); //geometries::utils::sexp_n_row( l );
+    //R_xlen_t n_rows = geometry_mat.nrow(); //geometries::utils::sexp_n_row( l );
+    R_xlen_t n_rows = Rf_length( VECTOR_ELT( l, 0 ) );
     //R_xlen_t n_cols = Rf_length( l );
     R_xlen_t n_id_cols = Rf_length( ids );
 

@@ -13,25 +13,25 @@ df <- data.frame(
 m <- as.matrix( df )
 
 ## single ID, single geometry, no attributes
-res <- gm_make_geometries(df, 1, 4)
+res <- gm_geometries(df, 1, 4)
 expect_true( length( res ) == 2 )
 expect_true( ncol( res[[1]] ) == 1 )
 expect_true( ncol( res[[2]] ) == 1 )
 
-res <- gm_make_geometries(m, 1, 4)
+res <- gm_geometries(m, 1, 4)
 expect_true( length( res ) == 2 )
 expect_true( ncol( res[[1]] ) == 1 )
 expect_true( ncol( res[[2]] ) == 1 )
 
 ## single ID, single geometry, attributes
-res <- gm_make_geometries(df, 1, 4, "my_attr")
+res <- gm_geometries(df, 1, 4, "my_attr")
 expect_true( length( res ) == 2 )
 expect_true( ncol( res[[1]] ) == 1 )
 expect_true( ncol( res[[2]] ) == 1 )
 expect_true( attr( res[[1]], "class") == "my_attr" )
 expect_true( attr( res[[2]], "class") == "my_attr" )
 
-res <- gm_make_geometries(m, 1, 4, "my_attr")
+res <- gm_geometries(m, 1, 4, "my_attr")
 expect_true( length( res ) == 2 )
 expect_true( ncol( res[[1]] ) == 1 )
 expect_true( ncol( res[[2]] ) == 1 )
@@ -39,26 +39,26 @@ expect_true( attr( res[[1]], "class") == "my_attr" )
 expect_true( attr( res[[2]], "class") == "my_attr" )
 
 ## single ID, multi geometry, no attributes
-res <- gm_make_geometries(df, 1, c(4,5,6,7,8), "my_attr")
+res <- gm_geometries(df, 1, c(4,5,6,7,8), "my_attr")
 expect_true( length( res ) == 2 )
 expect_true( ncol( res[[1]] ) == 5 )
 expect_true( ncol( res[[2]] ) == 5 )
 
-res <- gm_make_geometries(m, 1, c(4,5,6,7,8), "my_attr")
+res <- gm_geometries(m, 1, c(4,5,6,7,8), "my_attr")
 expect_true( length( res ) == 2 )
 expect_true( ncol( res[[1]] ) == 5 )
 expect_true( ncol( res[[2]] ) == 5 )
 
 
 ## single ID, multi geometry, no attributes
-res <- gm_make_geometries(df, 1, c(4,5,6,7,8), "my_attr")
+res <- gm_geometries(df, 1, c(4,5,6,7,8), "my_attr")
 expect_true( length( res ) == 2 )
 expect_true( ncol( res[[1]] ) == 5 )
 expect_true( ncol( res[[2]] ) == 5 )
 expect_true( attr( res[[1]], "class") == "my_attr" )
 expect_true( attr( res[[2]], "class") == "my_attr" )
 
-res <- gm_make_geometries(m, 1, c(4,5,6,7,8), "my_attr")
+res <- gm_geometries(m, 1, c(4,5,6,7,8), "my_attr")
 expect_true( length( res ) == 2 )
 expect_true( ncol( res[[1]] ) == 5 )
 expect_true( ncol( res[[2]] ) == 5 )
@@ -66,7 +66,7 @@ expect_true( attr( res[[1]], "class") == "my_attr" )
 expect_true( attr( res[[2]], "class") == "my_attr" )
 
 ## multi ID, multi geometry, no attributes
-res <- gm_make_geometries(df, c(1,2), c(4,5,6,7,8), "my_attr")
+res <- gm_geometries(df, c(1,2), c(4,5,6,7,8), "my_attr")
 expect_true( length( res ) == 2 )
 expect_true( length( res[[1]] ) == 2 )
 expect_true( length( res[[2]] ) == 2 )
@@ -88,7 +88,7 @@ expect_true( is.null( attr( res[[1]][[2]], "class")  ) )
 
 
 
-res <- gm_make_geometries(m, c(1,2), c(4,5,6,7,8), "my_attr")
+res <- gm_geometries(m, c(1,2), c(4,5,6,7,8), "my_attr")
 expect_true( length( res ) == 2 )
 expect_true( length( res[[1]] ) == 2 )
 expect_true( length( res[[2]] ) == 2 )

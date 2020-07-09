@@ -4,25 +4,6 @@
 namespace geometries {
 namespace utils {
 
-  inline Rcpp::IntegerVector int_names( Rcpp::StringVector& df_names, Rcpp::StringVector& s ) {
-
-    Rcpp::IntegerVector ians( s.length() );
-    //Rcpp::StringVector nms = x.names();
-
-    R_xlen_t i, j;
-    for(i = 0; i < s.length(); ++i ) {
-      const char * id = s[ i ];
-      for(j = 0; j < df_names.length(); ++j ) {
-        const char * n = df_names[ j ];
-        if( strcmp( id, n ) == 0 ) {
-          ians[ i ] = j;
-          break;
-        }
-      }
-    }
-    return ians;
-  }
-
   inline Rcpp::DataFrame make_dataframe(
       Rcpp::List& res,
       R_xlen_t& total_rows,
