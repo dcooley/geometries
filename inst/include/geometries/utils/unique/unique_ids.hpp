@@ -38,7 +38,7 @@ namespace utils {
     }
     }
     default: {
-      Rcpp::stop("geometries - could not get id column");  // #nocov
+      Rcpp::stop("geometries - could not get id column");
     }
     }
     return Rcpp::List::create();
@@ -52,33 +52,33 @@ namespace utils {
     Rcpp::DataFrame df;
 
     switch( TYPEOF( x ) ) {
-    case INTSXP: {
-      if( Rf_isMatrix( x ) ) {
-      df = Rcpp::as< Rcpp::DataFrame >( x );
-      break;
-      // Rcpp::IntegerVector ids = im( Rcpp::_, id_col );
-      // SEXP unique_ids = geometries::utils::get_sexp_unique( ids );
-      // return unique_ids;
-    }
-    }
-    case REALSXP: {
-      if( Rf_isMatrix( x ) ) {
-      df = Rcpp::as< Rcpp::DataFrame >( x );
-      break;
-      // Rcpp::NumericVector ids = nm( Rcpp::_, id_col );
-      // SEXP unique_ids = geometries::utils::get_sexp_unique( ids );
-      // return unique_ids;
-    }
-    }
-    case VECSXP: {
-      if( Rf_inherits( x, "data.frame") ) {
-      df = Rcpp::as< Rcpp::DataFrame >( x );
-      break;
-    }
-    }
-    default: {
-      Rcpp::stop("geometries - could not get id column");  // #nocov
-    }
+      case INTSXP: {
+        if( Rf_isMatrix( x ) ) {
+          df = Rcpp::as< Rcpp::DataFrame >( x );
+          break;
+          // Rcpp::IntegerVector ids = im( Rcpp::_, id_col );
+          // SEXP unique_ids = geometries::utils::get_sexp_unique( ids );
+          // return unique_ids;
+        }
+      }
+      case REALSXP: {
+        if( Rf_isMatrix( x ) ) {
+          df = Rcpp::as< Rcpp::DataFrame >( x );
+          break;
+          // Rcpp::NumericVector ids = nm( Rcpp::_, id_col );
+          // SEXP unique_ids = geometries::utils::get_sexp_unique( ids );
+          // return unique_ids;
+        }
+      }
+      case VECSXP: {
+        if( Rf_inherits( x, "data.frame") ) {
+          df = Rcpp::as< Rcpp::DataFrame >( x );
+          break;
+        }
+      }
+      default: {
+        Rcpp::stop("geometries - could not get id column");
+      }
     }
 
     SEXP ids = df[ id_col ];
@@ -113,7 +113,7 @@ namespace utils {
       return get_ids( x, s_id_col );
     }
     default: {
-      Rcpp::stop("geometries - can't determine id column type"); // #nocov
+      Rcpp::stop("geometries - can't determine id column type");
     }
     }
     return Rcpp::List::create();

@@ -69,22 +69,22 @@ namespace utils {
     SEXP& x   // object, of which are names or indices
   ) {
     switch( TYPEOF( values_to_find ) ) {
-    case REALSXP: {}
-    case INTSXP: {
-      Rcpp::IntegerVector values = Rcpp::as< Rcpp::IntegerVector >( values_to_find );
-      Rcpp::IntegerVector look_in = geometries::utils::sexp_length( x );
-      return where_is( values, look_in );
+      case REALSXP: {}
+      case INTSXP: {
+        Rcpp::IntegerVector values = Rcpp::as< Rcpp::IntegerVector >( values_to_find );
+        Rcpp::IntegerVector look_in = geometries::utils::sexp_length( x );
+        return where_is( values, look_in );
+      }
+      case STRSXP: {
+        Rcpp::StringVector values = Rcpp::as< Rcpp::StringVector >( values_to_find );
+        Rcpp::StringVector look_in = geometries::utils::sexp_col_names( x );
+        return where_is( values, look_in );
+      }
+      default: {
+        Rcpp::stop("geometries - error trying to find values in a vector");
+      }
     }
-    case STRSXP: {
-      Rcpp::StringVector values = Rcpp::as< Rcpp::StringVector >( values_to_find );
-      Rcpp::StringVector look_in = geometries::utils::sexp_col_names( x );
-      return where_is( values, look_in );
-    }
-    default: {
-      Rcpp::stop("geometries - error trying to find values in a vector");
-    }
-    }
-    return Rcpp::IntegerVector::create(); // #nocov // never reaches
+    return Rcpp::IntegerVector::create(); // #nocov never reaches
   }
 
   inline SEXP concatenate_vectors(
@@ -245,7 +245,7 @@ namespace utils {
       return concatenate_vectors( sv_1, sv_2 );
     }
     default: {
-      Rcpp::stop("geometries - can't combine columns");  // #nocov
+      Rcpp::stop("geometries - can't combine columns");
     }
     }
 

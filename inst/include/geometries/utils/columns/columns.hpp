@@ -102,7 +102,7 @@ namespace utils {
     return other_columns( df_names, id_cols );
   }
 
-  // #nocov start
+
   inline SEXP other_columns(
       Rcpp::DataFrame& df,
       Rcpp::IntegerVector& id_cols
@@ -111,7 +111,6 @@ namespace utils {
     Rcpp::IntegerVector other_cols = Rcpp::seq( 0, n_col - 1 );
     return other_columns( other_cols, id_cols );
   }
-  // #nocov end
 
   inline SEXP other_columns(
       Rcpp::DataFrame& df,
@@ -124,7 +123,6 @@ namespace utils {
     return other_columns( nv, id_cols );
   }
 
-  // #nocov start
   inline SEXP other_columns(
       Rcpp::NumericMatrix& nm,
       Rcpp::StringVector& id_cols
@@ -141,7 +139,6 @@ namespace utils {
     Rcpp::IntegerVector other_cols = Rcpp::seq( 0, n_col - 1 );
     return other_columns( other_cols, id_cols );
   }
-  // #nocov end
 
   inline SEXP other_columns(
       Rcpp::NumericMatrix& nm,
@@ -186,29 +183,27 @@ namespace utils {
       Rcpp::IntegerVector& id_cols
   ) {
     switch( TYPEOF( x ) ) {
-    case INTSXP: {
-    if( Rf_isMatrix( x ) ) {
-      Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x ) ;
-      return other_columns( im, id_cols );
-    }
-    }
-    case REALSXP: {
-    if( Rf_isMatrix( x ) ) {
-      Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-      return other_columns( nm, id_cols );
-    }
-    }
-    case VECSXP: {
-    // #nocov start
-    if( Rf_inherits( x, "data.frame") ) {
-      Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-      return other_columns( df, id_cols );
-    }
-    // #nocov end
-    }
-    default: {
-      Rcpp::stop("geometries - unsupported object"); // #nocov
-    }
+      case INTSXP: {
+        if( Rf_isMatrix( x ) ) {
+          Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x ) ;
+          return other_columns( im, id_cols );
+        }
+      }
+      case REALSXP: {
+        if( Rf_isMatrix( x ) ) {
+          Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
+          return other_columns( nm, id_cols );
+        }
+      }
+      case VECSXP: {
+        if( Rf_inherits( x, "data.frame") ) {
+          Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
+          return other_columns( df, id_cols );
+        }
+      }
+      default: {
+        Rcpp::stop("geometries - unsupported object");
+      }
     }
   }
 
@@ -239,7 +234,7 @@ namespace utils {
     }
     }
     default: {
-      Rcpp::stop("geometries - unsupported object"); // #nocov
+      Rcpp::stop("geometries - unsupported object");
     }
     }
   }
@@ -270,7 +265,7 @@ namespace utils {
     }
     }
     default: {
-      Rcpp::stop("geometries - unsupported object");  // #nocov
+      Rcpp::stop("geometries - unsupported object");
     }
     }
   }
@@ -280,27 +275,27 @@ namespace utils {
       Rcpp::StringVector& id_cols
   ) {
     switch( TYPEOF( x ) ) {
-    case INTSXP: {
-    if( Rf_isMatrix( x ) ) {
-      Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x ) ;
-      return other_columns( im, id_cols );
-    }
-    }
-    case REALSXP: {
-    if( Rf_isMatrix( x ) ) {  // #nocov
-      Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x ); // #nocov
-      return other_columns( nm, id_cols );                           // #nocov
-    }
-    }
-    case VECSXP: {
-    if( Rf_inherits( x, "data.frame") ) {
-      Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-      return other_columns( df, id_cols );
-    }
-    }
-    default: {
-      Rcpp::stop("geometries - unsupported object");  // #nocov
-    }
+      case INTSXP: {
+        if( Rf_isMatrix( x ) ) {
+          Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x ) ;
+          return other_columns( im, id_cols );
+        }
+      }
+      case REALSXP: {
+        if( Rf_isMatrix( x ) ) {
+          Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
+          return other_columns( nm, id_cols );
+        }
+      }
+      case VECSXP: {
+        if( Rf_inherits( x, "data.frame") ) {
+          Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
+          return other_columns( df, id_cols );
+        }
+      }
+      default: {
+        Rcpp::stop("geometries - unsupported object");
+      }
     }
   }
 
@@ -311,7 +306,7 @@ namespace utils {
   ) {
 
     if( Rf_isNull( id_cols ) ) {
-      return other_columns( x );  // #nocov
+      return other_columns( x );
     }
 
     switch( TYPEOF( id_cols ) ) {
@@ -321,11 +316,10 @@ namespace utils {
       return other_columns( x, nv2 );
     }
     case INTSXP: {
-      // #nocov start
+
       Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( id_cols );
       Rcpp::IntegerVector iv2 = Rcpp::sort_unique( iv );
       return other_columns( x, iv2 );
-      // #nocov end
     }
     case STRSXP: {
       Rcpp::StringVector sv = Rcpp::as< Rcpp::StringVector >( id_cols );
@@ -333,7 +327,7 @@ namespace utils {
       return other_columns( x, sv2 );
     }
     default: {
-      Rcpp::stop("geometries - unsupported column types");  // #nocov
+      Rcpp::stop("geometries - unsupported column types");
     }
     }
   }
@@ -405,8 +399,6 @@ namespace utils {
 
   }
 
-  // #nocov start
-
   inline SEXP column_positions(
       Rcpp::NumericMatrix& nm,
       Rcpp::StringVector& cols
@@ -441,15 +433,13 @@ namespace utils {
     return iv;
   }
 
-  // #nocov end
-
   inline SEXP column_positions(
     SEXP& x,
     Rcpp::StringVector& cols
   ) {
 
     if( !Rf_isMatrix( x ) ) {
-      Rcpp::stop("geometries - expecting matrix when finding column positions");  // #nocov
+      Rcpp::stop("geometries - expecting matrix when finding column positions");
     }
 
     Rcpp::StringVector m_names = geometries::utils::sexp_col_names( x );

@@ -112,7 +112,7 @@ namespace utils {
         idx++;
 
         if( idx >= start_positions.length() ) {
-          Rcpp::stop("geometries - error indexing lines, perhaps caused by un-ordered data?");  // #nocov
+          Rcpp::stop("geometries - error indexing lines, perhaps caused by un-ordered data?");
         }
 
         start_positions[ idx ] = i;
@@ -125,7 +125,7 @@ namespace utils {
     }
 
     if( start_positions.length() != end_positions.length() ) {
-      Rcpp::stop("geometries - error indexing lines, perhaps caused by un-ordered data?");  // #nocov
+      Rcpp::stop("geometries - error indexing lines, perhaps caused by un-ordered data?");
     }
 
     im( Rcpp::_, 0 ) = start_positions;
@@ -171,7 +171,7 @@ namespace utils {
         idx++;
 
         if( idx >= start_positions.length() ) {
-          Rcpp::stop("geometries - error indexing lines, perhaps caused by un-ordered data?"); // #nocov
+          Rcpp::stop("geometries - error indexing lines, perhaps caused by un-ordered data?");
         }
 
         start_positions[ idx ] = i;
@@ -195,7 +195,7 @@ namespace utils {
     SEXP& unique_ids
   ) {
     if( TYPEOF( line_ids ) != TYPEOF( unique_ids ) ) {
-      Rcpp::stop("geometries - line_ids and unique_ids are not the same type"); // #nocov
+      Rcpp::stop("geometries - line_ids and unique_ids are not the same type");
     }
 
     switch( TYPEOF( line_ids ) ) {
@@ -220,7 +220,7 @@ namespace utils {
       return id_positions( sv_line_ids, sv_unique_ids );
     }
     default: {
-      Rcpp::stop("geometries - unsupported vector type for determining id positions"); // #nocov
+      Rcpp::stop("geometries - unsupported vector type for determining id positions");
     }
     }
 

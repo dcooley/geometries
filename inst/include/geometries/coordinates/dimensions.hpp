@@ -43,7 +43,7 @@ namespace coordinates {
     }
     case VECSXP: {
       if( Rf_inherits( geom, "data.frame" ) ) {
-      Rcpp::stop("geometries - unsupported coordinate type");  // #nocov
+      Rcpp::stop("geometries - unsupported coordinate type");
     }
       Rcpp::List lst = Rcpp::as< Rcpp::List >( geom );
       //if (lst.size() == 0 ) {
@@ -60,7 +60,7 @@ namespace coordinates {
       break;
     }
     default: {
-      Rcpp::stop("geometries - unsupported coordinate type");  // #nocov
+      Rcpp::stop("geometries - unsupported coordinate type");
     }
     }
 

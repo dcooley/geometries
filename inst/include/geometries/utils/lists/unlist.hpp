@@ -216,26 +216,26 @@ namespace utils {
     Rcpp::List lst_sizes = list_size( lst, total_size, existing_type );
 
     switch( existing_type ) {
-    case LGLSXP: {
-      Rcpp::LogicalVector lv( total_size );
-      unlist_list( lst, lst_sizes, lv, position );
-      return lv;
-    }
-    case INTSXP: {
-      Rcpp::IntegerVector iv( total_size );
-      unlist_list( lst, lst_sizes, iv, position );
-      return iv;
-    }
-    case REALSXP: {
-      Rcpp::NumericVector nv( total_size );
-      unlist_list( lst, lst_sizes, nv, position );
-      return nv;
-    }
-    default: {
-      Rcpp::StringVector sv( total_size );
-      unlist_list( lst, lst_sizes, sv, position );
-      return sv;
-    }
+      case LGLSXP: {
+        Rcpp::LogicalVector lv( total_size );
+        unlist_list( lst, lst_sizes, lv, position );
+        return lv;
+      }
+      case INTSXP: {
+        Rcpp::IntegerVector iv( total_size );
+        unlist_list( lst, lst_sizes, iv, position );
+        return iv;
+      }
+      case REALSXP: {
+        Rcpp::NumericVector nv( total_size );
+        unlist_list( lst, lst_sizes, nv, position );
+        return nv;
+      }
+      default: {
+        Rcpp::StringVector sv( total_size );
+        unlist_list( lst, lst_sizes, sv, position );
+        return sv;
+      }
     }
 
     Rcpp::stop("geometries - couldn't unlist this object");

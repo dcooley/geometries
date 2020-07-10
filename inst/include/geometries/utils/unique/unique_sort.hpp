@@ -40,7 +40,7 @@ namespace utils {
     case STRSXP: {
       return sexp_unique< char* , STRSXP >( s2 );
     }
-    default: Rcpp::stop("geometries - unknown vector type"); // #nocov
+    default: Rcpp::stop("geometries - unknown vector type");
     }
     return 0;
   }

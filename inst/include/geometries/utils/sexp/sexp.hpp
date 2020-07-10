@@ -8,7 +8,6 @@
 namespace geometries{
 namespace utils {
 
-  // #nocov start
   template < int RTYPE >
   inline Rcpp::StringVector sexp_col_names( Rcpp::Matrix < RTYPE > m ) {
     return colnames( m );
@@ -16,21 +15,21 @@ namespace utils {
 
   inline Rcpp::StringVector sexp_col_names( SEXP m ) {
     switch( TYPEOF( m ) ) {
-    case INTSXP: {
-      return sexp_col_names< INTSXP >( m );
-    }
-    case REALSXP: {
-      return sexp_col_names< REALSXP >( m );
-    }
-    case VECSXP: {
-    if( Rf_inherits( m, "data.frame") ) {
-      Rcpp::StringVector attr({"names"});
-      return Rf_getAttrib( m, attr ) ;
-    }
-    }
-    default: {
-      Rcpp::stop("geometries - expecting a data.frame or matrix when trying to get colnames");
-    }
+      case INTSXP: {
+        return sexp_col_names< INTSXP >( m );
+      }
+      case REALSXP: {
+        return sexp_col_names< REALSXP >( m );
+      }
+      case VECSXP: {
+        if( Rf_inherits( m, "data.frame") ) {
+          Rcpp::StringVector attr({"names"});
+          return Rf_getAttrib( m, attr ) ;
+        }
+      }
+      default: {
+        Rcpp::stop("geometries - expecting a data.frame or matrix when trying to get colnames");
+      }
     }
   }
 
@@ -79,8 +78,6 @@ namespace utils {
     }
     return 0;
   }
-  // #nocov end
-
 
   // finds the integer index position of column names
   inline Rcpp::IntegerVector sexp_col_int(
@@ -109,17 +106,17 @@ namespace utils {
     SEXP& v
   ) {
     switch( TYPEOF( v ) ) {
-    case INTSXP: {
-      return Rcpp::as< Rcpp::IntegerVector >( v );
-    }
-    case STRSXP: {
-      Rcpp::StringVector s = Rcpp::as< Rcpp::StringVector >( v );
-      Rcpp::StringVector df_names = df.names();
-      return sexp_col_int( df_names, s );
-    }
-    default: {
-      Rcpp::stop("geometries - require either integer or string column indices");
-    }
+      case INTSXP: {
+        return Rcpp::as< Rcpp::IntegerVector >( v );
+      }
+      case STRSXP: {
+        Rcpp::StringVector s = Rcpp::as< Rcpp::StringVector >( v );
+        Rcpp::StringVector df_names = df.names();
+        return sexp_col_int( df_names, s );
+      }
+      default: {
+        Rcpp::stop("geometries - require either integer or string column indices");
+      }
     }
   }
 
@@ -128,17 +125,17 @@ namespace utils {
       SEXP& v
   ) {
     switch( TYPEOF( v ) ) {
-    case INTSXP: {
-      return Rcpp::as< Rcpp::IntegerVector >( v );
-    }
-    case STRSXP: {
-      Rcpp::StringVector s = Rcpp::as< Rcpp::StringVector >( v );
-      Rcpp::StringVector lst_names = lst.names();
-      return sexp_col_int( lst_names, s );
-    }
-    default: {
-      Rcpp::stop("geometries - require either integer or string column indices");
-    }
+      case INTSXP: {
+        return Rcpp::as< Rcpp::IntegerVector >( v );
+      }
+      case STRSXP: {
+        Rcpp::StringVector s = Rcpp::as< Rcpp::StringVector >( v );
+        Rcpp::StringVector lst_names = lst.names();
+        return sexp_col_int( lst_names, s );
+      }
+      default: {
+        Rcpp::stop("geometries - require either integer or string column indices");
+      }
     }
   }
 
@@ -156,16 +153,16 @@ namespace utils {
   ) {
 
     switch( TYPEOF( v ) ) {
-    case INTSXP: {
-      return Rcpp::as< Rcpp::IntegerVector >( v );
-    }
-    case STRSXP: {
-      Rcpp::StringVector s = Rcpp::as< Rcpp::StringVector >( v );
-      return sexp_col_int( x, s );
-    }
-    default: {
-      Rcpp::stop("geometries - require either integer or string column indices");
-    }
+      case INTSXP: {
+        return Rcpp::as< Rcpp::IntegerVector >( v );
+      }
+      case STRSXP: {
+        Rcpp::StringVector s = Rcpp::as< Rcpp::StringVector >( v );
+        return sexp_col_int( x, s );
+      }
+      default: {
+        Rcpp::stop("geometries - require either integer or string column indices");
+      }
     }
     return Rcpp::IntegerVector(0);
   }

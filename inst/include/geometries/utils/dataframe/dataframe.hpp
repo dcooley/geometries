@@ -16,7 +16,7 @@ namespace utils {
       Rcpp::IntegerVector rownames = Rcpp::seq( 1, total_rows );
       res.attr("row.names") = rownames;
     } else {
-      res.attr("row.names") = Rcpp::IntegerVector(0);  // #nocov
+      res.attr("row.names") = Rcpp::IntegerVector(0);
     }
 
     res.attr("names") = column_names;

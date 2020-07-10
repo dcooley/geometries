@@ -30,27 +30,27 @@ namespace utils {
       Rcpp::IntegerMatrix& line_positions
   ) {
     switch( TYPEOF( v ) ) {
-    case LGLSXP: {
-      Rcpp::LogicalVector lv = Rcpp::as< Rcpp::LogicalVector >( v );
-      return fill_list( lv, line_positions );
+      case LGLSXP: {
+        Rcpp::LogicalVector lv = Rcpp::as< Rcpp::LogicalVector >( v );
+        return fill_list( lv, line_positions );
+      }
+      case INTSXP: {
+        Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( v );
+        return fill_list( iv, line_positions );
+      }
+      case REALSXP: {
+        Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( v );
+        return fill_list( nv, line_positions );
+      }
+      case STRSXP: {
+        Rcpp::StringVector sv = Rcpp::as< Rcpp::StringVector >( v );
+        return fill_list( sv, line_positions );
+      }
+      default: {
+        Rcpp::stop("geometries - unknown column type");
+      }
     }
-    case INTSXP: {
-      Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( v );
-      return fill_list( iv, line_positions );
-    }
-    case REALSXP: {
-      Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( v );
-      return fill_list( nv, line_positions );
-    }
-    case STRSXP: {
-      Rcpp::StringVector sv = Rcpp::as< Rcpp::StringVector >( v );
-      return fill_list( sv, line_positions );
-    }
-    default: {
-      Rcpp::stop("geometries - unknown column type");
-    }
-    }
-    return Rcpp::List::create(); // #nocov
+    return Rcpp::List::create(); // #nocov never reaches
   }
 
 } // utils

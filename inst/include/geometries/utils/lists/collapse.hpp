@@ -34,7 +34,7 @@ namespace utils {
     R_xlen_t lst_size = lst.size();
     // each list must have the same number of columns.
     if( lst_size == 0 ) {
-      return lst; // #nocov
+      return lst;
     }
 
     R_xlen_t i;
@@ -57,7 +57,7 @@ namespace utils {
       R_xlen_t n_col = inner_list.size();
 
       if( n_vectors - 1 != n_col ) {
-        Rcpp::stop("geometries - unknown issue - please report this, along with an example, at www.github.com/dcooley/geometries/issues"); // #nocov
+        Rcpp::stop("geometries - unknown issue - please report this, along with an example, at www.github.com/dcooley/geometries/issues");
       }
 
       for( j = 0; j < n_col; ++j ) {
@@ -101,7 +101,7 @@ namespace utils {
     R_xlen_t lst_size = lst.size();
     // each list must have the same number of columns.
     if( lst_size == 0 ) {
-      return lst; // #nocov
+      return lst;
     }
 
     R_xlen_t i;
@@ -124,7 +124,7 @@ namespace utils {
       R_xlen_t n_col = inner_list.size();
 
       if( n_vectors - 1 != n_col ) {
-        Rcpp::stop("geometries - unknown issue - please report this, along with an example, at www.github.com/dcooley/geometries/issues"); // #nocov
+        Rcpp::stop("geometries - unknown issue - please report this, along with an example, at www.github.com/dcooley/geometries/issues");
       }
 
       for( j = 0; j < n_col; ++j ) {

@@ -22,25 +22,25 @@ namespace utils {
     Rcpp::Range rng = Rcpp::Range( start, end );
 
     switch( TYPEOF( x ) ) {
-    case LGLSXP: {
-      Rcpp::LogicalVector lv = Rcpp::as< Rcpp::LogicalVector >( x );
-      return subset_vector( lv, rng );
-    }
-    case INTSXP: {
-      Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( x );
-      return subset_vector( iv, rng );
-    }
-    case REALSXP: {
-      Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( x );
-      return subset_vector( nv, rng );
-    }
-    case STRSXP: {
-      Rcpp::StringVector sv = Rcpp::as< Rcpp::StringVector >( x );
-      return subset_vector( sv, rng ); // shouldn't get here? should only be numerics
-    }
-    default: {
-      Rcpp::stop("geometries - unsupported vector type for subsetting");  // #nocov
-    }
+      case LGLSXP: {
+        Rcpp::LogicalVector lv = Rcpp::as< Rcpp::LogicalVector >( x );
+        return subset_vector( lv, rng );
+      }
+      case INTSXP: {
+        Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( x );
+        return subset_vector( iv, rng );
+      }
+      case REALSXP: {
+        Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( x );
+        return subset_vector( nv, rng );
+      }
+      case STRSXP: {
+        Rcpp::StringVector sv = Rcpp::as< Rcpp::StringVector >( x );
+        return subset_vector( sv, rng ); // shouldn't get here? should only be numerics
+      }
+      default: {
+        Rcpp::stop("geometries - unsupported vector type for subsetting");
+      }
     }
     return Rcpp::List::create(); // never reaches
   }
