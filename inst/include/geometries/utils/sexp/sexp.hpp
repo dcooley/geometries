@@ -13,18 +13,18 @@ namespace utils {
     return colnames( m );
   }
 
-  inline Rcpp::StringVector sexp_col_names( SEXP m ) {
-    switch( TYPEOF( m ) ) {
+  inline Rcpp::StringVector sexp_col_names( SEXP x ) {
+    switch( TYPEOF( x ) ) {
       case INTSXP: {
-        return sexp_col_names< INTSXP >( m );
+        return sexp_col_names< INTSXP >( x );
       }
       case REALSXP: {
-        return sexp_col_names< REALSXP >( m );
+        return sexp_col_names< REALSXP >( x );
       }
       case VECSXP: {
-        if( Rf_inherits( m, "data.frame") ) {
+        if( Rf_inherits( x, "data.frame") || Rf_isNewList( x )) {
           Rcpp::StringVector attr({"names"});
-          return Rf_getAttrib( m, attr ) ;
+          return Rf_getAttrib( x, attr ) ;
         }
       }
       default: {

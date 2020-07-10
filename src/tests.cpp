@@ -92,6 +92,27 @@ SEXP test_matrix() {
 
 // ----------------------------
 // sexp.hpp
+// [[Rcpp::export(.test_sexp_col_names)]]
+Rcpp::StringVector test_sexp_col_names( SEXP x ) {
+  return geometries::utils::sexp_col_names( x );
+}
+
+// [[Rcpp::export(.test_sexp_n_col)]]
+R_xlen_t test_sexp_n_col( SEXP x ) {
+  return geometries::utils::sexp_n_col( x );
+}
+
+// [[Rcpp::export(.test_sexp_n_row)]]
+R_xlen_t test_sexp_n_row( SEXP x ) {
+  return geometries::utils::sexp_n_row( x );
+}
+
+// [[Rcpp::export(.test_sexp_length)]]
+R_xlen_t test_sexp_length( SEXP x ) {
+  return geometries::utils::sexp_length( x );
+}
+
+
 Rcpp::List test_sexp() {
 
   Rcpp::NumericVector x = {1,2,3,4};
@@ -102,6 +123,7 @@ Rcpp::List test_sexp() {
     Rcpp::_["y"] = y
   );
 
+  // col_int
   Rcpp::StringVector x_col = {"x"};
   Rcpp::StringVector y_col = {"y"};
   Rcpp::StringVector lst_names = lst.names();
@@ -171,7 +193,7 @@ SEXP test_other_columns_impl() {
 
 }
 
-//[[Rcpp::export(.other_columns)]]
+//[[Rcpp::export(.test_other_columns)]]
 SEXP test_other_columns( SEXP x, SEXP y, SEXP z ) {
   return geometries::utils::other_columns( x, y, z );
 }

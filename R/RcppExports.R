@@ -25,11 +25,27 @@ rcpp_nest <- function(x, depth) {
     .Call(`_geometries_rcpp_nest`, x, depth)
 }
 
+.test_sexp_col_names <- function(x) {
+    .Call(`_geometries_test_sexp_col_names`, x)
+}
+
+.test_sexp_n_col <- function(x) {
+    .Call(`_geometries_test_sexp_n_col`, x)
+}
+
+.test_sexp_n_row <- function(x) {
+    .Call(`_geometries_test_sexp_n_row`, x)
+}
+
+.test_sexp_length <- function(x) {
+    .Call(`_geometries_test_sexp_length`, x)
+}
+
 test_other_columns_impl <- function() {
     .Call(`_geometries_test_other_columns_impl`)
 }
 
-.other_columns <- function(x, y, z) {
+.test_other_columns <- function(x, y, z) {
     .Call(`_geometries_test_other_columns`, x, y, z)
 }
 

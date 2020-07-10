@@ -77,6 +77,50 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// test_sexp_col_names
+Rcpp::StringVector test_sexp_col_names(SEXP x);
+RcppExport SEXP _geometries_test_sexp_col_names(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_sexp_col_names(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// test_sexp_n_col
+R_xlen_t test_sexp_n_col(SEXP x);
+RcppExport SEXP _geometries_test_sexp_n_col(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_sexp_n_col(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// test_sexp_n_row
+R_xlen_t test_sexp_n_row(SEXP x);
+RcppExport SEXP _geometries_test_sexp_n_row(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_sexp_n_row(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// test_sexp_length
+R_xlen_t test_sexp_length(SEXP x);
+RcppExport SEXP _geometries_test_sexp_length(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_sexp_length(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // test_other_columns_impl
 SEXP test_other_columns_impl();
 RcppExport SEXP _geometries_test_other_columns_impl() {
@@ -118,6 +162,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_make_geometries", (DL_FUNC) &_geometries_rcpp_make_geometries, 4},
     {"_geometries_rcpp_rleid", (DL_FUNC) &_geometries_rcpp_rleid, 2},
     {"_geometries_rcpp_nest", (DL_FUNC) &_geometries_rcpp_nest, 2},
+    {"_geometries_test_sexp_col_names", (DL_FUNC) &_geometries_test_sexp_col_names, 1},
+    {"_geometries_test_sexp_n_col", (DL_FUNC) &_geometries_test_sexp_n_col, 1},
+    {"_geometries_test_sexp_n_row", (DL_FUNC) &_geometries_test_sexp_n_row, 1},
+    {"_geometries_test_sexp_length", (DL_FUNC) &_geometries_test_sexp_length, 1},
     {"_geometries_test_other_columns_impl", (DL_FUNC) &_geometries_test_other_columns_impl, 0},
     {"_geometries_test_other_columns", (DL_FUNC) &_geometries_test_other_columns, 3},
     {"_geometries_tests", (DL_FUNC) &_geometries_tests, 0},
