@@ -71,19 +71,18 @@ gm_geometries <- function( obj, id_cols, geometry_cols, class_attributes = NULL 
 
 ## convert R-index to c++-index integer
 index_correct <- function( obj, cols ) {
+
+  if( is.numeric( cols ) ) {
+    return( as.integer( cols ) - 1L )
+  }
+
   if( inherits( obj, "data.frame" ) ) {
-    if( is.numeric( cols ) ) {
-      return( as.integer( cols ) - 1L )
-    }
     if( is.character( cols ) ) {
       return( which(names(obj) %in% cols ) - 1L )
     }
     return( cols )
   } else {
     ## matrix
-    if( is.numeric( cols ) ) {
-      return( as.integer( cols ) - 1L )
-    }
     if( is.character( cols ) ) {
       n <- dimnames( obj )[[2]]
       return( which(n %in% cols ) - 1L )

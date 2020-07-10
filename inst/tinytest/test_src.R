@@ -31,3 +31,40 @@ expect_equal( l$test_matrix$nm9, l$test_matrix$nm2 )
 ### SEXP col_int
 expect_true( l$test_colint$x_col == 0 )
 expect_true( l$test_colint$y_col == 1 )
+
+
+
+### Other Columns
+
+df <- data.frame(
+  x = 1
+  , y = 1
+  , z = 1
+)
+
+expect_equal( geometries:::.other_columns( df, 1L, 2L ), 0L )
+expect_equal( geometries:::.other_columns( df, 1, 2 ), 0 )
+expect_true( is.integer( geometries:::.other_columns( df, 1L, 2L ) ) )
+expect_false( is.integer( geometries:::.other_columns( df, 1, 2 ) ) )
+expect_error( geometries:::.other_columns( df, 1, 2L ) , "geometries - different vector types found" )
+
+expect_equal( l$other_col$other_yz_int, c(1L,2L) )
+expect_equal( l$other_col$other_zx_int, c(0L,2L) )
+expect_equal( l$other_col$other_z_int, c(2L) )
+
+expect_true( is.integer( l$other_col$other_yz_int ) )
+expect_true( is.integer( l$other_col$other_zx_int ) )
+expect_true( is.integer( l$other_col$other_z_int ) )
+
+expect_equal( l$other_col$other_yz_dbl, c(1,2) )
+expect_equal( l$other_col$other_zx_dbl, c(0,2) )
+expect_equal( l$other_col$other_z_dbl, c(2) )
+
+expect_false( is.integer( l$other_col$other_yz_dbl ) )
+expect_false( is.integer( l$other_col$other_zx_dbl ) )
+expect_false( is.integer( l$other_col$other_z_dbl ) )
+
+expect_equal( l$other_col$other_yz_str, c("y","z") )
+expect_equal( l$other_col$other_zx_str, c("x","z") )
+expect_equal( l$other_col$other_z_str, c("z") )
+

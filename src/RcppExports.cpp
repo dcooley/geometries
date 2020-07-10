@@ -77,6 +77,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// test_other_columns_impl
+SEXP test_other_columns_impl();
+RcppExport SEXP _geometries_test_other_columns_impl() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_other_columns_impl());
+    return rcpp_result_gen;
+END_RCPP
+}
+// test_other_columns
+SEXP test_other_columns(SEXP x, SEXP y, SEXP z);
+RcppExport SEXP _geometries_test_other_columns(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type y(ySEXP);
+    Rcpp::traits::input_parameter< SEXP >::type z(zSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_other_columns(x, y, z));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tests
 SEXP tests();
 RcppExport SEXP _geometries_tests() {
@@ -95,6 +118,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_make_geometries", (DL_FUNC) &_geometries_rcpp_make_geometries, 4},
     {"_geometries_rcpp_rleid", (DL_FUNC) &_geometries_rcpp_rleid, 2},
     {"_geometries_rcpp_nest", (DL_FUNC) &_geometries_rcpp_nest, 2},
+    {"_geometries_test_other_columns_impl", (DL_FUNC) &_geometries_test_other_columns_impl, 0},
+    {"_geometries_test_other_columns", (DL_FUNC) &_geometries_test_other_columns, 3},
     {"_geometries_tests", (DL_FUNC) &_geometries_tests, 0},
     {NULL, NULL, 0}
 };

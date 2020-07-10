@@ -25,6 +25,14 @@ rcpp_nest <- function(x, depth) {
     .Call(`_geometries_rcpp_nest`, x, depth)
 }
 
+test_other_columns_impl <- function() {
+    .Call(`_geometries_test_other_columns_impl`)
+}
+
+.other_columns <- function(x, y, z) {
+    .Call(`_geometries_test_other_columns`, x, y, z)
+}
+
 .tests <- function() {
     .Call(`_geometries_tests`)
 }

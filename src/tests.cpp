@@ -3,6 +3,8 @@
 #include "geometries/bbox/bbox.hpp"
 #include "geometries/matrix/to_mat.hpp"
 #include "geometries/utils/sexp/sexp.hpp"
+#include "geometries/utils/columns/columns.hpp"
+#include "geometries/utils/rleid/rleid.hpp"
 
 // ----------------------------
 // bbox.hpp
@@ -114,11 +116,70 @@ Rcpp::List test_sexp() {
 
 }
 
+// ----------------------------
+// columns.hpp
+
+// [[Rcpp::export]]
+SEXP test_other_columns_impl() {
+
+  Rcpp::NumericVector x = {1,1,2,2,2,3};
+  Rcpp::NumericVector y = {1,1,1,2,2,2};
+  Rcpp::NumericVector z = {1,2,3,4,5,6};
+
+  Rcpp::List l = Rcpp::List::create(
+    Rcpp::_["x"] = x,
+    Rcpp::_["y"] = y,
+    Rcpp::_["z"] = z
+  );
+  SEXP df = Rcpp::as< Rcpp::DataFrame >( l );
+
+  SEXP x_col_int = Rf_ScalarInteger( 0 );
+  SEXP y_col_int = Rf_ScalarInteger( 1 );
+  //SEXP z_col_int = Rf_ScalarInteger( 2 );
+
+  SEXP x_col_dbl = Rf_ScalarReal( 0 );
+  SEXP y_col_dbl = Rf_ScalarReal( 1 );
+  //SEXP z_col_dbl = Rf_ScalarReal( 2 );
+
+  SEXP x_col_str = Rf_mkString( "x" );
+  SEXP y_col_str = Rf_mkString( "y" );
+  //SEXP z_col_str = Rf_mkString( "z" );
+
+  SEXP other_yz_int = geometries::utils::other_columns( df, x_col_int );
+  SEXP other_xz_int = geometries::utils::other_columns( df, y_col_int );
+  SEXP other_z_int = geometries::utils::other_columns( df, x_col_int, y_col_int );
+
+  SEXP other_yz_dbl = geometries::utils::other_columns( df, x_col_dbl );
+  SEXP other_xz_dbl = geometries::utils::other_columns( df, y_col_dbl );
+  SEXP other_z_dbl = geometries::utils::other_columns( df, x_col_dbl, y_col_dbl );
+
+  SEXP other_yz_str = geometries::utils::other_columns( df, x_col_str );
+  SEXP other_xz_str = geometries::utils::other_columns( df, y_col_str );
+  SEXP other_z_str = geometries::utils::other_columns( df, x_col_str, y_col_str );
+
+  return Rcpp::List::create(
+    Rcpp::_["other_yz_int"] = other_yz_int,
+    Rcpp::_["other_zx_int"] = other_xz_int,
+    Rcpp::_["other_z_int"] = other_z_int,
+    Rcpp::_["other_yz_dbl"] = other_yz_dbl,
+    Rcpp::_["other_zx_dbl"] = other_xz_dbl,
+    Rcpp::_["other_z_dbl"] = other_z_dbl,
+    Rcpp::_["other_yz_str"] = other_yz_str,
+    Rcpp::_["other_zx_str"] = other_xz_str,
+    Rcpp::_["other_z_str"] = other_z_str
+  );
+
+}
+
+//[[Rcpp::export(.other_columns)]]
+SEXP test_other_columns( SEXP x, SEXP y, SEXP z ) {
+  return geometries::utils::other_columns( x, y, z );
+}
+
+
 
 // ----------------------------
 // rleid.hpp
-
-#include "geometries/utils/rleid/rleid.hpp"
 
 SEXP test_rleid() {
 
@@ -155,12 +216,14 @@ SEXP tests() {
   Rcpp::List rleid = test_rleid();
   Rcpp::List to_matrix = test_matrix();
   Rcpp::List int_col = test_sexp();
+  Rcpp::List other_col = test_other_columns_impl();
 
   return Rcpp::List::create(
     Rcpp::_["test_bbox"] = mb,
     Rcpp::_["test_rleid"] = rleid,
     Rcpp::_["test_colint"] = int_col,
-    Rcpp::_["test_matrix"] = to_matrix
+    Rcpp::_["test_matrix"] = to_matrix,
+    Rcpp::_["other_col"] = other_col
   );
 }
 
