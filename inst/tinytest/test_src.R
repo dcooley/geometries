@@ -42,11 +42,11 @@ df <- data.frame(
   , z = 1
 )
 
-expect_equal( geometries:::.other_columns( df, 1L, 2L ), 0L )
-expect_equal( geometries:::.other_columns( df, 1, 2 ), 0 )
-expect_true( is.integer( geometries:::.other_columns( df, 1L, 2L ) ) )
-expect_false( is.integer( geometries:::.other_columns( df, 1, 2 ) ) )
-expect_error( geometries:::.other_columns( df, 1, 2L ) , "geometries - different vector types found" )
+expect_equal( geometries:::.test_other_columns( df, 1L, 2L ), 0L )
+expect_equal( geometries:::.test_other_columns( df, 1, 2 ), 0 )
+expect_true( is.integer( geometries:::.test_other_columns( df, 1L, 2L ) ) )
+expect_false( is.integer( geometries:::.test_other_columns( df, 1, 2 ) ) )
+expect_error( geometries:::.test_other_columns( df, 1, 2L ) , "geometries - different vector types found" )
 
 expect_equal( l$other_col$other_yz_int, c(1L,2L) )
 expect_equal( l$other_col$other_zx_int, c(0L,2L) )
