@@ -16,13 +16,14 @@ namespace geometries {
       Rcpp::List& l,
       Rcpp::IntegerVector& ids,
       Rcpp::IntegerVector& geometry_cols,
-      Rcpp::Nullable< Rcpp::StringVector > class_attribute
+      Rcpp::List attributes
   ) {
 
     // Rcpp::Rcout << "Ids: " << ids << std::endl;
     // Rcpp::Rcout << "geoms: " << geometry_cols << std::endl;
-    bool has_class = !Rf_isNull( class_attribute );
+    //bool has_class = !Rf_isNull( class_attribute );
     // Rcpp::Rcout << "has_class: " << has_class << std::endl;
+    bool has_class = attributes.length() > 0;
 
     R_xlen_t i, j;
     R_xlen_t n_id_cols = Rf_length( ids );
@@ -42,7 +43,7 @@ namespace geometries {
       // AND iff nesting == n_id_cols (1)
 
       // Rcpp::Rcout << "splitting" << std::endl;
-      rleid( i ) = geometries::utils::split_by_id( l, rle_ids, geometry_cols, last, class_attribute );
+      rleid( i ) = geometries::utils::split_by_id( l, rle_ids, geometry_cols, last, attributes );
       // Rcpp::Rcout << "split" << std::endl;
 
       // here the rleid(i) tells us which elements of rleid(i+1)
@@ -79,8 +80,7 @@ namespace geometries {
           Rcpp::List obj = prev_res[ inner_rng ];
 
           if( first && has_class && n_id_cols != 1 ) {
-            Rcpp::StringVector cls = {"class"};
-            Rf_setAttrib( obj, cls, class_attribute );
+            geometries::utils::attach_attributes( obj, attributes);
           }
           curr_res( j ) = obj;
         }
@@ -96,8 +96,7 @@ namespace geometries {
         SEXP coords = curr["coords"];
 
         if( first && has_class && n_id_cols != 1  ) {
-          Rcpp::StringVector cls = {"class"};
-          Rf_setAttrib( coords, cls, class_attribute );
+           geometries::utils::attach_attributes( coords, attributes);
         }
 
         rleid( i ) = Rcpp::List::create(
@@ -116,7 +115,7 @@ namespace geometries {
     SEXP& x,
     SEXP& ids,
     SEXP& geometry_cols,
-    Rcpp::Nullable< Rcpp::StringVector > class_attribute
+    Rcpp::List attributes
   ) {
     if( TYPEOF( ids ) != TYPEOF( geometry_cols ) ) {
       Rcpp::stop("geometries - id_columns and geometry_columns must be the same type");
@@ -127,7 +126,7 @@ namespace geometries {
     Rcpp::IntegerVector int_geom = geometries::utils::sexp_col_int( x, geometry_cols );
 
     Rcpp::List lst = geometries::utils::as_list( x );
-    return make_geometries( lst, int_ids, int_geom, class_attribute );
+    return make_geometries( lst, int_ids, int_geom, attributes );
   }
 
 } // geometries

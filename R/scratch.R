@@ -1,3 +1,46 @@
+
+# n <- 1e5
+# e <- 4
+#
+# df <- data.frame(
+#   id = rep(1:n, each = e)
+#   , x = rnorm( n * e )
+#   , y = rnorm( n * e)
+# )
+#
+#
+# #remotes::install_github("dcooley/sfheaders")
+# library(sfheaders)
+# library(microbenchmark)
+#
+# microbenchmark::microbenchmark(
+#
+#   sfheaders = {
+#     sfc <- sfheaders::sfc_polygon(
+#       obj = df
+#       , polygon_id = "id"
+#       , x = "x"
+#       , y = "y"
+#     )
+#   },
+#   geometryes = {
+#     geom <- geometries::gm_geometries(
+#       obj = df
+#       , geometry_cols = c("x","y")
+#       , id_cols = c("id","id")
+#       , class_attributes = list(class = c("XY","POLYGON", "sfg"))
+#     )
+#   },
+#   times = 5
+# )
+
+# Unit: milliseconds
+#       expr         min          lq       mean      median         uq        max neval
+#  sfheaders 29882.63039 30081.96134 30440.0203 30423.66346 30821.1120 30990.7341     5
+# geometryes    58.46881    73.30238   169.9254    82.17112   181.9949   453.6897     5
+
+
+
 #
 # df <- ggplot2::map_data("state")
 #

@@ -6,6 +6,52 @@
 namespace geometries {
 namespace utils {
 
+  inline void attach_attributes( SEXP& obj, Rcpp::List& attributes ) {
+
+    R_xlen_t k;
+    R_xlen_t n_attributes = attributes.length();
+    Rcpp::StringVector attr_names = attributes.names();
+    for( k = 0; k < n_attributes; ++k ) {
+
+      Rcpp::String cls = attr_names[ k ];
+      Rcpp::StringVector vcls = {cls};
+      Rcpp::StringVector attr = attributes[ k ];
+
+      Rf_setAttrib( obj, vcls, attr );
+    }
+  }
+
+  inline void attach_attributes( Rcpp::List& obj, Rcpp::List& attributes ) {
+
+    R_xlen_t k;
+    R_xlen_t n_attributes = attributes.length();
+    Rcpp::StringVector attr_names = attributes.names();
+    for( k = 0; k < n_attributes; ++k ) {
+
+      Rcpp::String cls = attr_names[ k ];
+      Rcpp::StringVector vcls = {cls};
+      Rcpp::StringVector attr = attributes[ k ];
+
+      Rf_setAttrib( obj, vcls, attr );
+    }
+  }
+
+  inline void attach_attributes( Rcpp::NumericMatrix& obj, Rcpp::List& attributes ) {
+
+    R_xlen_t k;
+    R_xlen_t n_attributes = attributes.length();
+    Rcpp::StringVector attr_names = attributes.names();
+    for( k = 0; k < n_attributes; ++k ) {
+
+      Rcpp::String cls = attr_names[ k ];
+      Rcpp::StringVector vcls = {cls};
+      Rcpp::StringVector attr = attributes[ k ];
+
+      Rf_setAttrib( obj, vcls, attr );
+    }
+  }
+
+
   // TODO
   // - If it's the first ID column,
   // - add the class_attribute
@@ -18,10 +64,11 @@ namespace utils {
       Rcpp::IntegerVector& ids,
       Rcpp::IntegerVector& geometry_cols,
       bool last,
-      Rcpp::Nullable< Rcpp::StringVector > class_attribute
+      Rcpp::List attributes
   ) {
 
-    bool has_class = !Rf_isNull( class_attribute );
+    //bool has_class = !Rf_isNull( class_attribute );
+    bool has_class = attributes.length() > 0;
 
     // matrix of geometries
     // Rcpp::Rcout << "to_matrix" << std::endl;
@@ -90,8 +137,7 @@ namespace utils {
           Rcpp::NumericMatrix res_mat = geometry_mat( row_rng, Rcpp::_ );
 
           if( has_class && n_id_cols == 1 ) {
-            Rcpp::StringVector cls = {"class"};
-            Rf_setAttrib( res_mat, cls, class_attribute );
+            attach_attributes( res_mat, attributes );
           }
 
           res[ res_counter ] = res_mat;
@@ -117,8 +163,7 @@ namespace utils {
       Rcpp::NumericMatrix res_mat = geometry_mat( row_rng, Rcpp::_ );
 
       if( has_class && n_id_cols == 1 ) {
-        Rcpp::StringVector cls = {"class"};
-        Rf_setAttrib( res_mat, cls, class_attribute );
+        attach_attributes( res_mat, attributes);
       }
 
       res[ res_counter ] = res_mat;

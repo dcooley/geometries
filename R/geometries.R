@@ -27,7 +27,7 @@
 #'   df
 #'   , id_cols = c(1)
 #'   , geometry_cols = c(2,3)
-#'   , "my_line_object"
+#'   , list( class = "my_line_object" )
 #'  )
 #'
 #' ## Adding a second ID column
@@ -62,7 +62,7 @@
 #'  )
 #'
 #' @export
-gm_geometries <- function( obj, id_cols, geometry_cols, class_attributes = NULL ) {
+gm_geometries <- function( obj, id_cols, geometry_cols, class_attributes = list() ) {
   id_cols <- index_correct( obj, id_cols )
   geometry_cols <- index_correct( obj, geometry_cols )
   return( rcpp_make_geometries( obj, id_cols, geometry_cols, class_attributes ) )

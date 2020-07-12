@@ -4,7 +4,7 @@
 \alias{gm_geometries}
 \title{geometries}
 \usage{
-gm_geometries(obj, id_cols, geometry_cols, class_attributes = NULL)
+gm_geometries(obj, id_cols, geometry_cols, class_attributes = list())
 }
 \arguments{
 \item{obj}{data.frame}
@@ -37,7 +37,7 @@ gm_geometries(
   df
   , id_cols = c(1)
   , geometry_cols = c(2,3)
-  , "my_line_object"
+  , list( class = "my_line_object" )
  )
 
 ## Adding a second ID column
