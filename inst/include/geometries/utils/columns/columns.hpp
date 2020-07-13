@@ -9,10 +9,13 @@
 namespace geometries {
 namespace utils {
 
+  template< int RTYPE >
   inline SEXP other_columns(
-      Rcpp::IntegerVector& all_cols,
-      Rcpp::IntegerVector& id_cols
+      Rcpp::Vector< RTYPE >& all_cols,
+      Rcpp::Vector< RTYPE >& id_cols
   ) {
+
+    typedef typename Rcpp::traits::storage_type< RTYPE >::type T;
 
     int n_id_cols = id_cols.size();
     int n_other_cols = all_cols.size();
@@ -21,66 +24,9 @@ namespace utils {
 
     for( i = 0; i < n_id_cols; ++i ) {
       is_in = false;
-      int id_col = id_cols[i];
+      T id_col = id_cols[i];
       for( j = 0; j < n_other_cols; ++j ) {
-        int a_col = all_cols[j];
-        if( id_col == a_col ) {
-          // this column is one of the id ones, so we shouldn't keep it.
-          is_in = true;
-          break;
-        }
-      }
-      if( is_in ) {
-        all_cols.erase( j );
-      }
-    }
-    return all_cols;
-  }
-
-  inline SEXP other_columns(
-      Rcpp::NumericVector& all_cols,
-      Rcpp::NumericVector& id_cols
-  ) {
-
-    int n_id_cols = id_cols.size();
-    int n_other_cols = all_cols.size();
-    int i, j;
-    bool is_in = false;
-
-    for( i = 0; i < n_id_cols; ++i ) {
-      is_in = false;
-      double id_col = id_cols[i];
-      for( j = 0; j < n_other_cols; ++j ) {
-        double a_col = all_cols[j];
-        if( id_col == a_col ) {
-          // this column is one of the id ones, so we shouldn't keep it.
-          is_in = true;
-          break;
-        }
-      }
-      if( is_in ) {
-        all_cols.erase( j );
-      }
-    }
-    return all_cols;
-  }
-
-
-  inline SEXP other_columns(
-      Rcpp::StringVector& all_cols,
-      Rcpp::StringVector& id_cols
-  ) {
-
-    int n_id_cols = id_cols.size();
-    int n_other_cols = all_cols.size();
-    int i, j;
-    bool is_in = false;
-
-    for( i = 0; i < n_id_cols; ++i ) {
-      is_in = false;
-      Rcpp::String id_col = id_cols[i];
-      for( j = 0; j < n_other_cols; ++j ) {
-        Rcpp::String a_col = all_cols[j];
+        T a_col = all_cols[j];
         if( id_col == a_col ) {
           // this column is one of the id ones, so we shouldn't keep it.
           is_in = true;
@@ -212,30 +158,30 @@ namespace utils {
   ) {
 
     switch( TYPEOF( x ) ) {
-    case INTSXP: {
-      if( Rf_isMatrix( x ) ) {
-      Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x ) ;
-      Rcpp::IntegerVector cols = Rcpp::seq( 0, (im.ncol() - 1) );
-      return cols;
-      //return other_columns( im, id_cols );
-    }
-    }
-    case REALSXP: {
-      if( Rf_isMatrix( x ) ) {
-      Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-      Rcpp::IntegerVector cols = Rcpp::seq( 0, (nm.ncol() - 1) );
-      return cols;
-    }
-    }
-    case VECSXP: {
-      if( Rf_inherits( x, "data.frame") ) {
-      Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-      return df.names();
-    }
-    }
-    default: {
-      Rcpp::stop("geometries - unsupported object");
-    }
+      case INTSXP: {
+        if( Rf_isMatrix( x ) ) {
+          Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x ) ;
+          Rcpp::IntegerVector cols = Rcpp::seq( 0, (im.ncol() - 1) );
+          return cols;
+          //return other_columns( im, id_cols );
+        }
+      }
+      case REALSXP: {
+        if( Rf_isMatrix( x ) ) {
+          Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
+          Rcpp::IntegerVector cols = Rcpp::seq( 0, (nm.ncol() - 1) );
+          return cols;
+        }
+      }
+      case VECSXP: {
+        if( Rf_inherits( x, "data.frame") ) {
+          Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
+          return df.names();
+        }
+      }
+      default: {
+        Rcpp::stop("geometries - unsupported object");
+      }
     }
   }
 
@@ -246,27 +192,27 @@ namespace utils {
   ) {
 
     switch( TYPEOF( x ) ) {
-    case INTSXP: {
-    if( Rf_isMatrix( x ) ) {
-      Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x ) ;
-      return other_columns( im, id_cols );
-    }
-    }
-    case REALSXP: {
-    if( Rf_isMatrix( x ) ) {
-      Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-      return other_columns( nm, id_cols );
-    }
-    }
-    case VECSXP: {
-    if( Rf_inherits( x, "data.frame") ) {
-      Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-      return other_columns( df, id_cols );
-    }
-    }
-    default: {
-      Rcpp::stop("geometries - unsupported object");
-    }
+      case INTSXP: {
+        if( Rf_isMatrix( x ) ) {
+          Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x ) ;
+          return other_columns( im, id_cols );
+        }
+      }
+      case REALSXP: {
+        if( Rf_isMatrix( x ) ) {
+          Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
+          return other_columns( nm, id_cols );
+        }
+      }
+      case VECSXP: {
+        if( Rf_inherits( x, "data.frame") ) {
+          Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
+          return other_columns( df, id_cols );
+        }
+      }
+      default: {
+        Rcpp::stop("geometries - unsupported object");
+      }
     }
   }
 
@@ -310,25 +256,25 @@ namespace utils {
     }
 
     switch( TYPEOF( id_cols ) ) {
-    case REALSXP: {
-      Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( id_cols );
-      Rcpp::NumericVector nv2 = Rcpp::sort_unique( nv );
-      return other_columns( x, nv2 );
-    }
-    case INTSXP: {
+      case REALSXP: {
+        Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( id_cols );
+        Rcpp::NumericVector nv2 = Rcpp::sort_unique( nv );
+        return other_columns( x, nv2 );
+      }
+      case INTSXP: {
 
-      Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( id_cols );
-      Rcpp::IntegerVector iv2 = Rcpp::sort_unique( iv );
-      return other_columns( x, iv2 );
-    }
-    case STRSXP: {
-      Rcpp::StringVector sv = Rcpp::as< Rcpp::StringVector >( id_cols );
-      Rcpp::StringVector sv2 = Rcpp::sort_unique( sv );
-      return other_columns( x, sv2 );
-    }
-    default: {
-      Rcpp::stop("geometries - unsupported column types");
-    }
+        Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( id_cols );
+        Rcpp::IntegerVector iv2 = Rcpp::sort_unique( iv );
+        return other_columns( x, iv2 );
+      }
+      case STRSXP: {
+        Rcpp::StringVector sv = Rcpp::as< Rcpp::StringVector >( id_cols );
+        Rcpp::StringVector sv2 = Rcpp::sort_unique( sv );
+        return other_columns( x, sv2 );
+      }
+      default: {
+        Rcpp::stop("geometries - unsupported column types");
+      }
     }
   }
 

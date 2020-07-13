@@ -10,6 +10,16 @@ namespace matrix {
 
   template< int RTYPE >
   inline SEXP to_matrix(
+    Rcpp::Vector< RTYPE >& v
+  ) {
+    v.attr("dim") = Rcpp::Dimension( 1, v.length() );
+    Rcpp::Matrix< RTYPE > m = Rcpp::as< Rcpp::Matrix< RTYPE > >( v );
+    //Rcpp::Rcout << "mat: " << m << std::endl;
+    return m;
+  }
+
+  template< int RTYPE >
+  inline SEXP to_matrix(
     Rcpp::Matrix< RTYPE >& m
   ) {
     return m;
@@ -321,7 +331,8 @@ namespace matrix {
     switch( TYPEOF( x ) ) {
       case INTSXP: {
         if( !Rf_isMatrix( x ) ) {
-          Rcpp::stop("geometries - lines need to be matrices or data.frames");
+          Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( x );
+          return to_matrix( iv );
         } else {
           Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
           return to_matrix( im );
@@ -329,7 +340,8 @@ namespace matrix {
       }
       case REALSXP: {
         if( !Rf_isMatrix( x ) ) {
-          Rcpp::stop("geometries - lines need to be matrices or data.frames");
+          Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( x );
+          return to_matrix( nv );
         } else {
           Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
           return to_matrix( nm );

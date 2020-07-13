@@ -9,6 +9,9 @@
 
 namespace geometries {
 
+
+  // adds the attribute to each geometry in a list
+  // so is really used for collections
   inline SEXP make_geometries(
     Rcpp::List& l,
     Rcpp::List attributes
