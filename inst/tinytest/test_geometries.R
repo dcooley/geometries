@@ -116,5 +116,5 @@ expect_true( is.null( attr( res[[1]][[2]], "class")  ) )
 expect_true( is.null( attr( res[[2]][[1]], "class")  ) )
 expect_true( is.null( attr( res[[1]][[2]], "class")  ) )
 
-
+## shapes are closed
 

@@ -4,7 +4,13 @@
 \alias{gm_geometries}
 \title{geometries}
 \usage{
-gm_geometries(obj, id_cols, geometry_cols, class_attributes = list())
+gm_geometries(
+  obj,
+  id_cols,
+  geometry_cols,
+  class_attributes = list(),
+  close = FALSE
+)
 }
 \arguments{
 \item{obj}{data.frame}
@@ -14,6 +20,8 @@ gm_geometries(obj, id_cols, geometry_cols, class_attributes = list())
 \item{geometry_cols}{vector of geometry columns (either integer or string)}
 
 \item{class_attributes}{class attributes to assign to each geometry}
+
+\item{close}{logical stating if the last row must equal the first row of each geometry}
 }
 \description{
 Converts a data.frame into a collection of geometries.

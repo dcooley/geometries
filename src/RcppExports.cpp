@@ -40,8 +40,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // rcpp_make_geometries
-SEXP rcpp_make_geometries(SEXP x, SEXP id_cols, SEXP geometry_cols, Rcpp::List attributes);
-RcppExport SEXP _geometries_rcpp_make_geometries(SEXP xSEXP, SEXP id_colsSEXP, SEXP geometry_colsSEXP, SEXP attributesSEXP) {
+SEXP rcpp_make_geometries(SEXP x, SEXP id_cols, SEXP geometry_cols, Rcpp::List attributes, bool close);
+RcppExport SEXP _geometries_rcpp_make_geometries(SEXP xSEXP, SEXP id_colsSEXP, SEXP geometry_colsSEXP, SEXP attributesSEXP, SEXP closeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -49,7 +49,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< SEXP >::type id_cols(id_colsSEXP);
     Rcpp::traits::input_parameter< SEXP >::type geometry_cols(geometry_colsSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type attributes(attributesSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_make_geometries(x, id_cols, geometry_cols, attributes));
+    Rcpp::traits::input_parameter< bool >::type close(closeSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_make_geometries(x, id_cols, geometry_cols, attributes, close));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -159,7 +160,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_calculate_bbox", (DL_FUNC) &_geometries_rcpp_calculate_bbox, 2},
     {"_geometries_rcpp_geometry_dimensions", (DL_FUNC) &_geometries_rcpp_geometry_dimensions, 1},
     {"_geometries_rcpp_coordinates", (DL_FUNC) &_geometries_rcpp_coordinates, 1},
-    {"_geometries_rcpp_make_geometries", (DL_FUNC) &_geometries_rcpp_make_geometries, 4},
+    {"_geometries_rcpp_make_geometries", (DL_FUNC) &_geometries_rcpp_make_geometries, 5},
     {"_geometries_rcpp_rleid", (DL_FUNC) &_geometries_rcpp_rleid, 2},
     {"_geometries_rcpp_nest", (DL_FUNC) &_geometries_rcpp_nest, 2},
     {"_geometries_test_sexp_col_names", (DL_FUNC) &_geometries_test_sexp_col_names, 1},

@@ -2,6 +2,7 @@
 #define R_GEOMETRIES_UTILS_SPLIT_H
 
 #include "geometries/matrix/to_mat.hpp"
+#include "geometries/utils/close/close.hpp"
 
 namespace geometries {
 namespace utils {
@@ -36,7 +37,8 @@ namespace utils {
     }
   }
 
-  inline void attach_attributes( Rcpp::NumericMatrix& obj, Rcpp::List& attributes ) {
+  template < int RTYPE >
+  inline void attach_attributes( Rcpp::Matrix< RTYPE >& obj, Rcpp::List& attributes ) {
 
     R_xlen_t k;
     R_xlen_t n_attributes = attributes.length();
@@ -51,6 +53,22 @@ namespace utils {
     }
   }
 
+template< int RTYPE >
+inline void attach_attributes( Rcpp::Vector< RTYPE >& obj, Rcpp::List& attributes ) {
+
+  R_xlen_t k;
+  R_xlen_t n_attributes = attributes.length();
+  Rcpp::StringVector attr_names = attributes.names();
+  for( k = 0; k < n_attributes; ++k ) {
+
+    Rcpp::String cls = attr_names[ k ];
+    Rcpp::StringVector vcls = {cls};
+    Rcpp::StringVector attr = attributes[ k ];
+
+    Rf_setAttrib( obj, vcls, attr );
+  }
+}
+
 
   // TODO
   // - If it's the first ID column,
@@ -64,7 +82,8 @@ namespace utils {
       Rcpp::IntegerVector& ids,
       Rcpp::IntegerVector& geometry_cols,
       bool last,
-      Rcpp::List attributes
+      Rcpp::List attributes,
+      bool close = false
   ) {
 
     //bool has_class = !Rf_isNull( class_attribute );
@@ -124,9 +143,7 @@ namespace utils {
       if( !same ) {
 
         nelems[ res_counter ] = n_elements;
-
         cumulative_size = n_elements + cumulative_size;
-
         sums[ res_counter ] = cumulative_size;
         n_elements = 1;
 
@@ -135,6 +152,9 @@ namespace utils {
 
           Rcpp::Range row_rng( start, end );
           Rcpp::NumericMatrix res_mat = geometry_mat( row_rng, Rcpp::_ );
+          if( close ) {
+            res_mat = geometries::utils::close_matrix( res_mat );
+          }
 
           if( has_class && n_id_cols == 1 ) {
             attach_attributes( res_mat, attributes );
@@ -144,7 +164,6 @@ namespace utils {
 
           start = i;
         }
-
         res_counter++;
       }
     }
@@ -161,6 +180,10 @@ namespace utils {
 
       Rcpp::Range row_rng( start, end );
       Rcpp::NumericMatrix res_mat = geometry_mat( row_rng, Rcpp::_ );
+
+      if( close ) {
+        res_mat = geometries::utils::close_matrix( res_mat );
+      }
 
       if( has_class && n_id_cols == 1 ) {
         attach_attributes( res_mat, attributes);

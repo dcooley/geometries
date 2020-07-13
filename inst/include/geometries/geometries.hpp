@@ -9,6 +9,27 @@
 
 namespace geometries {
 
+  inline SEXP make_geometries(
+    Rcpp::List& l,
+    Rcpp::List attributes
+  ) {
+    // each 'row' is a geometry (i.e., a vector / POINT )
+    bool has_class = attributes.length() > 0;
+    R_xlen_t i;
+
+    Rcpp::NumericMatrix geometry_mat = geometries::matrix::to_matrix( l );
+    R_xlen_t n_rows = geometry_mat.nrow();
+    Rcpp::List res( n_rows );
+
+    for( i = 0; i < n_rows; ++i ) {
+       Rcpp::NumericVector nv = geometry_mat( i, Rcpp::_ );
+      if( has_class ) {
+        geometries::utils::attach_attributes( nv, attributes );
+      }
+      res[i] = nv;
+    }
+    return res;
+  }
 
   // works on the assumption that every different outer-id is a different geometry
   // so any attributes are applied at the outer-id level
@@ -16,7 +37,8 @@ namespace geometries {
       Rcpp::List& l,
       Rcpp::IntegerVector& ids,
       Rcpp::IntegerVector& geometry_cols,
-      Rcpp::List attributes
+      Rcpp::List attributes,
+      bool close = false
   ) {
 
     // Rcpp::Rcout << "Ids: " << ids << std::endl;
@@ -43,7 +65,7 @@ namespace geometries {
       // AND iff nesting == n_id_cols (1)
 
       // Rcpp::Rcout << "splitting" << std::endl;
-      rleid( i ) = geometries::utils::split_by_id( l, rle_ids, geometry_cols, last, attributes );
+      rleid( i ) = geometries::utils::split_by_id( l, rle_ids, geometry_cols, last, attributes, close );
       // Rcpp::Rcout << "split" << std::endl;
 
       // here the rleid(i) tells us which elements of rleid(i+1)
@@ -96,7 +118,7 @@ namespace geometries {
         SEXP coords = curr["coords"];
 
         if( first && has_class && n_id_cols != 1  ) {
-           geometries::utils::attach_attributes( coords, attributes);
+           geometries::utils::attach_attributes( coords, attributes );
         }
 
         rleid( i ) = Rcpp::List::create(
@@ -115,18 +137,18 @@ namespace geometries {
     SEXP& x,
     SEXP& ids,
     SEXP& geometry_cols,
-    Rcpp::List attributes
+    Rcpp::List attributes,
+    bool close = false
   ) {
     if( TYPEOF( ids ) != TYPEOF( geometry_cols ) ) {
       Rcpp::stop("geometries - id_columns and geometry_columns must be the same type");
     }
 
-
     Rcpp::IntegerVector int_ids = geometries::utils::sexp_col_int( x, ids );
     Rcpp::IntegerVector int_geom = geometries::utils::sexp_col_int( x, geometry_cols );
 
     Rcpp::List lst = geometries::utils::as_list( x );
-    return make_geometries( lst, int_ids, int_geom, attributes );
+    return make_geometries( lst, int_ids, int_geom, attributes, close );
   }
 
 } // geometries

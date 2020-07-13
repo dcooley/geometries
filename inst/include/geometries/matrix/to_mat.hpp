@@ -49,7 +49,6 @@ namespace matrix {
     }
     int n_rows = Rf_length( VECTOR_ELT( lst, 0 ) );
 
-    Rcpp::StringVector df_names = lst.names();
     Rcpp::NumericMatrix nm( n_rows, n_cols );
 
     for( i = 0; i < n_cols; ++i ) {
@@ -58,8 +57,9 @@ namespace matrix {
     }
 
     if( keep_names ) {
+      Rcpp::StringVector list_names = lst.names();
       Rcpp::List m_attr(2);
-      m_attr(1) = df_names;
+      m_attr(1) = list_names;
       nm.attr("dimnames") = m_attr;
     }
     return nm;
@@ -131,7 +131,6 @@ namespace matrix {
       Rcpp::stop("geometries - number of columns requested is greater than those available");
     }
 
-    Rcpp::StringVector lst_names = lst.names();
     Rcpp::StringVector m_names( n_cols );
     Rcpp::NumericMatrix nm( n_rows, n_cols );
 
@@ -143,6 +142,7 @@ namespace matrix {
     }
 
     if( keep_names ) {
+      Rcpp::StringVector lst_names = lst.names();
       Rcpp::List m_attr(2);
       m_attr(1) = m_names;
       nm.attr("dimnames") = m_attr;
@@ -192,7 +192,6 @@ namespace matrix {
     if( keep_names ) {
       Rcpp::List m_attr(2);
       m_attr(1) = m_names;
-
       nm.attr("dimnames") = m_attr;
     }
     return nm;

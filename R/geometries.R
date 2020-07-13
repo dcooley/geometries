@@ -7,6 +7,7 @@
 #' @param id_cols vector of id columns (either integer or string)
 #' @param geometry_cols vector of geometry columns (either integer or string)
 #' @param class_attributes class attributes to assign to each geometry
+#' @param close logical stating if the last row must equal the first row of each geometry
 #'
 #' @examples
 #'
@@ -62,10 +63,10 @@
 #'  )
 #'
 #' @export
-gm_geometries <- function( obj, id_cols, geometry_cols, class_attributes = list() ) {
+gm_geometries <- function( obj, id_cols, geometry_cols, class_attributes = list(), close = FALSE ) {
   id_cols <- index_correct( obj, id_cols )
   geometry_cols <- index_correct( obj, geometry_cols )
-  return( rcpp_make_geometries( obj, id_cols, geometry_cols, class_attributes ) )
+  return( rcpp_make_geometries( obj, id_cols, geometry_cols, class_attributes, close ) )
 }
 
 
