@@ -89,6 +89,11 @@ SEXP test_matrix() {
 
 }
 
+//[[Rcpp::export]]
+SEXP tm( SEXP x ) {
+  return geometries::matrix::to_matrix( x );
+}
+
 
 // ----------------------------
 // sexp.hpp

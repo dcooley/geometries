@@ -25,6 +25,10 @@ rcpp_nest <- function(x, depth) {
     .Call(`_geometries_rcpp_nest`, x, depth)
 }
 
+tm <- function(x) {
+    .Call(`_geometries_tm`, x)
+}
+
 .test_sexp_col_names <- function(x) {
     .Call(`_geometries_test_sexp_col_names`, x)
 }

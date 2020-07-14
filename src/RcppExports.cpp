@@ -78,6 +78,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// tm
+SEXP tm(SEXP x);
+RcppExport SEXP _geometries_tm(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(tm(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // test_sexp_col_names
 Rcpp::StringVector test_sexp_col_names(SEXP x);
 RcppExport SEXP _geometries_test_sexp_col_names(SEXP xSEXP) {
@@ -163,6 +174,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_make_geometries", (DL_FUNC) &_geometries_rcpp_make_geometries, 5},
     {"_geometries_rcpp_rleid", (DL_FUNC) &_geometries_rcpp_rleid, 2},
     {"_geometries_rcpp_nest", (DL_FUNC) &_geometries_rcpp_nest, 2},
+    {"_geometries_tm", (DL_FUNC) &_geometries_tm, 1},
     {"_geometries_test_sexp_col_names", (DL_FUNC) &_geometries_test_sexp_col_names, 1},
     {"_geometries_test_sexp_n_col", (DL_FUNC) &_geometries_test_sexp_n_col, 1},
     {"_geometries_test_sexp_n_row", (DL_FUNC) &_geometries_test_sexp_n_row, 1},

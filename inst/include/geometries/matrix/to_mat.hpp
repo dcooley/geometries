@@ -332,7 +332,8 @@ namespace matrix {
       case INTSXP: {
         if( !Rf_isMatrix( x ) ) {
           Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( x );
-          return to_matrix( iv );
+        Rcpp::IntegerMatrix mat = to_matrix( iv );
+        return mat;
         } else {
           Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
           return to_matrix( im );
@@ -341,7 +342,8 @@ namespace matrix {
       case REALSXP: {
         if( !Rf_isMatrix( x ) ) {
           Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( x );
-          return to_matrix( nv );
+          Rcpp::NumericMatrix mat = to_matrix( nv );
+          return mat;
         } else {
           Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
           return to_matrix( nm );

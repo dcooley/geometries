@@ -6,6 +6,7 @@
 // #include "geometries/utils/dataframe/dataframe.hpp"
 #include "geometries/utils/sexp/sexp.hpp"
 #include "geometries/utils/lists/as_list.hpp"
+#include "geometries/utils/attributes/attributes.hpp"
 
 namespace geometries {
 
