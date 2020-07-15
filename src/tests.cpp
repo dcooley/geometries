@@ -229,10 +229,15 @@ SEXP test_rleid() {
   Rcpp::IntegerVector xy = geometries::utils::rleid( df, id2 );
   Rcpp::IntegerVector xyz = geometries::utils::rleid( df, id3 );
 
+  // id positions
+  Rcpp::IntegerVector id_idx = geometries::utils::rleid_indices( df, id1 );
+
+
   return Rcpp::List::create(
     Rcpp::_["x"] = xx,
     Rcpp::_["y"] = xy,
-    Rcpp::_["z"] = xyz
+    Rcpp::_["z"] = xyz,
+    Rcpp::_["idx"] = id_idx
   );
 
 }

@@ -45,8 +45,68 @@ namespace utils {
       // at this point we now have a run-length-encoded vector
       ians[ i ] = ( grp += !same );
     }
-
     return ians;
+  }
+
+  // template < int RTYPE >
+  // inline Rcpp::IntegerVector rleid_indices( Rcpp::Vector< RTYPE >& x ) {
+  //
+  // }
+
+  inline Rcpp::IntegerVector rleid_indices( SEXP& x ) {
+
+    //typedef typename Rcpp::traits::storage_type< RTYPE >::type T;
+    R_xlen_t i;
+    R_xlen_t len = Rf_length( x );
+    R_xlen_t counter = 0;
+
+    Rcpp::IntegerVector ians( len );
+    //int grp = 1;
+    ians[ 0 ] = 0;
+    counter++;
+    switch( TYPEOF( x ) ) {
+      case INTSXP: case LGLSXP: {
+        int *icol = INTEGER( x );
+        for( i = 1; i < len; ++i ) {
+          if( icol[i] != icol[i-1] ) {
+            ians[ counter ] = i;
+            counter++;
+          }
+        }
+      } break;
+      case REALSXP: {
+        long long *lljcol = (long long *)REAL(x);
+        for( i = 1; i < len; ++i ) {
+         if( lljcol[i] != lljcol[i-1] ) {
+            ians[ counter ] = i;
+            counter++;
+          }
+        }
+      } break;
+      case STRSXP: {
+        const SEXP *jd = STRING_PTR( x );
+        for (i = 1; i < len; ++i ) {
+          if( jd[i] != jd[i-1] ) {
+            ians[ counter ] = i;
+            counter++;
+          }
+        }
+      } break;
+      default: {
+        Rcpp::stop("geometries - unsupported vector type");
+      }
+    }
+    Rcpp::Range rng(0, counter - 1);
+    return ians[ rng ];
+  }
+
+  // inline Rcpp::IntegerVector rleid_indices( SEXP& x ) {
+  //
+  // }
+
+  inline Rcpp::IntegerVector rleid_indices( Rcpp::List& l, Rcpp::IntegerVector& col ) {
+    SEXP jcol = VECTOR_ELT( l, col[0] );
+    return rleid_indices( jcol );
   }
 
 } // utils

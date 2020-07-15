@@ -13,6 +13,8 @@ expect_equal( l$test_rleid$x, c(1,1,2,2,2,3))
 expect_equal( l$test_rleid$y, c(1,1,2,3,3,4))
 expect_equal( l$test_rleid$z, c(1,2,3,4,5,6))
 
+expect_equal( l$test_rleid$idx, c(0,2,5))
+
 expect_equal( l$test_matrix$nm1, matrix(c(1:4, 1:4), ncol = 2) )
 expect_equal( l$test_matrix$nm2, matrix(c(1:4), ncol = 1) )
 expect_equal( l$test_matrix$nm3, matrix(c(1:4), ncol = 1) )
