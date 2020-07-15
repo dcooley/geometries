@@ -8,16 +8,6 @@
 namespace geometries {
 namespace utils {
 
-
-
-
-  // TODO
-  // - If it's the first ID column,
-  // - add the class_attribute
-  // - don't add it to each individual matrix (unless only 1 id)
-  // - so do it iff j == 0 ?
-  // - does it get added to the list, or to the matrix?
-
   inline SEXP split_by_id(
       Rcpp::List& l,
       Rcpp::IntegerVector& ids,
@@ -27,18 +17,13 @@ namespace utils {
       bool close = false
   ) {
 
-    //bool has_class = !Rf_isNull( class_attribute );
     bool has_class = attributes.length() > 0;
 
     // matrix of geometries
-    // Rcpp::Rcout << "to_matrix" << std::endl;
     Rcpp::NumericMatrix geometry_mat = geometries::matrix::to_matrix( l, geometry_cols );
-    // Rcpp::Rcout << "matriced" << std::endl;
 
     R_xlen_t i;
-    //R_xlen_t n_rows = geometry_mat.nrow(); //geometries::utils::sexp_n_row( l );
     R_xlen_t n_rows = Rf_length( VECTOR_ELT( l, 0 ) );
-    //R_xlen_t n_cols = Rf_length( l );
     R_xlen_t n_id_cols = Rf_length( ids );
 
     Rcpp::IntegerVector nelems( n_rows );

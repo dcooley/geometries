@@ -3,7 +3,6 @@
 
 #include "geometries/utils/split/split.hpp"
 #include "geometries/matrix/mat_to_df.hpp"
-// #include "geometries/utils/dataframe/dataframe.hpp"
 #include "geometries/utils/sexp/sexp.hpp"
 #include "geometries/utils/lists/as_list.hpp"
 #include "geometries/utils/attributes/attributes.hpp"
@@ -45,10 +44,6 @@ namespace geometries {
       bool close = false
   ) {
 
-    // Rcpp::Rcout << "Ids: " << ids << std::endl;
-    // Rcpp::Rcout << "geoms: " << geometry_cols << std::endl;
-    //bool has_class = !Rf_isNull( class_attribute );
-    // Rcpp::Rcout << "has_class: " << has_class << std::endl;
     bool has_class = attributes.length() > 0;
 
     R_xlen_t i, j;
@@ -68,9 +63,7 @@ namespace geometries {
       // because once back here, a single-id column split doesn't get packaged up
       // AND iff nesting == n_id_cols (1)
 
-      // Rcpp::Rcout << "splitting" << std::endl;
       rleid( i ) = geometries::utils::split_by_id( l, rle_ids, geometry_cols, last, attributes, close );
-      // Rcpp::Rcout << "split" << std::endl;
 
       // here the rleid(i) tells us which elements of rleid(i+1)
       // belong in which "package"
