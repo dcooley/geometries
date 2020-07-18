@@ -70,3 +70,13 @@ expect_equal( l$other_col$other_yz_str, c("y","z") )
 expect_equal( l$other_col$other_zx_str, c("x","z") )
 expect_equal( l$other_col$other_z_str, c("z") )
 
+## as_list.hpp
+expect_true( all( l$test_list$list_mat[[1]] == 1:4 ) )
+expect_true( all( l$test_list$list_mat[[2]] == 4:1 ) )
+expect_equal( l$test_list$list_mat, l$test_list$list_df )
+expect_equal( l$test_list$list_mat, l$test_list$list_lst )
+
+
+
+
+

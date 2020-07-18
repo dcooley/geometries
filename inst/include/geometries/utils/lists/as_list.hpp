@@ -29,30 +29,34 @@ namespace utils {
 
   inline Rcpp::List as_list( SEXP& x ) {
     switch( TYPEOF( x ) ) {
-    case INTSXP: {
-      if( Rf_isMatrix( x ) ) {
-      Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
-      return as_list( im );
-    } else {
-      Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( x );
-      return as_list( iv );
-    }
-    }
-    case REALSXP: {
-      if( Rf_isMatrix( x ) ) {
-      Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-      return as_list( nm );
-    } else {
-      Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( x );
-      return as_list( nv );
-    }
-    }
-    case VECSXP: {
-      return Rcpp::as< Rcpp::List >( x );
-    }
-    default: {
-      Rcpp::stop("sfheaders - unknown object type for converting to list");
-    }
+      case INTSXP: {
+        if( Rf_isMatrix( x ) ) {
+          Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
+          return as_list( im );
+        } else {
+          Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( x );
+          return as_list( iv );
+        }
+      }
+      case REALSXP: {
+        if( Rf_isMatrix( x ) ) {
+          Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
+          return as_list( nm );
+        } else {
+          Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( x );
+          return as_list( nv );
+        }
+      }
+      case VECSXP: {
+        Rcpp::List lst = Rcpp::as< Rcpp::List >( x );
+        // if( keep_names && x.hasAttribute("names") ) {
+        //   Rf_setAttrib( lst, x.attr("names") );
+        // }
+        return lst;
+      }
+      default: {
+        Rcpp::stop("sfheaders - unknown object type for converting to list");
+      }
     }
     return Rcpp::List::create(); // never reaches
   }

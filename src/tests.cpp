@@ -5,6 +5,7 @@
 #include "geometries/utils/sexp/sexp.hpp"
 #include "geometries/utils/columns/columns.hpp"
 #include "geometries/utils/rleid/rleid.hpp"
+#include "geometries/utils/lists/as_list.hpp"
 
 // ----------------------------
 // bbox.hpp
@@ -242,6 +243,42 @@ SEXP test_rleid() {
 
 }
 
+// ----------------------------
+// list.hpp
+
+SEXP test_list() {
+  // test various objects converted to list
+  // how are names handled?
+
+  Rcpp::NumericVector x = {1,2,3,4};
+  Rcpp::NumericVector y = {4,3,2,1};
+
+  Rcpp::NumericMatrix mat(4,2);
+  mat( Rcpp::_, 0 ) = x;
+  mat( Rcpp::_, 1 ) = y;
+
+  Rcpp::DataFrame df = Rcpp::DataFrame::create(
+    Rcpp::_["x"] = x,
+    Rcpp::_["y"] = y
+  );
+
+  Rcpp::List lst = Rcpp::List::create(
+    Rcpp::_["x"] = x,
+    Rcpp::_["y"] = y
+  );
+
+  Rcpp::List lst_mat = geometries::utils::as_list( mat );
+  Rcpp::List lst_df = geometries::utils::as_list( df );
+  Rcpp::List lst_lst = geometries::utils::as_list( lst );
+
+  return Rcpp::List::create(
+    Rcpp::_["list_mat"] = lst_mat,
+    Rcpp::_["list_df"] = lst_df,
+    Rcpp::_["list_lst"] = lst_lst
+  );
+
+}
+
 // [[Rcpp::export(.tests)]]
 SEXP tests() {
   Rcpp::List mb = test_bbox();
@@ -249,13 +286,15 @@ SEXP tests() {
   Rcpp::List to_matrix = test_matrix();
   Rcpp::List int_col = test_sexp();
   Rcpp::List other_col = test_other_columns_impl();
+  Rcpp::List list = test_list();
 
   return Rcpp::List::create(
     Rcpp::_["test_bbox"] = mb,
     Rcpp::_["test_rleid"] = rleid,
     Rcpp::_["test_colint"] = int_col,
     Rcpp::_["test_matrix"] = to_matrix,
-    Rcpp::_["other_col"] = other_col
+    Rcpp::_["other_col"] = other_col,
+    Rcpp::_["test_list"] = list
   );
 }
 
