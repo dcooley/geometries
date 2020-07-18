@@ -38,7 +38,7 @@
 #'   df
 #'   , id_cols = c(1,4)
 #'   , geometry_cols = c(2,3)
-#'   , "my_multiline_object"
+#'   , list( class = "my_multiline_object" )
 #' )
 #'
 #' ## Using character column names
