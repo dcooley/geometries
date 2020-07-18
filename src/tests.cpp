@@ -252,27 +252,31 @@ SEXP test_list() {
 
   Rcpp::NumericVector x = {1,2,3,4};
   Rcpp::NumericVector y = {4,3,2,1};
+  Rcpp::StringVector z(4);
+  z[0] = "a";
+  z[1] = "b";
+  z[2] = "c";
+  z[3] = "d";
 
   Rcpp::NumericMatrix mat(4,2);
   mat( Rcpp::_, 0 ) = x;
   mat( Rcpp::_, 1 ) = y;
 
-  Rcpp::DataFrame df = Rcpp::DataFrame::create(
+  SEXP lst = Rcpp::List::create(
     Rcpp::_["x"] = x,
-    Rcpp::_["y"] = y
+    Rcpp::_["y"] = z
   );
 
-  Rcpp::List lst = Rcpp::List::create(
-    Rcpp::_["x"] = x,
-    Rcpp::_["y"] = y
-  );
+  SEXP df = Rcpp::as< Rcpp::DataFrame >( lst );
 
   Rcpp::List lst_mat = geometries::utils::as_list( mat );
+  Rcpp::List lst_lst_mat = geometries::utils::as_list( lst_mat );
   Rcpp::List lst_df = geometries::utils::as_list( df );
   Rcpp::List lst_lst = geometries::utils::as_list( lst );
 
   return Rcpp::List::create(
     Rcpp::_["list_mat"] = lst_mat,
+    Rcpp::_["list_list_mat"] = lst_lst_mat,
     Rcpp::_["list_df"] = lst_df,
     Rcpp::_["list_lst"] = lst_lst
   );

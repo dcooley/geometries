@@ -6,6 +6,7 @@ namespace utils {
 
   template < int RTYPE >
   inline Rcpp::List as_list( Rcpp::Vector< RTYPE >& x ) {
+
     R_xlen_t n_col = x.length();
     R_xlen_t i;
     Rcpp::List res( n_col );
@@ -17,6 +18,7 @@ namespace utils {
 
   template < int RTYPE >
   inline Rcpp::List as_list( Rcpp::Matrix< RTYPE >& x ) {
+
     R_xlen_t n_col = x.ncol();
     R_xlen_t i;
     Rcpp::List res( n_col );
@@ -27,7 +29,8 @@ namespace utils {
     return res;
   }
 
-  inline Rcpp::List as_list( SEXP& x ) {
+  inline Rcpp::List as_list( SEXP& x, bool keep_names = true ) {
+
     switch( TYPEOF( x ) ) {
       case INTSXP: {
         if( Rf_isMatrix( x ) ) {
@@ -48,11 +51,7 @@ namespace utils {
         }
       }
       case VECSXP: {
-        Rcpp::List lst = Rcpp::as< Rcpp::List >( x );
-        // if( keep_names && x.hasAttribute("names") ) {
-        //   Rf_setAttrib( lst, x.attr("names") );
-        // }
-        return lst;
+        return Rcpp::as< Rcpp::List >( x );
       }
       default: {
         Rcpp::stop("sfheaders - unknown object type for converting to list");
