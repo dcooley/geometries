@@ -12,14 +12,13 @@ namespace utils {
     Rcpp::IntegerVector& line_positions  // vector giving start positions
   ) {
 
-    R_xlen_t n = line_positions.length() - 1;
-    //R_xlen_t max_rows = v.length();
+    R_xlen_t n = line_positions.length();
+    R_xlen_t max_rows = v.length();
     Rcpp::List res( n );
     R_xlen_t i;
     for( i = 0; i < n; ++i ) {
       R_xlen_t start = line_positions[ i ];
-      R_xlen_t end = line_positions[ i + 1 ] - 1;
-
+      R_xlen_t end = ( i == ( n - 1 ) ) ? max_rows - 1 : line_positions[ i + 1 ] - 1;
       Rcpp::IntegerVector elements = Rcpp::seq( start, end );
       res[ i ] = v[ elements ];
     }

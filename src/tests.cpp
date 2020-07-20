@@ -6,6 +6,7 @@
 #include "geometries/utils/columns/columns.hpp"
 #include "geometries/utils/rleid/rleid.hpp"
 #include "geometries/utils/lists/as_list.hpp"
+#include "geometries/utils/lists/fill.hpp"
 
 // ----------------------------
 // bbox.hpp
@@ -244,6 +245,16 @@ SEXP test_rleid() {
 }
 
 // ----------------------------
+// fill.hpp
+
+SEXP test_fill_list() {
+  Rcpp::NumericVector x = {1,2,3,4};
+  Rcpp::IntegerVector line_positions = {0,2};
+  Rcpp::List lst = geometries::utils::fill_list( x, line_positions );
+  return lst;
+}
+
+// ----------------------------
 // list.hpp
 
 SEXP test_list() {
@@ -291,6 +302,7 @@ SEXP tests() {
   Rcpp::List int_col = test_sexp();
   Rcpp::List other_col = test_other_columns_impl();
   Rcpp::List list = test_list();
+  Rcpp::List fill = test_fill_list();
 
   return Rcpp::List::create(
     Rcpp::_["test_bbox"] = mb,
@@ -298,7 +310,8 @@ SEXP tests() {
     Rcpp::_["test_colint"] = int_col,
     Rcpp::_["test_matrix"] = to_matrix,
     Rcpp::_["other_col"] = other_col,
-    Rcpp::_["test_list"] = list
+    Rcpp::_["test_list"] = list,
+    Rcpp::_["test_fill_list"] = fill
   );
 }
 

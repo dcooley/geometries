@@ -77,9 +77,12 @@ expect_true( all( l$test_list$list_mat[[2]] == 4:1 ) )
 ## a data.frame converted to a list remains unchanged
 expect_true( is.data.frame( l$test_list$list_df ) )
 
-
 ## unnamed-list
 expect_true( is.null( names( l$test_list$list_list_mat ) ) )
 expect_true( all( names( l$test_list$list_df ) == c("x","y") ) )
+
+## fill_list.hpp
+expect_equal( l$test_fill_list[[1]], c(1,2) )
+expect_equal( l$test_fill_list[[2]], c(3,4) )
 
 
