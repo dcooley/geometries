@@ -6,28 +6,49 @@ namespace utils {
 
   // collapse a vector into a list
   // where line_ids gives the start and end indexes of v to use
-  template < int RTYPE >
+  template< int RTYPE >
   inline Rcpp::List fill_list(
-      Rcpp::Vector< RTYPE >& v,
-      Rcpp::IntegerMatrix& line_positions
+    Rcpp::Vector< RTYPE >& v,
+    Rcpp::IntegerVector& line_positions  // vector giving start positions
   ) {
-    R_xlen_t n = line_positions.nrow();  // nrow should also be the row of the final df object we are creating
+
+    R_xlen_t n = line_positions.length() - 1;
+    //R_xlen_t max_rows = v.length();
     Rcpp::List res( n );
     R_xlen_t i;
-
     for( i = 0; i < n; ++i ) {
-      R_xlen_t start = line_positions(i, 0);
-      R_xlen_t end = line_positions(i, 1);
+      R_xlen_t start = line_positions[ i ];
+      R_xlen_t end = line_positions[ i + 1 ] - 1;
+
       Rcpp::IntegerVector elements = Rcpp::seq( start, end );
       res[ i ] = v[ elements ];
     }
     return res;
   }
 
+
+  // template < int RTYPE >
+  // inline Rcpp::List fill_list(
+  //     Rcpp::Vector< RTYPE >& v,
+  //     Rcpp::IntegerMatrix& line_positions
+  // ) {
+  //   R_xlen_t n = line_positions.nrow();  // nrow should also be the row of the final df object we are creating
+  //   Rcpp::List res( n );
+  //   R_xlen_t i;
+  //
+  //   for( i = 0; i < n; ++i ) {
+  //     R_xlen_t start = line_positions(i, 0);
+  //     R_xlen_t end = line_positions(i, 1);
+  //     Rcpp::IntegerVector elements = Rcpp::seq( start, end );
+  //     res[ i ] = v[ elements ];
+  //   }
+  //   return res;
+  // }
+
   // TODO - handle dates and factors??
   inline Rcpp::List fill_list(
       SEXP& v,
-      Rcpp::IntegerMatrix& line_positions
+      Rcpp::IntegerVector& line_positions
   ) {
     switch( TYPEOF( v ) ) {
       case LGLSXP: {
