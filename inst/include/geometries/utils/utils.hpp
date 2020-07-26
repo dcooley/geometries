@@ -40,13 +40,28 @@ namespace utils {
   }
 
   // checks if an integer column index exists
-  inline void column_exists( SEXP x, int& id_col ) {
+  inline void column_exists( SEXP& x, int& cols ) {
     R_xlen_t n_col = geometries::utils::sexp_n_col( x );
-    if( id_col > ( n_col - 1 ) ) {
-      Rcpp::stop("geometries - id column index doesn't exist");
+    if( cols > ( n_col - 1 ) ) {
+      Rcpp::stop("geometries - column index doesn't exist");
     }
   }
 
+  inline void column_exists( Rcpp::List& x, Rcpp::IntegerVector& cols ) {
+    R_xlen_t n_col = x.length();
+    R_xlen_t max_id = Rcpp::max( cols );
+    if( max_id > ( n_col - 1 ) ) {
+      Rcpp::stop("geometries - column index doesn't exist");
+    }
+  }
+
+  inline void column_exists( SEXP& x, Rcpp::IntegerVector& cols ) {
+    R_xlen_t n_col = geometries::utils::sexp_n_col( x );
+    R_xlen_t max_id = Rcpp::max( cols );
+    if( max_id > ( n_col - 1 ) ) {
+      Rcpp::stop("geometries - column index doesn't exist");
+    }
+  }
 
 } // namespace utils
 } // namespace geometries

@@ -45,9 +45,9 @@ df <- data.frame(
 )
 
 expect_equal( geometries:::.test_other_columns( df, 1L, 2L ), 0L )
-expect_equal( geometries:::.test_other_columns( df, 1, 2 ), 0 )
+expect_error( geometries:::.test_other_columns( df, 1, 2 ), "geometries - unsupported column" )
 expect_true( is.integer( geometries:::.test_other_columns( df, 1L, 2L ) ) )
-expect_false( is.integer( geometries:::.test_other_columns( df, 1, 2 ) ) )
+# expect_false( is.integer( geometries:::.test_other_columns( df, 1, 2 ) ) )
 expect_error( geometries:::.test_other_columns( df, 1, 2L ) , "geometries - different vector types found" )
 
 expect_equal( l$other_col$other_yz_int, c(1L,2L) )
@@ -58,13 +58,13 @@ expect_true( is.integer( l$other_col$other_yz_int ) )
 expect_true( is.integer( l$other_col$other_zx_int ) )
 expect_true( is.integer( l$other_col$other_z_int ) )
 
-expect_equal( l$other_col$other_yz_dbl, c(1,2) )
-expect_equal( l$other_col$other_zx_dbl, c(0,2) )
-expect_equal( l$other_col$other_z_dbl, c(2) )
+# expect_equal( l$other_col$other_yz_dbl, c(1,2) )
+# expect_equal( l$other_col$other_zx_dbl, c(0,2) )
+# expect_equal( l$other_col$other_z_dbl, c(2) )
 
-expect_false( is.integer( l$other_col$other_yz_dbl ) )
-expect_false( is.integer( l$other_col$other_zx_dbl ) )
-expect_false( is.integer( l$other_col$other_z_dbl ) )
+# expect_false( is.integer( l$other_col$other_yz_dbl ) )
+# expect_false( is.integer( l$other_col$other_zx_dbl ) )
+# expect_false( is.integer( l$other_col$other_z_dbl ) )
 
 expect_equal( l$other_col$other_yz_str, c("y","z") )
 expect_equal( l$other_col$other_zx_str, c("x","z") )

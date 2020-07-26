@@ -218,6 +218,18 @@ namespace utils {
     // bool sort_unique = true
   ) {
 
+    if( Rf_isNull( vec_1 ) && Rf_isNull( vec_2 ) ) {
+      return R_NilValue;
+    }
+
+    if( Rf_isNull( vec_1 ) && !Rf_isNull( vec_2 ) ) {
+      return vec_2;
+    }
+
+    if( !Rf_isNull( vec_1 ) && Rf_isNull( vec_2 ) ) {
+      return vec_1;
+    }
+
     if( TYPEOF( vec_1 ) != TYPEOF( vec_2 ) ) {
       Rcpp::stop("geometries - different vector types found");
     }
@@ -229,24 +241,28 @@ namespace utils {
     // int i;
 
     switch(TYPEOF( vec_1 ) ) {
-    case INTSXP: {
-      Rcpp::IntegerVector iv_1 = Rcpp::as< Rcpp::IntegerVector >( vec_1 );
-      Rcpp::IntegerVector iv_2 = Rcpp::as< Rcpp::IntegerVector >( vec_2 );
-      return concatenate_vectors( iv_1, iv_2 );
-    }
-    case REALSXP: {
-      Rcpp::NumericVector nv_1 = Rcpp::as< Rcpp::NumericVector >( vec_1 );
-      Rcpp::NumericVector nv_2 = Rcpp::as< Rcpp::NumericVector >( vec_2 );
-      return concatenate_vectors( nv_1, nv_2 );
-    }
-    case STRSXP: {
-      Rcpp::StringVector sv_1 = Rcpp::as< Rcpp::StringVector >( vec_1 );
-      Rcpp::StringVector sv_2 = Rcpp::as< Rcpp::StringVector >( vec_2 );
-      return concatenate_vectors( sv_1, sv_2 );
-    }
-    default: {
-      Rcpp::stop("geometries - can't combine columns");
-    }
+      case NILSXP: {
+        return R_NilValue;
+      }
+      case LGLSXP: {}
+      case INTSXP: {
+        Rcpp::IntegerVector iv_1 = Rcpp::as< Rcpp::IntegerVector >( vec_1 );
+        Rcpp::IntegerVector iv_2 = Rcpp::as< Rcpp::IntegerVector >( vec_2 );
+        return concatenate_vectors( iv_1, iv_2 );
+      }
+      case REALSXP: {
+        Rcpp::NumericVector nv_1 = Rcpp::as< Rcpp::NumericVector >( vec_1 );
+        Rcpp::NumericVector nv_2 = Rcpp::as< Rcpp::NumericVector >( vec_2 );
+        return concatenate_vectors( nv_1, nv_2 );
+      }
+      case STRSXP: {
+        Rcpp::StringVector sv_1 = Rcpp::as< Rcpp::StringVector >( vec_1 );
+        Rcpp::StringVector sv_2 = Rcpp::as< Rcpp::StringVector >( vec_2 );
+        return concatenate_vectors( sv_1, sv_2 );
+      }
+      default: {
+        Rcpp::stop("geometries - can't combine columns");
+      }
     }
 
     return Rcpp::List::create(); // never reaches

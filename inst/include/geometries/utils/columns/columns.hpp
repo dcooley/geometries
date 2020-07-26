@@ -48,7 +48,6 @@ namespace utils {
     return other_columns( df_names, id_cols );
   }
 
-
   inline SEXP other_columns(
       Rcpp::DataFrame& df,
       Rcpp::IntegerVector& id_cols
@@ -58,71 +57,24 @@ namespace utils {
     return other_columns( other_cols, id_cols );
   }
 
+  template < int RTYPE >
   inline SEXP other_columns(
-      Rcpp::DataFrame& df,
-      Rcpp::NumericVector& id_cols
-  ) {
-    int n_col = df.ncol();
-
-    Rcpp::IntegerVector other_cols = Rcpp::seq( 0, n_col - 1 );
-    Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( other_cols );
-    return other_columns( nv, id_cols );
-  }
-
-  inline SEXP other_columns(
-      Rcpp::NumericMatrix& nm,
+      Rcpp::Matrix< RTYPE >& m,
       Rcpp::StringVector& id_cols
   ) {
-    Rcpp::StringVector nm_names = geometries::utils::matrix_names( nm );
-    return other_columns( nm_names, id_cols );
+    Rcpp::StringVector m_names = geometries::utils::matrix_names( m );
+    return other_columns( m_names, id_cols );
   }
 
+  template < int RTYPE >
   inline SEXP other_columns(
-      Rcpp::NumericMatrix& nm,
+      Rcpp::Matrix< RTYPE >& m,
       Rcpp::IntegerVector& id_cols
   ) {
-    int n_col = nm.ncol();
+    int n_col = m.ncol();
     Rcpp::IntegerVector other_cols = Rcpp::seq( 0, n_col - 1 );
     return other_columns( other_cols, id_cols );
   }
-
-  inline SEXP other_columns(
-      Rcpp::NumericMatrix& nm,
-      Rcpp::NumericVector& id_cols
-  ) {
-    int n_col = nm.ncol();
-    Rcpp::IntegerVector other_cols = Rcpp::seq( 0, n_col - 1 );
-    Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( other_cols );
-    return other_columns( nv, id_cols );
-  }
-
-  inline SEXP other_columns(
-      Rcpp::IntegerMatrix& im,
-      Rcpp::StringVector& id_cols
-  ) {
-    Rcpp::StringVector im_names = geometries::utils::matrix_names( im );
-    return other_columns( im_names, id_cols );
-  }
-
-  inline SEXP other_columns(
-      Rcpp::IntegerMatrix& im,
-      Rcpp::IntegerVector& id_cols
-  ) {
-    int n_col = im.ncol();
-    Rcpp::IntegerVector im_cols = Rcpp::seq( 0, n_col - 1 );
-    return other_columns( im_cols, id_cols );
-  }
-
-  inline SEXP other_columns(
-      Rcpp::IntegerMatrix& im,
-      Rcpp::NumericVector& id_cols
-  ) {
-    int n_col = im.ncol();
-    Rcpp::IntegerVector im_cols = Rcpp::seq( 0, n_col - 1 );
-    Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( im_cols );
-    return other_columns( nv, id_cols );
-  }
-
 
   inline SEXP other_columns(
       SEXP& x,
@@ -157,64 +109,71 @@ namespace utils {
       SEXP& x
   ) {
 
-    switch( TYPEOF( x ) ) {
-      case INTSXP: {
-        if( Rf_isMatrix( x ) ) {
-          Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x ) ;
-          Rcpp::IntegerVector cols = Rcpp::seq( 0, (im.ncol() - 1) );
-          return cols;
-          //return other_columns( im, id_cols );
-        }
-      }
-      case REALSXP: {
-        if( Rf_isMatrix( x ) ) {
-          Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-          Rcpp::IntegerVector cols = Rcpp::seq( 0, (nm.ncol() - 1) );
-          return cols;
-        }
-      }
-      case VECSXP: {
-        if( Rf_inherits( x, "data.frame") ) {
-          Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-          return df.names();
-        }
-      }
-      default: {
-        Rcpp::stop("geometries - unsupported object");
-      }
-    }
+    R_xlen_t n_col = geometries::utils::sexp_n_col( x );
+    Rcpp::IntegerVector cols = Rcpp::seq( 0, (n_col - 1) );
+    return cols;
+
+    // switch( TYPEOF( x ) ) {
+    //   case INTSXP: {
+    //     if( Rf_isMatrix( x ) ) {
+    //       Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x ) ;
+    //       Rcpp::IntegerVector cols = Rcpp::seq( 0, (im.ncol() - 1) );
+    //       return cols;
+    //     }
+    //   }
+    //   case REALSXP: {
+    //     if( Rf_isMatrix( x ) ) {
+    //       //Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
+    //       R_xlen_t n_col = geometries::utils::sexp_n_col( x );
+    //       Rcpp::IntegerVector cols = Rcpp::seq( 0, (n_col - 1) );
+    //       return cols;
+    //     }
+    //   }
+    //   case VECSXP: {
+    //     if( Rf_inherits( x, "data.frame") ) {
+    //       Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
+    //       return df.names();
+    //     } else if ( Rf_isNewList( x ) ) {
+    //       Rcpp::IntegerVector cols = Rcpp::seq( 0, ( Rf_length( x ) - 1 )  );
+    //       return cols;
+    //     }
+    //   }
+    //   default: {
+    //     Rcpp::stop("geometries - unsupported object");
+    //   }
+    // }
   }
 
 
-  inline SEXP other_columns(
-      SEXP& x,
-      Rcpp::NumericVector& id_cols
-  ) {
-
-    switch( TYPEOF( x ) ) {
-      case INTSXP: {
-        if( Rf_isMatrix( x ) ) {
-          Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x ) ;
-          return other_columns( im, id_cols );
-        }
-      }
-      case REALSXP: {
-        if( Rf_isMatrix( x ) ) {
-          Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-          return other_columns( nm, id_cols );
-        }
-      }
-      case VECSXP: {
-        if( Rf_inherits( x, "data.frame") ) {
-          Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-          return other_columns( df, id_cols );
-        }
-      }
-      default: {
-        Rcpp::stop("geometries - unsupported object");
-      }
-    }
-  }
+  // inline SEXP other_columns(
+  //     SEXP& x,
+  //     Rcpp::NumericVector& id_cols
+  // ) {
+  //
+  //   switch( TYPEOF( x ) ) {
+  //     case INTSXP: {
+  //       if( Rf_isMatrix( x ) ) {
+  //         Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x ) ;
+  //         return other_columns( im, id_cols );
+  //       }
+  //     }
+  //     case REALSXP: {
+  //       if( Rf_isMatrix( x ) ) {
+  //         Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
+  //         return other_columns( nm, id_cols );
+  //       }
+  //     }
+  //     case VECSXP: {
+  //       if( Rf_inherits( x, "data.frame") ) {
+  //         Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
+  //         return other_columns( df, id_cols );
+  //       }
+  //     }
+  //     default: {
+  //       Rcpp::stop("geometries - unsupported object");
+  //     }
+  //   }
+  // }
 
   inline SEXP other_columns(
       SEXP& x,
@@ -256,11 +215,11 @@ namespace utils {
     }
 
     switch( TYPEOF( id_cols ) ) {
-      case REALSXP: {
-        Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( id_cols );
-        Rcpp::NumericVector nv2 = Rcpp::sort_unique( nv );
-        return other_columns( x, nv2 );
-      }
+      // case REALSXP: {
+      //   Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( id_cols );
+      //   Rcpp::NumericVector nv2 = Rcpp::sort_unique( nv );
+      //   return other_columns( x, nv2 );
+      // }
       case INTSXP: {
 
         Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( id_cols );

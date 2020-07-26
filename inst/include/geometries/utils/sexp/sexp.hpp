@@ -4,7 +4,6 @@
 
 #include <Rcpp.h>
 
-
 namespace geometries{
 namespace utils {
 
@@ -36,11 +35,14 @@ namespace utils {
 
   inline R_xlen_t sexp_n_col( SEXP& x ) {
 
-    if( Rf_isNewList( x ) || Rf_inherits( x, "data.frame") ) {
-      return Rf_length( x );
+    if( Rf_isMatrix( x ) ) {
+      return Rf_ncols( x );
     }
 
-    return Rf_ncols( x );
+    // if( Rf_isNewList( x ) || Rf_inherits( x, "data.frame") ) {
+    //   return Rf_length( x );
+    // }
+    return Rf_length( x );
   }
 
   inline R_xlen_t sexp_n_row( SEXP& x ) {
@@ -56,8 +58,8 @@ namespace utils {
     return Rf_nrows( x );
   }
 
-  template <int RTYPE>
-  inline R_xlen_t sexp_length(Rcpp::Vector<RTYPE> v) {
+  template < int RTYPE >
+  inline R_xlen_t sexp_length( Rcpp::Vector< RTYPE > v ) {
     return v.length();
   }
 

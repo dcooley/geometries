@@ -6,6 +6,7 @@
 #include "geometries/utils/sexp/sexp.hpp"
 #include "geometries/utils/lists/as_list.hpp"
 #include "geometries/utils/attributes/attributes.hpp"
+#include "geometries/utils/null/null.hpp"
 
 namespace geometries {
 
@@ -14,18 +15,22 @@ namespace geometries {
   // so is really used for collections
   inline SEXP make_geometries(
     Rcpp::List& l,
-    Rcpp::List attributes
+    Rcpp::List attributes,
+    int& n_empty
   ) {
     // each 'row' is a geometry (i.e., a vector / POINT )
     bool has_class = attributes.length() > 0;
     R_xlen_t i;
 
-    Rcpp::NumericMatrix geometry_mat = geometries::matrix::to_matrix( l );
+    Rcpp::NumericMatrix geometry_mat = geometries::matrix::to_geometry_matrix( l );
     R_xlen_t n_rows = geometry_mat.nrow();
     Rcpp::List res( n_rows );
 
     for( i = 0; i < n_rows; ++i ) {
-       Rcpp::NumericVector nv = geometry_mat( i, Rcpp::_ );
+      Rcpp::NumericVector nv = geometry_mat( i, Rcpp::_ );
+      if( geometries::utils::is_null_geometry( nv ) ) {
+        n_empty++;
+      }
       if( has_class ) {
         geometries::utils::attach_attributes( nv, attributes );
       }

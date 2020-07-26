@@ -5,6 +5,10 @@ rcpp_calculate_bbox <- function(x, geometry_cols) {
     .Call(`_geometries_rcpp_calculate_bbox`, x, geometry_cols)
 }
 
+rcpp_other_columns <- function(x) {
+    .Call(`_geometries_rcpp_other_columns`, x)
+}
+
 rcpp_geometry_dimensions <- function(geometries) {
     .Call(`_geometries_rcpp_geometry_dimensions`, geometries)
 }

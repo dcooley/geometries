@@ -1,5 +1,5 @@
-#ifndef R_GEOMETRIES_TO_MATRIX_H
-#define R_GEOMETRIES_TO_MATRIX_H
+#ifndef R_GEOMETRIES_TO_GEOMETRY_MATRIX_H
+#define R_GEOMETRIES_TO_GEOMETRY_MATRIX_H
 
 #include <Rcpp.h>
 #include "geometries/utils/matrix/matrix.hpp"
@@ -9,29 +9,28 @@ namespace geometries {
 namespace matrix {
 
   template< int RTYPE >
-  inline SEXP to_matrix(
+  inline SEXP to_geometry_matrix(
     Rcpp::Vector< RTYPE >& v
   ) {
     v.attr("dim") = Rcpp::Dimension( 1, v.length() );
     Rcpp::Matrix< RTYPE > m = Rcpp::as< Rcpp::Matrix< RTYPE > >( v );
-    //Rcpp::Rcout << "mat: " << m << std::endl;
     return m;
   }
 
   template< int RTYPE >
-  inline SEXP to_matrix(
+  inline SEXP to_geometry_matrix(
     Rcpp::Matrix< RTYPE >& m
   ) {
     return m;
   }
 
-  inline Rcpp::NumericMatrix to_matrix(
+  inline Rcpp::NumericMatrix to_geometry_matrix(
       Rcpp::DataFrame& df,
       bool keep_names = false
   ) {
-    int i;
-    int n_cols = df.cols();
-    int n_rows = df.rows();
+    R_xlen_t i;
+    R_xlen_t n_cols = df.cols();
+    R_xlen_t n_rows = df.rows();
     Rcpp::StringVector df_names = df.names();
     Rcpp::NumericMatrix nm( n_rows, n_cols );
 
@@ -48,16 +47,19 @@ namespace matrix {
     return nm;
   }
 
-  inline Rcpp::NumericMatrix to_matrix(
+  // This assumes the list is 'square' and can
+  // be directly converted into a matrix
+  // i.e., it's a data.frame, but without the data.frame attributes
+  inline Rcpp::NumericMatrix to_geometry_matrix(
       Rcpp::List& lst,
       bool keep_names = false
   ) {
-    int i;
-    int n_cols = Rf_length( lst );
+    R_xlen_t i;
+    R_xlen_t n_cols = Rf_length( lst );
     if( n_cols == 0 ) {
       Rcpp::stop("geometries - 0-length list found");
     }
-    int n_rows = Rf_length( VECTOR_ELT( lst, 0 ) );
+    R_xlen_t n_rows = Rf_length( VECTOR_ELT( lst, 0 ) );
 
     Rcpp::NumericMatrix nm( n_rows, n_cols );
 
@@ -76,7 +78,7 @@ namespace matrix {
   }
 
   template< int RTYPE >
-  inline SEXP to_matrix(
+  inline SEXP to_geometry_matrix(
       Rcpp::Matrix< RTYPE >& m,
       Rcpp::IntegerVector& geometry_cols
   ) {
@@ -92,7 +94,7 @@ namespace matrix {
     return m2;
   }
 
-  inline Rcpp::NumericMatrix to_matrix(
+  inline Rcpp::NumericMatrix to_geometry_matrix(
       Rcpp::DataFrame& df,
       Rcpp::StringVector& cols, // may only want a subset of columns
       bool keep_names = false
@@ -125,7 +127,7 @@ namespace matrix {
     return nm;
   }
 
-  inline Rcpp::NumericMatrix to_matrix(
+  inline Rcpp::NumericMatrix to_geometry_matrix(
       Rcpp::List& lst,
       Rcpp::StringVector& cols, // may only want a subset of columns
       bool keep_names = false
@@ -161,15 +163,15 @@ namespace matrix {
   }
 
   template< int RTYPE >
-  inline SEXP to_matrix(
+  inline SEXP to_geometry_matrix(
     Rcpp::Matrix< RTYPE >& m,
     Rcpp::StringVector& geometry_cols
   ) {
     Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( m );
-    return to_matrix( df, geometry_cols );
+    return to_geometry_matrix( df, geometry_cols );
   }
 
-  inline Rcpp::NumericMatrix to_matrix(
+  inline Rcpp::NumericMatrix to_geometry_matrix(
       Rcpp::DataFrame& df,
       Rcpp::IntegerVector& cols, // may only want a subset of columns
       bool keep_names = false
@@ -200,6 +202,7 @@ namespace matrix {
     }
 
     if( keep_names ) {
+      Rcpp::Rcout << "keeping names: " << m_names << std::endl;
       Rcpp::List m_attr(2);
       m_attr(1) = m_names;
       nm.attr("dimnames") = m_attr;
@@ -207,14 +210,14 @@ namespace matrix {
     return nm;
   }
 
-  inline Rcpp::NumericMatrix to_matrix(
+  inline Rcpp::NumericMatrix to_geometry_matrix(
       Rcpp::List& lst,
       Rcpp::IntegerVector& cols // may only want a subset of columns
   ) {
     R_xlen_t i;
     R_xlen_t n_cols = cols.size();
 
-    // Rcpp::Rcout << "to_matrix" << std::endl;
+    // Rcpp::Rcout << "to_geometry_matrix" << std::endl;
 
     if( Rf_length( lst ) == 0 ) {
       Rcpp::stop("geometries - 0-length list found");
@@ -250,7 +253,7 @@ namespace matrix {
     return nm;
   }
 
-  inline SEXP to_matrix(
+  inline SEXP to_geometry_matrix(
       SEXP& x,
       Rcpp::StringVector& geometry_cols
   ) {
@@ -260,7 +263,7 @@ namespace matrix {
           Rcpp::stop("geometries - lines need to be matrices or data.frames");
         } else {
           Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
-          return to_matrix( im, geometry_cols );
+          return to_geometry_matrix( im, geometry_cols );
         }
       }
       case REALSXP: {
@@ -268,16 +271,16 @@ namespace matrix {
           Rcpp::stop("geometries - lines need to be matrices or data.frames");
         } else {
           Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-          return to_matrix( nm, geometry_cols );
+          return to_geometry_matrix( nm, geometry_cols );
         }
       }
       case VECSXP: {
         if( Rf_inherits( x, "data.frame" ) ) {
           Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-          return to_matrix( df, geometry_cols );
+          return to_geometry_matrix( df, geometry_cols );
         } else if (Rf_isNewList( x ) ) {
           Rcpp::List lst = Rcpp::as< Rcpp::List >( x );
-          return to_matrix( lst, geometry_cols );
+          return to_geometry_matrix( lst, geometry_cols );
         }// else default
       }
       default: {
@@ -287,7 +290,7 @@ namespace matrix {
     return Rcpp::List::create(); // never reaches
   }
 
-  inline SEXP to_matrix(
+  inline SEXP to_geometry_matrix(
       SEXP& x,
       Rcpp::IntegerVector& geometry_cols
   ) {
@@ -297,7 +300,7 @@ namespace matrix {
           Rcpp::stop("geometries - lines need to be matrices or data.frames");
         } else {
           Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
-          return to_matrix( im, geometry_cols );
+          return to_geometry_matrix( im, geometry_cols );
         }
       }
       case REALSXP: {
@@ -305,17 +308,17 @@ namespace matrix {
           Rcpp::stop("geometries - lines need to be matrices or data.frames");
         } else {
           Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-          return to_matrix( nm, geometry_cols );
+          return to_geometry_matrix( nm, geometry_cols );
         }
       }
       case VECSXP: {
         if( Rf_inherits( x, "data.frame" ) ) {
           Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-          return to_matrix( df, geometry_cols );
+          return to_geometry_matrix( df, geometry_cols );
 
         } else if (Rf_isNewList( x ) ) {
           Rcpp::List lst = Rcpp::as< Rcpp::List >( x );
-          return to_matrix( lst, geometry_cols );
+          return to_geometry_matrix( lst, geometry_cols );
         }// else default
       }
       default: {
@@ -325,38 +328,38 @@ namespace matrix {
     return Rcpp::List::create(); // never reaches
   }
 
-  inline SEXP to_matrix(
+  inline SEXP to_geometry_matrix(
       SEXP& x
   ) {
     switch( TYPEOF( x ) ) {
       case INTSXP: {
         if( !Rf_isMatrix( x ) ) {
           Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( x );
-        Rcpp::IntegerMatrix mat = to_matrix( iv );
-        return mat;
+          Rcpp::IntegerMatrix mat = to_geometry_matrix( iv );
+          return mat;
         } else {
           Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
-          return to_matrix( im );
+          return to_geometry_matrix( im );
         }
       }
       case REALSXP: {
         if( !Rf_isMatrix( x ) ) {
           Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( x );
-          Rcpp::NumericMatrix mat = to_matrix( nv );
+          Rcpp::NumericMatrix mat = to_geometry_matrix( nv );
           return mat;
         } else {
           Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-          return to_matrix( nm );
+          return to_geometry_matrix( nm );
         }
       }
       case VECSXP: {
         if( Rf_inherits( x, "data.frame" ) ) {
           Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-          return to_matrix( df );
+          return to_geometry_matrix( df );
 
-        } else if (Rf_isNewList( x ) ) {
+        } else if ( Rf_isNewList( x ) ) {
           Rcpp::List lst = Rcpp::as< Rcpp::List >( x );
-          return to_matrix( lst );
+          return to_geometry_matrix( lst );
         }// else default
       }
       default: {
@@ -366,12 +369,12 @@ namespace matrix {
     return Rcpp::List::create(); // never reaches
   }
 
-  inline SEXP to_matrix(
+  inline SEXP to_geometry_matrix(
       SEXP& x,
       SEXP& geometry_cols
   ) {
     if( Rf_isNull( geometry_cols ) ) {
-      return to_matrix( x );
+      return to_geometry_matrix( x );
     }
 
     switch( TYPEOF( geometry_cols ) ) {
@@ -379,17 +382,17 @@ namespace matrix {
     case INTSXP: {
       Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( geometry_cols );
       if( iv.length() == 0 ) {
-        return to_matrix( x );
+        return to_geometry_matrix( x );
       } else {
-        return to_matrix( x, iv );
+        return to_geometry_matrix( x, iv );
       }
     }
     case STRSXP: {
       Rcpp::StringVector sv = Rcpp::as< Rcpp::StringVector >( geometry_cols );
       if( sv.length() == 0 ) {
-        return to_matrix( x );
+        return to_geometry_matrix( x );
       } else {
-        return to_matrix( x, sv );
+        return to_geometry_matrix( x, sv );
       }
     }
     default: {

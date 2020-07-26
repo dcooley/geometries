@@ -59,22 +59,22 @@ SEXP test_matrix() {
   Rcpp::StringVector scols = {"x"};
   Rcpp::IntegerVector icols = {0};
 
-  Rcpp::NumericMatrix nm1 = geometries::matrix::to_matrix( lst );
-  Rcpp::NumericMatrix nm2 = geometries::matrix::to_matrix( lst, scols );
-  Rcpp::NumericMatrix nm3 = geometries::matrix::to_matrix( lst, icols );
+  Rcpp::NumericMatrix nm1 = geometries::matrix::to_geometry_matrix( lst );
+  Rcpp::NumericMatrix nm2 = geometries::matrix::to_geometry_matrix( lst, scols );
+  Rcpp::NumericMatrix nm3 = geometries::matrix::to_geometry_matrix( lst, icols );
 
-  Rcpp::NumericMatrix nm4 = geometries::matrix::to_matrix( lst, scols, true );
-  //Rcpp::NumericMatrix nm5 = geometries::matrix::to_matrix( lst, icols, true );  // integer subset doen't keep names
+  Rcpp::NumericMatrix nm4 = geometries::matrix::to_geometry_matrix( lst, scols, true );
+  //Rcpp::NumericMatrix nm5 = geometries::matrix::to_geometry_matrix( lst, icols, true );  // integer subset doen't keep names
 
   Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( lst );
 
-  Rcpp::NumericMatrix nm5 = geometries::matrix::to_matrix( df );
-  Rcpp::NumericMatrix nm6 = geometries::matrix::to_matrix( df, scols );
-  Rcpp::NumericMatrix nm7 = geometries::matrix::to_matrix( df, icols );
+  Rcpp::NumericMatrix nm5 = geometries::matrix::to_geometry_matrix( df );
+  Rcpp::NumericMatrix nm6 = geometries::matrix::to_geometry_matrix( df, scols );
+  Rcpp::NumericMatrix nm7 = geometries::matrix::to_geometry_matrix( df, icols );
 
-  Rcpp::NumericMatrix nm8 = geometries::matrix::to_matrix( df, scols, true );
+  Rcpp::NumericMatrix nm8 = geometries::matrix::to_geometry_matrix( df, scols, true );
 
-  Rcpp::NumericMatrix nm9 = geometries::matrix::to_matrix( nmxy, icols );
+  Rcpp::NumericMatrix nm9 = geometries::matrix::to_geometry_matrix( nmxy, icols );
 
 
   return Rcpp::List::create(
@@ -93,7 +93,7 @@ SEXP test_matrix() {
 
 //[[Rcpp::export]]
 SEXP tm( SEXP x ) {
-  return geometries::matrix::to_matrix( x );
+  return geometries::matrix::to_geometry_matrix( x );
 }
 
 
@@ -151,6 +151,8 @@ Rcpp::List test_sexp() {
 // [[Rcpp::export]]
 SEXP test_other_columns_impl() {
 
+  //Rcpp::IntegerVector na = { R_NilValue, R_NilValue };
+
   Rcpp::NumericVector x = {1,1,2,2,2,3};
   Rcpp::NumericVector y = {1,1,1,2,2,2};
   Rcpp::NumericVector z = {1,2,3,4,5,6};
@@ -166,9 +168,9 @@ SEXP test_other_columns_impl() {
   SEXP y_col_int = Rf_ScalarInteger( 1 );
   //SEXP z_col_int = Rf_ScalarInteger( 2 );
 
-  SEXP x_col_dbl = Rf_ScalarReal( 0 );
-  SEXP y_col_dbl = Rf_ScalarReal( 1 );
-  //SEXP z_col_dbl = Rf_ScalarReal( 2 );
+  // SEXP x_col_dbl = Rf_ScalarReal( 0 );
+  // SEXP y_col_dbl = Rf_ScalarReal( 1 );
+  // //SEXP z_col_dbl = Rf_ScalarReal( 2 );
 
   SEXP x_col_str = Rf_mkString( "x" );
   SEXP y_col_str = Rf_mkString( "y" );
@@ -178,9 +180,9 @@ SEXP test_other_columns_impl() {
   SEXP other_xz_int = geometries::utils::other_columns( df, y_col_int );
   SEXP other_z_int = geometries::utils::other_columns( df, x_col_int, y_col_int );
 
-  SEXP other_yz_dbl = geometries::utils::other_columns( df, x_col_dbl );
-  SEXP other_xz_dbl = geometries::utils::other_columns( df, y_col_dbl );
-  SEXP other_z_dbl = geometries::utils::other_columns( df, x_col_dbl, y_col_dbl );
+  // SEXP other_yz_dbl = geometries::utils::other_columns( df, x_col_dbl );
+  // SEXP other_xz_dbl = geometries::utils::other_columns( df, y_col_dbl );
+  // SEXP other_z_dbl = geometries::utils::other_columns( df, x_col_dbl, y_col_dbl );
 
   SEXP other_yz_str = geometries::utils::other_columns( df, x_col_str );
   SEXP other_xz_str = geometries::utils::other_columns( df, y_col_str );
@@ -190,9 +192,9 @@ SEXP test_other_columns_impl() {
     Rcpp::_["other_yz_int"] = other_yz_int,
     Rcpp::_["other_zx_int"] = other_xz_int,
     Rcpp::_["other_z_int"] = other_z_int,
-    Rcpp::_["other_yz_dbl"] = other_yz_dbl,
-    Rcpp::_["other_zx_dbl"] = other_xz_dbl,
-    Rcpp::_["other_z_dbl"] = other_z_dbl,
+    // Rcpp::_["other_yz_dbl"] = other_yz_dbl,
+    // Rcpp::_["other_zx_dbl"] = other_xz_dbl,
+    // Rcpp::_["other_z_dbl"] = other_z_dbl,
     Rcpp::_["other_yz_str"] = other_yz_str,
     Rcpp::_["other_zx_str"] = other_xz_str,
     Rcpp::_["other_z_str"] = other_z_str
@@ -280,13 +282,19 @@ SEXP test_list() {
 
   SEXP df = Rcpp::as< Rcpp::DataFrame >( lst );
 
+  Rcpp::DataFrame df2 = Rcpp::as< Rcpp::DataFrame >( lst );
+  Rcpp::IntegerVector geom_cols = {0};
+  Rcpp::NumericMatrix mat_names = geometries::matrix::to_geometry_matrix( df2, geom_cols, true );
+
   Rcpp::List lst_mat = geometries::utils::as_list( mat );
+  Rcpp::List lst_mat_names = geometries::utils::as_list( mat_names );
   Rcpp::List lst_lst_mat = geometries::utils::as_list( lst_mat );
   Rcpp::List lst_df = geometries::utils::as_list( df );
   Rcpp::List lst_lst = geometries::utils::as_list( lst );
 
   return Rcpp::List::create(
     Rcpp::_["list_mat"] = lst_mat,
+    Rcpp::_["list_mat_names"] = lst_mat_names,
     Rcpp::_["list_list_mat"] = lst_lst_mat,
     Rcpp::_["list_df"] = lst_df,
     Rcpp::_["list_lst"] = lst_lst

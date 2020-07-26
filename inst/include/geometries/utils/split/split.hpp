@@ -20,7 +20,7 @@ namespace utils {
     bool has_class = attributes.length() > 0;
 
     // matrix of geometries
-    Rcpp::NumericMatrix geometry_mat = geometries::matrix::to_matrix( l, geometry_cols );
+    Rcpp::NumericMatrix geometry_mat = geometries::matrix::to_geometry_matrix( l, geometry_cols );
 
     R_xlen_t i;
     R_xlen_t n_rows = Rf_length( VECTOR_ELT( l, 0 ) );
