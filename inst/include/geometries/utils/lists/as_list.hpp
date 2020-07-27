@@ -30,9 +30,6 @@ namespace utils {
     //if there are names, attach the names
     if( !Rf_isNull( x.attr("dimnames") ) ) {
       Rcpp::List dims = x.attr("dimnames");
-      for( int i = 0; i < dims.length(); ++i ) {
-        SEXP j = dims[i];
-      }
       Rcpp::StringVector n = dims[1];
       res.names() = n;
     }

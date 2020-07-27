@@ -15,13 +15,6 @@
 namespace geometries {
 namespace utils {
 
-  inline void geometry_column_check( SEXP x ) {
-    R_xlen_t n = geometries::utils::sexp_length( x );
-    if( n < 2 || n > 4) {
-      Rcpp::stop("geometries - incorrect number of geometry columns");
-    }
-  }
-
   inline void column_check( SEXP x, SEXP cols ) {
     R_xlen_t n_col = geometries::utils::sexp_n_col( x );
     R_xlen_t n = geometries::utils::sexp_length( cols );
@@ -36,7 +29,6 @@ namespace utils {
         Rcpp::stop("geometries - invalid geometry column index");
       }
     }
-
   }
 
   // checks if an integer column index exists
