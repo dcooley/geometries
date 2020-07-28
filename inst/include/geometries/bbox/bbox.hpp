@@ -50,20 +50,21 @@ namespace bbox {
   // TODO: - template bbox type
   inline void calculate_bbox(
       Rcpp::NumericVector& bbox,
-      double& lon,
-      double& lat
+      double& x,
+      double& y
   ) {
     //xmin, ymin, xmax, ymax
-    bbox[0] = std::min( lon, bbox[0] );
-    bbox[2] = std::max( lon, bbox[2] );
+    bbox[0] = std::min( x, bbox[0] );
+    bbox[2] = std::max( x, bbox[2] );
 
-    bbox[1] = std::min( lat, bbox[1] );
-    bbox[3] = std::max( lat, bbox[3] );
+    bbox[1] = std::min( y, bbox[1] );
+    bbox[3] = std::max( y, bbox[3] );
   }
 
+  template< int RTYPE >
   inline void calculate_bbox(
-      Rcpp::NumericVector& bbox,
-      Rcpp::NumericVector& point
+      Rcpp::Vector< RTYPE >& bbox,
+      Rcpp::Vector< RTYPE >& point
   ) {
 
     bbox_size_check( point );
@@ -102,15 +103,15 @@ namespace bbox {
     make_bbox( bbox, nx, ny );
   }
 
+  template< int RTYPE >
   inline void calculate_bbox(
-      Rcpp::NumericVector& bbox,
-      Rcpp::NumericMatrix& nm
+      Rcpp::Vector< RTYPE >& bbox,
+      Rcpp::Matrix< RTYPE >& mat
   ) {
+    bbox_size_check( mat );
 
-    bbox_size_check( nm );
-
-    Rcpp::NumericVector x = nm( Rcpp::_, 0 );
-    Rcpp::NumericVector y = nm( Rcpp::_, 1 );
+    Rcpp::Vector< RTYPE > x = mat( Rcpp::_, 0 );
+    Rcpp::Vector< RTYPE > y = mat( Rcpp::_, 1 );
 
     make_bbox( bbox, x, y );
 
@@ -127,7 +128,6 @@ namespace bbox {
     Rcpp::NumericVector y = df[1];
 
     make_bbox( bbox, x, y );
-
   }
 
   inline void calculate_bbox(
@@ -169,6 +169,7 @@ namespace bbox {
 
     Rcpp::String x_col = geometry_cols[0];
     Rcpp::String y_col = geometry_cols[1];
+
     Rcpp::NumericVector x = df[ x_col ];
     Rcpp::NumericVector y = df[ y_col ];
 
@@ -185,6 +186,37 @@ namespace bbox {
 
     Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( im );
     calculate_bbox( bbox, df, geometry_cols );
+  }
+
+  inline void calculate_bbox(
+      Rcpp::NumericVector& bbox,
+      Rcpp::IntegerVector& iv,
+      Rcpp::IntegerVector& geometry_cols
+  ) {
+    geometries::utils::column_check( iv, geometry_cols );
+    bbox_size_check( geometry_cols );
+
+    int x = iv[ geometry_cols[0] ];
+    int y = iv[ geometry_cols[1] ];
+
+    double dx = static_cast< double >( x );
+    double dy = static_cast< double >( y );
+
+    calculate_bbox( bbox, dx, dy );
+  }
+
+  inline void calculate_bbox(
+      Rcpp::NumericVector& bbox,
+      Rcpp::NumericVector& nv,
+      Rcpp::IntegerVector& geometry_cols
+  ) {
+    geometries::utils::column_check( nv, geometry_cols );
+    bbox_size_check( geometry_cols );
+
+    double x = nv[ geometry_cols[0] ];
+    double y = nv[ geometry_cols[1] ];
+
+    calculate_bbox( bbox, x, y );
   }
 
   inline void calculate_bbox(
@@ -243,36 +275,36 @@ namespace bbox {
     switch( TYPEOF( x ) ) {
     case INTSXP: {
       if( Rf_isMatrix( x ) ) {
-      Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
-      calculate_bbox( bbox, im );
-    } else {
-      Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( x );
-      calculate_bbox( bbox, iv );
-    }
+        Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
+        calculate_bbox( bbox, im );
+      } else {
+        Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( x );
+        calculate_bbox( bbox, iv );
+      }
     break;
     }
     case REALSXP: {
       if( Rf_isMatrix( x ) ) {
-      Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-      calculate_bbox( bbox, nm );
-    } else {
-      Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( x );
-      calculate_bbox( bbox, nv );
-    }
+        Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
+        calculate_bbox( bbox, nm );
+      } else {
+        Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( x );
+        calculate_bbox( bbox, nv );
+      }
     break;
     }
     case VECSXP: {
       if( Rf_inherits( x, "data.frame" ) ) {
-      Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-      calculate_bbox( bbox, df );
-    } else if ( Rf_isNewList( x ) ) {
-      Rcpp::List lst = Rcpp::as< Rcpp::List >( x );
-      R_xlen_t i;
-      for( i = 0; i < lst.size(); ++i ) {
-        SEXP s = lst[ i ];
-        calculate_bbox( bbox, s );
-      }
-    }// else default
+        Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
+        calculate_bbox( bbox, df );
+      } else if ( Rf_isNewList( x ) ) {
+        Rcpp::List lst = Rcpp::as< Rcpp::List >( x );
+        R_xlen_t i;
+        for( i = 0; i < lst.size(); ++i ) {
+          SEXP s = lst[ i ];
+          calculate_bbox( bbox, s );
+        }
+      }// else default
     break;
     }
     default: {
@@ -286,42 +318,43 @@ namespace bbox {
       SEXP& x,
       Rcpp::IntegerVector& geometry_cols
   ) {
+
     switch( TYPEOF( x ) ) {
     case INTSXP: {
       if( Rf_isMatrix( x ) ) {
-      Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
-      calculate_bbox( bbox, im, geometry_cols );
-      break;
-    } else {
-      Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( x );
-      calculate_bbox( bbox, iv );
-      break;
-    }
+        Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
+        calculate_bbox( bbox, im, geometry_cols );
+        break;
+      } else {
+        Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( x );
+        calculate_bbox( bbox, iv, geometry_cols );
+        break;
+      }
     }
     case REALSXP: {
       if( Rf_isMatrix( x ) ) {
-      Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-      calculate_bbox( bbox, nm, geometry_cols );
-      break;
-    } else {
-      Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( x );
-      calculate_bbox( bbox, nv );
-      break;
+        Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
+        calculate_bbox( bbox, nm, geometry_cols );
+        break;
+      } else {
+        Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( x );
+        calculate_bbox( bbox, nv, geometry_cols );
+        break;
     }
     }
     case VECSXP: {
       if( Rf_inherits( x, "data.frame") ) {
-      Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-      calculate_bbox( bbox, df, geometry_cols );
-      break;
-    }  else if ( Rf_isNewList( x ) ) {
-      Rcpp::List lst = Rcpp::as< Rcpp::List >( x );
-      R_xlen_t i;
-      for( i = 0; i < lst.size(); ++i ) {
-        SEXP s = lst[ i ];
-        calculate_bbox( bbox, s, geometry_cols );
-      }
-    }// else default
+        Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
+        calculate_bbox( bbox, df, geometry_cols );
+        break;
+      }  else if ( Rf_isNewList( x ) ) {
+        Rcpp::List lst = Rcpp::as< Rcpp::List >( x );
+        R_xlen_t i;
+        for( i = 0; i < lst.size(); ++i ) {
+          SEXP s = lst[ i ];
+          calculate_bbox( bbox, s, geometry_cols );
+        }
+      }// else default
     break;
     }
     default: {

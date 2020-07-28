@@ -223,7 +223,6 @@ namespace matrix {
     }
 
     if( keep_names ) {
-      Rcpp::Rcout << "keeping names: " << m_names << std::endl;
       Rcpp::List m_attr(2);
       m_attr(1) = m_names;
       nm.attr("dimnames") = m_attr;
@@ -238,15 +237,11 @@ namespace matrix {
     R_xlen_t i;
     R_xlen_t n_cols = cols.size();
 
-    // Rcpp::Rcout << "to_geometry_matrix" << std::endl;
-
     if( Rf_length( lst ) == 0 ) {
       Rcpp::stop("geometries - 0-length list found");
     }
 
     R_xlen_t n_rows = Rf_length( VECTOR_ELT(lst, 0) );
-
-    // Rcpp::Rcout << "n_rows: " << n_rows << std::endl;
 
     if( n_cols > Rf_length( lst ) ) {
       Rcpp::stop("geometries - number of columns requested is greater than those available");
@@ -254,14 +249,10 @@ namespace matrix {
 
     R_xlen_t max_idx = Rcpp::max( cols );
 
-    // Rcpp::Rcout << "max_idx: " << max_idx << std::endl;
-
     if( max_idx > ( Rf_length( lst ) - 1 ) ) {
       Rcpp::stop("geometries - invalid column index");
     }
 
-    //Rcpp::StringVector lst_names = lst.names();
-    //Rcpp::StringVector m_names( n_cols );
     Rcpp::NumericMatrix nm( n_rows, n_cols );
 
     for( i = 0; i < n_cols; ++i ) {
