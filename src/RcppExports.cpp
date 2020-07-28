@@ -17,6 +17,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rcpp_close_matrix
+SEXP rcpp_close_matrix(Rcpp::List x);
+RcppExport SEXP _geometries_rcpp_close_matrix(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_close_matrix(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rcpp_other_columns
 SEXP rcpp_other_columns(SEXP x, SEXP id_cols, SEXP id_col2, SEXP id_col3);
 RcppExport SEXP _geometries_rcpp_other_columns(SEXP xSEXP, SEXP id_colsSEXP, SEXP id_col2SEXP, SEXP id_col3SEXP) {
@@ -243,6 +254,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_calculate_bbox", (DL_FUNC) &_geometries_rcpp_calculate_bbox, 2},
+    {"_geometries_rcpp_close_matrix", (DL_FUNC) &_geometries_rcpp_close_matrix, 1},
     {"_geometries_rcpp_other_columns", (DL_FUNC) &_geometries_rcpp_other_columns, 4},
     {"_geometries_rcpp_geometry_dimensions", (DL_FUNC) &_geometries_rcpp_geometry_dimensions, 1},
     {"_geometries_rcpp_coordinates", (DL_FUNC) &_geometries_rcpp_coordinates, 1},

@@ -1,6 +1,8 @@
 #ifndef R_GEOMETRIES_UTILS_CLOSE_H
 #define R_GEOMETRIES_UTILS_CLOSE_H
 
+#include <Rcpp.h>
+
 namespace geometries {
 namespace utils {
 

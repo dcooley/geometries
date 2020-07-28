@@ -84,13 +84,9 @@ index_correct <- function( obj, cols ) {
     #}
     ## return( cols ) ## can't get here
   } else {
-    ## matrix
-    if( is.character( cols ) ) {
-      n <- dimnames( obj )[[2]]
-      return( which(n %in% cols ) - 1L )
-    }
-    return( cols )
+    ## matrix && character cols
+    n <- dimnames( obj )[[2]]
+    return( which(n %in% cols ) - 1L )
   }
-  ## return( cols )  ## never reaches
 }
 
