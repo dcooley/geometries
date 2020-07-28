@@ -358,7 +358,7 @@ namespace bbox {
     break;
     }
     default: {
-      Rcpp::stop("geometries - unsupported type for bbox");
+      Rcpp::stop("geometries - can't calculate bounding box for this type");
     }
     }
   }
@@ -407,7 +407,7 @@ namespace bbox {
       break;
       }
       default: {
-        Rcpp::stop("geometries - unsupported type for bbox");
+        Rcpp::stop("geometries - can't calculate bounding box for this type");
       }
     }
   }
