@@ -18,7 +18,7 @@ expect_equal( geometries:::.test_sexp_col_names( df ), names( df ) )
 expect_equal( geometries:::.test_sexp_col_names( mint ), names( df ) )
 expect_equal( geometries:::.test_sexp_col_names( mdbl ), names( df ) )
 expect_equal( geometries:::.test_sexp_col_names( lst ), names( df ) )
-expect_error( geometries:::.test_sexp_col_names( 1:4 ), "Not a matrix." )
+expect_error( geometries:::.test_sexp_col_names( 1:4 ), "geometries - object does not have names" )
 
 expect_equal( geometries:::.test_sexp_n_col( df ), 2 )
 expect_equal( geometries:::.test_sexp_n_col( data.frame() ), 0 )
@@ -26,7 +26,7 @@ expect_equal( geometries:::.test_sexp_n_col( list(x=1) ), 1 )
 expect_equal( geometries:::.test_sexp_n_col( matrix(1:4, ncol = 2) ), 2 )
 
 expect_equal( geometries:::.test_sexp_n_row( 1 ), 1 )
-expect_equal( geometries:::.test_sexp_n_row( 1:4 ), 4 )
+expect_equal( geometries:::.test_sexp_n_row( 1:4 ), 1 )
 expect_equal( geometries:::.test_sexp_n_row( data.frame() ), 0 )
 expect_equal( geometries:::.test_sexp_n_row( data.frame(x = 1:2) ), 2 )
 
@@ -35,6 +35,6 @@ expect_equal( geometries:::.test_sexp_length( 1L:5L ), 5 )
 expect_equal( geometries:::.test_sexp_length( c(T,F,T) ), 3 )
 expect_equal( geometries:::.test_sexp_length( list() ), 0 )
 expect_equal( geometries:::.test_sexp_length( data.frame( x = 1) ), 1 )
-expect_error( geometries:::.test_sexp_length( c(complex(3), complex(4)) ), "geometries - unknown vector type" )
+expect_equal( geometries:::.test_sexp_length( c(complex(3), complex(4) ) ), 7 )
 
 

@@ -7,31 +7,29 @@
 namespace geometries{
 namespace utils {
 
-  template < int RTYPE >
-  inline Rcpp::StringVector sexp_col_names( Rcpp::Matrix < RTYPE > m ) {
-    return colnames( m );
+  inline Rcpp::StringVector name_attributes( SEXP& x ) {
+    //if( x.hasAttribute("names") ) {
+      Rcpp::StringVector attr({"names"});
+      SEXP a = Rf_getAttrib( x, attr );
+      if( !Rf_isNull( a ) ) {
+        return Rcpp::as< Rcpp::StringVector >( a );
+      }
+    //}
+
+    Rcpp::stop("geometries - object does not have names");
   }
 
-  inline Rcpp::StringVector sexp_col_names( SEXP x ) {
-    switch( TYPEOF( x ) ) {
-      case INTSXP: {
-        return sexp_col_names< INTSXP >( x );
-      }
-      case REALSXP: {
-        return sexp_col_names< REALSXP >( x );
-      }
-      case VECSXP: {
-        if( Rf_inherits( x, "data.frame") || Rf_isNewList( x )) {
-          Rcpp::StringVector attr({"names"});
-          return Rf_getAttrib( x, attr ) ;
-        }
-      }
-      default: {
-        Rcpp::stop("geometries - expecting a data.frame or matrix when trying to get colnames");
-      }
+  template< int RTYPE >
+  inline Rcpp::StringVector sexp_col_names( Rcpp::Matrix< RTYPE > mat ) {
+    return colnames( mat );
+  }
+
+  inline Rcpp::StringVector sexp_col_names( SEXP& x ) {
+    if( Rf_isMatrix( x ) ) {
+      return Rcpp::colnames( x );
     }
+    return name_attributes( x );
   }
-
 
   inline R_xlen_t sexp_n_col( SEXP& x ) {
 
@@ -62,26 +60,27 @@ namespace utils {
   }
 
   template < int RTYPE >
-  inline R_xlen_t sexp_length( Rcpp::Vector< RTYPE > v ) {
+  inline R_xlen_t sexp_length( Rcpp::Vector< RTYPE >& v ) {
     return v.length();
   }
 
-  inline R_xlen_t sexp_length( SEXP s ) {
+  inline R_xlen_t sexp_length( SEXP& s ) {
 
-    switch( TYPEOF(s) ) {
-    case LGLSXP:
-      return sexp_length< LGLSXP >( s );
-    case REALSXP:
-      return sexp_length< REALSXP >( s );
-    case VECSXP:
-      return sexp_length< VECSXP >( s );
-    case INTSXP:
-      return sexp_length< INTSXP >( s );
-    case STRSXP:
-      return sexp_length< STRSXP >( s );
-    default: Rcpp::stop("geometries - unknown vector type");
-    }
-    return 0;
+    return Rf_length( s );
+    // switch( TYPEOF(s) ) {
+    // case LGLSXP:
+    //   return sexp_length< LGLSXP >( s );
+    // case REALSXP:
+    //   return sexp_length< REALSXP >( s );
+    // case VECSXP:
+    //   return sexp_length< VECSXP >( s );
+    // case INTSXP:
+    //   return sexp_length< INTSXP >( s );
+    // case STRSXP:
+    //   return sexp_length< STRSXP >( s );
+    // default: Rcpp::stop("geometries - unknown vector type");
+    // }
+    // return 0;
   }
 
   // finds the integer index position of column names
