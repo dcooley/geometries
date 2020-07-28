@@ -78,10 +78,11 @@ index_correct <- function( obj, cols ) {
   }
 
   if( inherits( obj, "data.frame" ) ) {
-    if( is.character( cols ) ) {
+    #if( is.character( cols ) ) {
+      ##
       return( which(names(obj) %in% cols ) - 1L )
-    }
-    return( cols )
+    #}
+    ## return( cols ) ## can't get here
   } else {
     ## matrix
     if( is.character( cols ) ) {
@@ -90,6 +91,6 @@ index_correct <- function( obj, cols ) {
     }
     return( cols )
   }
-  return( cols )
+  ## return( cols )  ## never reaches
 }
 

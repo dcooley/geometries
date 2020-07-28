@@ -6,6 +6,9 @@ expect_equal( geometries:::index_correct( data.frame(x = 1, y = 2), cols = c("x"
 expect_equal( geometries:::index_correct( data.frame(x = 1, y = 2), cols = c("y")), 1 )
 expect_equal( geometries:::index_correct( data.frame(x = 1, y = 2), cols = c("x","y")), c(0,1) )
 
+expect_equal( geometries:::index_correct( matrix(1:4, ncol = 2 ), cols = c(1,2) ), c(0,1) )
+df <- data.frame(x = 1:2, y = 3:4); m <- as.matrix( df )
+expect_equal( geometries:::index_correct( m , cols = c("x","y") ), c(0,1) )
 
 df <- data.frame(
   id1 = c(1,1,1,1,2,2,2)
