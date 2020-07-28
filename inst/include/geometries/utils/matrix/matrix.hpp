@@ -6,9 +6,6 @@
 namespace geometries {
 namespace utils {
 
-  // ---------------------------------------------------------------------------
-  // matrix names
-
   inline Rcpp::StringVector matrix_names(
       Rcpp::List& m_attr
   ) {
@@ -26,20 +23,6 @@ namespace utils {
     Rcpp::List m_attr = m.attr("dimnames");
     return matrix_names( m_attr );
   }
-
-  template< int RTYPE >
-  inline Rcpp::Matrix< RTYPE > matrix_row_to_matrix(
-      Rcpp::Matrix< RTYPE >& m,
-      R_xlen_t& i
-  ) {
-    Rcpp::Vector< RTYPE > this_row = m( i, Rcpp::_ );
-    R_xlen_t n_col = m.ncol();
-    Rcpp::Matrix< RTYPE > m2( 1, n_col );
-    m2( 0, Rcpp::_ ) = this_row;
-    return m2;
-  }
-
-  // ---------------------------------------------------------------------------
 
 
 } // utils

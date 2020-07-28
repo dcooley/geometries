@@ -6,7 +6,7 @@ namespace utils {
 
   inline void check_closed_rows( R_xlen_t n_row ) {
     if( n_row < 4 ) {
-      Rcpp::stop("geometries - closed shapes must have at least 4 rows. Use close = FALSE to bypass this check");
+      Rcpp::stop("geometries - closed shapes must have at least 4 rows");
     }
   }
 
@@ -60,24 +60,24 @@ namespace utils {
     for( i = 0; i < n_items; ++i ) {
       SEXP x = lst[i];
       switch( TYPEOF(x) ) {
-      case INTSXP: {
-        Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
-        lst[i] = close_matrix( im );
-        break;
-      }
-      case REALSXP: {
-        Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-        lst[i] = close_matrix( nm );
-        break;
-      }
-      case VECSXP: {
-        Rcpp::List lst2 = Rcpp::as< Rcpp::List >( x );
-        lst[i] = close_matrix( lst2 );
-        break;
-      }
-      default: {
-        Rcpp::stop("geometries - closing shapes requires matrices");
-      }
+        case INTSXP: {
+          Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
+          lst[i] = close_matrix( im );
+          break;
+        }
+        case REALSXP: {
+          Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
+          lst[i] = close_matrix( nm );
+          break;
+        }
+        case VECSXP: {
+          Rcpp::List lst2 = Rcpp::as< Rcpp::List >( x );
+          lst[i] = close_matrix( lst2 );
+          break;
+        }
+        default: {
+          Rcpp::stop("geometries - closing shapes requires matrices");
+        }
       }
     }
     return lst;

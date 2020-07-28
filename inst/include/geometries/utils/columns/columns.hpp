@@ -108,72 +108,10 @@ namespace utils {
   inline SEXP other_columns(
       SEXP& x
   ) {
-
     R_xlen_t n_col = geometries::utils::sexp_n_col( x );
     Rcpp::IntegerVector cols = Rcpp::seq( 0, (n_col - 1) );
     return cols;
-
-    // switch( TYPEOF( x ) ) {
-    //   case INTSXP: {
-    //     if( Rf_isMatrix( x ) ) {
-    //       Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x ) ;
-    //       Rcpp::IntegerVector cols = Rcpp::seq( 0, (im.ncol() - 1) );
-    //       return cols;
-    //     }
-    //   }
-    //   case REALSXP: {
-    //     if( Rf_isMatrix( x ) ) {
-    //       //Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-    //       R_xlen_t n_col = geometries::utils::sexp_n_col( x );
-    //       Rcpp::IntegerVector cols = Rcpp::seq( 0, (n_col - 1) );
-    //       return cols;
-    //     }
-    //   }
-    //   case VECSXP: {
-    //     if( Rf_inherits( x, "data.frame") ) {
-    //       Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-    //       return df.names();
-    //     } else if ( Rf_isNewList( x ) ) {
-    //       Rcpp::IntegerVector cols = Rcpp::seq( 0, ( Rf_length( x ) - 1 )  );
-    //       return cols;
-    //     }
-    //   }
-    //   default: {
-    //     Rcpp::stop("geometries - unsupported object");
-    //   }
-    // }
   }
-
-
-  // inline SEXP other_columns(
-  //     SEXP& x,
-  //     Rcpp::NumericVector& id_cols
-  // ) {
-  //
-  //   switch( TYPEOF( x ) ) {
-  //     case INTSXP: {
-  //       if( Rf_isMatrix( x ) ) {
-  //         Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x ) ;
-  //         return other_columns( im, id_cols );
-  //       }
-  //     }
-  //     case REALSXP: {
-  //       if( Rf_isMatrix( x ) ) {
-  //         Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-  //         return other_columns( nm, id_cols );
-  //       }
-  //     }
-  //     case VECSXP: {
-  //       if( Rf_inherits( x, "data.frame") ) {
-  //         Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-  //         return other_columns( df, id_cols );
-  //       }
-  //     }
-  //     default: {
-  //       Rcpp::stop("geometries - unsupported object");
-  //     }
-  //   }
-  // }
 
   inline SEXP other_columns(
       SEXP& x,

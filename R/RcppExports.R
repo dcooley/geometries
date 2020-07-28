@@ -5,8 +5,8 @@ rcpp_calculate_bbox <- function(x, geometry_cols) {
     .Call(`_geometries_rcpp_calculate_bbox`, x, geometry_cols)
 }
 
-rcpp_other_columns <- function(x) {
-    .Call(`_geometries_rcpp_other_columns`, x)
+rcpp_other_columns <- function(x, id_cols, id_col2, id_col3) {
+    .Call(`_geometries_rcpp_other_columns`, x, id_cols, id_col2, id_col3)
 }
 
 rcpp_geometry_dimensions <- function(geometries) {
@@ -19,6 +19,10 @@ rcpp_coordinates <- function(geometries) {
 
 rcpp_make_geometries <- function(x, id_cols, geometry_cols, attributes, close) {
     .Call(`_geometries_rcpp_make_geometries`, x, id_cols, geometry_cols, attributes, close)
+}
+
+rcpp_id_positions <- function(x, i) {
+    .Call(`_geometries_rcpp_id_positions`, x, i)
 }
 
 rcpp_rleid <- function(df, ids) {
@@ -59,5 +63,21 @@ test_other_columns_impl <- function() {
 
 .tests <- function() {
     .Call(`_geometries_tests`)
+}
+
+rcpp_concatenate_vectors <- function(vec_1, vec_2) {
+    .Call(`_geometries_rcpp_concatenate_vectors`, vec_1, vec_2)
+}
+
+rcpp_column_positions <- function(m, cols) {
+    .Call(`_geometries_rcpp_column_positions`, m, cols)
+}
+
+rcpp_where_is <- function(to_find, sv) {
+    .Call(`_geometries_rcpp_where_is`, to_find, sv)
+}
+
+rcpp_get_ids <- function(x, id_col) {
+    .Call(`_geometries_rcpp_get_ids`, x, id_col)
 }
 

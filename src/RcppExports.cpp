@@ -18,13 +18,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // rcpp_other_columns
-SEXP rcpp_other_columns(SEXP x);
-RcppExport SEXP _geometries_rcpp_other_columns(SEXP xSEXP) {
+SEXP rcpp_other_columns(SEXP x, SEXP id_cols, SEXP id_col2, SEXP id_col3);
+RcppExport SEXP _geometries_rcpp_other_columns(SEXP xSEXP, SEXP id_colsSEXP, SEXP id_col2SEXP, SEXP id_col3SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_other_columns(x));
+    Rcpp::traits::input_parameter< SEXP >::type id_cols(id_colsSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type id_col2(id_col2SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type id_col3(id_col3SEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_other_columns(x, id_cols, id_col2, id_col3));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -62,6 +65,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::List >::type attributes(attributesSEXP);
     Rcpp::traits::input_parameter< bool >::type close(closeSEXP);
     rcpp_result_gen = Rcpp::wrap(rcpp_make_geometries(x, id_cols, geometry_cols, attributes, close));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rcpp_id_positions
+SEXP rcpp_id_positions(SEXP x, SEXP i);
+RcppExport SEXP _geometries_rcpp_id_positions(SEXP xSEXP, SEXP iSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type i(iSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_id_positions(x, i));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -177,13 +192,62 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rcpp_concatenate_vectors
+SEXP rcpp_concatenate_vectors(SEXP vec_1, SEXP vec_2);
+RcppExport SEXP _geometries_rcpp_concatenate_vectors(SEXP vec_1SEXP, SEXP vec_2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type vec_1(vec_1SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type vec_2(vec_2SEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_concatenate_vectors(vec_1, vec_2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rcpp_column_positions
+Rcpp::IntegerVector rcpp_column_positions(SEXP m, Rcpp::StringVector cols);
+RcppExport SEXP _geometries_rcpp_column_positions(SEXP mSEXP, SEXP colsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type m(mSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type cols(colsSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_column_positions(m, cols));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rcpp_where_is
+int rcpp_where_is(Rcpp::String to_find, Rcpp::StringVector sv);
+RcppExport SEXP _geometries_rcpp_where_is(SEXP to_findSEXP, SEXP svSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::String >::type to_find(to_findSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type sv(svSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_where_is(to_find, sv));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rcpp_get_ids
+SEXP rcpp_get_ids(SEXP x, SEXP id_col);
+RcppExport SEXP _geometries_rcpp_get_ids(SEXP xSEXP, SEXP id_colSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type id_col(id_colSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_get_ids(x, id_col));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_calculate_bbox", (DL_FUNC) &_geometries_rcpp_calculate_bbox, 2},
-    {"_geometries_rcpp_other_columns", (DL_FUNC) &_geometries_rcpp_other_columns, 1},
+    {"_geometries_rcpp_other_columns", (DL_FUNC) &_geometries_rcpp_other_columns, 4},
     {"_geometries_rcpp_geometry_dimensions", (DL_FUNC) &_geometries_rcpp_geometry_dimensions, 1},
     {"_geometries_rcpp_coordinates", (DL_FUNC) &_geometries_rcpp_coordinates, 1},
     {"_geometries_rcpp_make_geometries", (DL_FUNC) &_geometries_rcpp_make_geometries, 5},
+    {"_geometries_rcpp_id_positions", (DL_FUNC) &_geometries_rcpp_id_positions, 2},
     {"_geometries_rcpp_rleid", (DL_FUNC) &_geometries_rcpp_rleid, 2},
     {"_geometries_rcpp_nest", (DL_FUNC) &_geometries_rcpp_nest, 2},
     {"_geometries_tm", (DL_FUNC) &_geometries_tm, 1},
@@ -194,6 +258,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_test_other_columns_impl", (DL_FUNC) &_geometries_test_other_columns_impl, 0},
     {"_geometries_test_other_columns", (DL_FUNC) &_geometries_test_other_columns, 3},
     {"_geometries_tests", (DL_FUNC) &_geometries_tests, 0},
+    {"_geometries_rcpp_concatenate_vectors", (DL_FUNC) &_geometries_rcpp_concatenate_vectors, 2},
+    {"_geometries_rcpp_column_positions", (DL_FUNC) &_geometries_rcpp_column_positions, 2},
+    {"_geometries_rcpp_where_is", (DL_FUNC) &_geometries_rcpp_where_is, 2},
+    {"_geometries_rcpp_get_ids", (DL_FUNC) &_geometries_rcpp_get_ids, 2},
     {NULL, NULL, 0}
 };
 
