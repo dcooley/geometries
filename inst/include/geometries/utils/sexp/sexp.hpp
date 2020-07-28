@@ -55,6 +55,9 @@ namespace utils {
       }
     }
 
+    if( !Rf_isMatrix( x ) && Rf_isVector( x ) ) {
+      return 1;
+    }
     return Rf_nrows( x );
   }
 

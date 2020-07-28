@@ -94,6 +94,27 @@ namespace matrix {
     return m2;
   }
 
+  template< int RTYPE >
+  inline SEXP to_geometry_matrix(
+    Rcpp::Vector< RTYPE >& v,
+    Rcpp::IntegerVector& geometry_cols
+  ) {
+    geometries::utils::column_check( v, geometry_cols );
+    R_xlen_t n_row = 1;
+    R_xlen_t n_col = geometry_cols.size();
+    R_xlen_t i;
+    Rcpp::Matrix< RTYPE > m( n_row, n_col );
+
+    typedef typename Rcpp::traits::storage_type< RTYPE >::type T;
+
+    for( i = 0; i < n_col; ++i ) {
+      int this_col = geometry_cols[ i ];
+      T v2 = v[ this_col ];
+      m( 0, i ) = v2;
+    }
+    return m;
+  }
+
   inline Rcpp::NumericMatrix to_geometry_matrix(
       Rcpp::DataFrame& df,
       Rcpp::StringVector& cols, // may only want a subset of columns
@@ -297,7 +318,8 @@ namespace matrix {
     switch( TYPEOF( x ) ) {
       case INTSXP: {
         if( !Rf_isMatrix( x ) ) {
-          Rcpp::stop("geometries - lines need to be matrices or data.frames");
+          Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( x );
+          return to_geometry_matrix( iv, geometry_cols );
         } else {
           Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
           return to_geometry_matrix( im, geometry_cols );
@@ -305,7 +327,8 @@ namespace matrix {
       }
       case REALSXP: {
         if( !Rf_isMatrix( x ) ) {
-          Rcpp::stop("geometries - lines need to be matrices or data.frames");
+          Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( x );
+          return to_geometry_matrix( nv, geometry_cols );
         } else {
           Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
           return to_geometry_matrix( nm, geometry_cols );
