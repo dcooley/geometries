@@ -86,7 +86,7 @@ l <- list(
 )
 res <- gm_coordinates( l )
 expect_true( ncol( res ) == 5 )
-expect_true( unique( res$id ) == 0 )  ## first vector is id of the geometry
+expect_true( unique( res$id ) == 1 )  ## first vector is id of the geometry
 expect_equal( unique( res$id1 ), c(1,2) )  ## second vector is id of shape within the geometry
 
 ## nesting depth
@@ -127,3 +127,20 @@ expect_equal(
   l[[2]][[1]]
   , unname( as.matrix( res[3:5, c("c1","c2", "c3") ] ) )
 )
+
+## ID index starts at 1
+expect_true( all( res[1:2, 1] == c(1,1) ) )
+
+### coordinates.hpp
+
+m <- matrix(1:4, ncol = 2)
+df <- data.frame(
+  x = 1:4
+)
+geometries:::.test_coordinates( df )
+
+
+
+
+
+

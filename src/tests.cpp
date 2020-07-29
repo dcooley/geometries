@@ -7,6 +7,7 @@
 #include "geometries/utils/rleid/rleid.hpp"
 #include "geometries/utils/lists/as_list.hpp"
 #include "geometries/utils/lists/fill.hpp"
+#include "geometries/coordinates/coordinates_impl.hpp"
 
 // ----------------------------
 // bbox.hpp
@@ -35,6 +36,18 @@ SEXP test_bbox() {
     Rcpp::_["INTSXP"] = iv
   );
 
+}
+
+// ----------------------------
+// coordinates.hpp
+
+// geometries::coordinates::coordinates_impl() also tested as part of gm_coordinates()
+
+//[[Rcpp::export(.test_coordinates)]]
+SEXP test_coordinates(
+    SEXP geometries
+  ) {
+  return geometries::coordinates::coordinates_impl( geometries );
 }
 
 // ----------------------------

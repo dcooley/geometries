@@ -21,9 +21,6 @@ namespace coordinates {
    *
    */
 
-  // each of these functions turn the geometries into a list
-  // of coordinates and ids
-
   // forward declaration ---------
   inline Rcpp::List coordinates(
       SEXP& geometry,
@@ -39,46 +36,49 @@ namespace coordinates {
     );
 
   // -------------------------------
+  template< int RTYPE, typename T >
   inline void coordinates(
-      Rcpp::Vector< REALSXP >& geometry,
+      Rcpp::Vector< RTYPE >& geometry,
       Rcpp::List& res,
       R_xlen_t& start_row_idx,
       R_xlen_t& coord_col_idx,
-      double& id
+      T& id
   ) {
     R_xlen_t n_col = geometry.length();
     R_xlen_t n_row = 1;
     R_xlen_t i;
-    Rcpp::Vector< REALSXP > current_vector;
+    Rcpp::Vector< RTYPE > current_vector;
     for( i = 0; i < n_col; ++i ) {
       current_vector = res[ i + coord_col_idx ];
-      double coord = geometry[ i ];
+      T coord = geometry[ i ];
       current_vector[ start_row_idx ] = coord;
     }
     start_row_idx += n_row;
   }
 
+  template< int RTYPE >
   inline void coordinates(
-    Rcpp::Vector< REALSXP >& geometry,
+    Rcpp::Vector< RTYPE >& geometry,
     Rcpp::List& res,
     R_xlen_t& start_row_idx,
     R_xlen_t& start_column_idx
   ) {
-    //typedef typename Rcpp::traits::storage_type< RTYPE >::type T;
-    double id = 1;
+    typedef typename Rcpp::traits::storage_type< RTYPE >::type T;
+    T id = 1;
     coordinates( geometry, res, start_row_idx, start_column_idx, id );
   }
 
+  template< int RTYPE, typename T >
   inline Rcpp::List coordinates(
-    Rcpp::Vector< REALSXP >& geometry,
+    Rcpp::Vector< RTYPE >& geometry,
     R_xlen_t& geometry_rows,
-    double& id
+    T& id
   ) {
     R_xlen_t n_col = geometry.length();
     R_xlen_t n_row = 1;
     R_xlen_t i;
     Rcpp::List res( n_col + 1 );
-    Rcpp::Vector< REALSXP > idv = Rcpp::rep( id, n_row );
+    Rcpp::Vector< RTYPE > idv = Rcpp::rep( id, n_row );
     res[0] = idv;
     for( i = 0; i < n_col; ++i ) {
       res[i + 1] = geometry[i];
@@ -87,28 +87,30 @@ namespace coordinates {
     return res;
   }
 
+  template< int RTYPE >
   inline Rcpp::List coordinates(
-    Rcpp::Vector< REALSXP >& geometry,
+    Rcpp::Vector< RTYPE >& geometry,
     R_xlen_t& geometry_rows
   ) {
-    //typedef typename Rcpp::traits::storage_type< RTYPE >::type T;
-    double id = 1;
+    typedef typename Rcpp::traits::storage_type< RTYPE >::type T;
+    T id = 1;
     return coordinates( geometry, geometry_rows, id );
   }
 
+  template< int RTYPE, typename T >
   inline void coordinates(
-    Rcpp::Matrix< REALSXP >& geometry,
+    Rcpp::Matrix< RTYPE >& geometry,
     Rcpp::List& res,
     R_xlen_t& start_row_idx,
     R_xlen_t& coord_col_idx,
-    double& id
+    T& id
   ) {
     R_xlen_t n_col = geometry.ncol(); // +1 for the id column
     R_xlen_t n_row = geometry.nrow();
     R_xlen_t i;
-    Rcpp::Vector< REALSXP > idv = Rcpp::rep( id, n_row );
-    Rcpp::Vector< REALSXP > current_vector;
-    Rcpp::Vector< REALSXP > new_vector;
+    Rcpp::Vector< RTYPE > idv = Rcpp::rep( id, n_row );
+    Rcpp::Vector< RTYPE > current_vector;
+    Rcpp::Vector< RTYPE > new_vector;
 
     current_vector = res[ coord_col_idx - 1 ];
     geometries::utils::fill_vector( current_vector, idv, start_row_idx );
@@ -122,27 +124,29 @@ namespace coordinates {
     start_row_idx += n_row;
   }
 
+  template< int RTYPE >
   inline void coordinates(
-    Rcpp::Matrix< REALSXP >& geometry,
+    Rcpp::Matrix< RTYPE >& geometry,
     Rcpp::List& res,
     R_xlen_t& start_row_idx, // where to start filling the result vector
     R_xlen_t& coord_col_idx // the first column of res to be filled.
   ) {
-    //typedef typename Rcpp::traits::storage_type< RTYPE >::type T;
-    double id = 1;
+    typedef typename Rcpp::traits::storage_type< RTYPE >::type T;
+    T id = 1;
     coordinates( geometry, res, start_row_idx, coord_col_idx, id );
   }
 
+  template< int RTYPE, typename T >
   inline Rcpp::List coordinates(
-    Rcpp::Matrix< REALSXP >& geometry,
+    Rcpp::Matrix< RTYPE >& geometry,
     R_xlen_t& geometry_rows,
-    double& id
+    T& id
   ) {
     R_xlen_t n_col = geometry.ncol();
     R_xlen_t n_row = geometry.nrow();
     R_xlen_t i;
     Rcpp::List res( n_col + 1 );
-    Rcpp::Vector< REALSXP > idv = Rcpp::rep( id, n_row );
+    Rcpp::Vector< RTYPE > idv = Rcpp::rep( id, n_row );
     res[0] = idv;
     for( i = 0; i < n_col; ++i ) {
       res[ i + 1 ] = geometry( Rcpp::_, i );
@@ -151,12 +155,13 @@ namespace coordinates {
     return res;
   }
 
+  template< int RTYPE >
   inline Rcpp::List coordinates(
-    Rcpp::Matrix< REALSXP >& geometry,
+    Rcpp::Matrix< RTYPE >& geometry,
     R_xlen_t& geometry_rows
   ) {
-    //typedef typename Rcpp::traits::storage_type< RTYPE >::type T;
-    double id = 1;
+    typedef typename Rcpp::traits::storage_type< RTYPE >::type T;
+    T id = 1;
     return coordinates( geometry, geometry_rows, id );
   }
 

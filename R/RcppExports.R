@@ -41,6 +41,10 @@ rcpp_nest <- function(x, depth) {
     .Call(`_geometries_rcpp_nest`, x, depth)
 }
 
+.test_coordinates <- function(geometries) {
+    .Call(`_geometries_test_coordinates`, geometries)
+}
+
 .test_to_geometry_matrix <- function(x, cols) {
     .Call(`_geometries_test_to_geometry_matrix`, x, cols)
 }

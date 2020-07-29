@@ -96,7 +96,7 @@ inline Rcpp::DataFrame coordinates_impl(
       R_xlen_t start_row_idx = dimension[0];
 
       double geometry_id = 1;
-      geometries::coordinates::coordinates(geometry, res, start_row_idx, coord_col_idx, geometry_id );
+      geometries::coordinates::coordinates( geometry, res, start_row_idx, coord_col_idx, geometry_id );
     } // ++i
 
     // for the id vector, the dimensions matrix tells me the start and end of each geometry
@@ -107,7 +107,7 @@ inline Rcpp::DataFrame coordinates_impl(
       R_xlen_t start = dim( i, 0 );
       R_xlen_t end = dim( i, 1 );
       for( j = start; j <= end; ++j ) {
-        shape_id[ j ] = i;
+        shape_id[ j ] = i + 1; // so id's start at 1
       }
     }
 
@@ -121,23 +121,23 @@ inline SEXP coordinates_impl(
   ) {
 
     switch( TYPEOF( geometries ) ) {
-    case INTSXP: {}
-    case REALSXP: {
-      if( Rf_isMatrix( geometries ) ) {
-      Rcpp::Matrix< REALSXP > mat = Rcpp::as< Rcpp::Matrix< REALSXP > >( geometries );
-      return coordinates_impl( mat );
-    } else { // vector
-      Rcpp::Vector< REALSXP > vec = Rcpp::as< Rcpp::Vector< REALSXP > >( geometries );
-      return coordinates_impl( vec );
-    }
-    }
-    case VECSXP: {
-      Rcpp::List lst = Rcpp::as< Rcpp::List >( geometries );
-      return coordinates_impl( lst );
-    }
-    default: {
-      Rcpp::stop("geometries - only vectors, matrices and lists are supported");
-    }
+      case INTSXP: {}
+      case REALSXP: {
+        if( Rf_isMatrix( geometries ) ) {
+          Rcpp::Matrix< REALSXP > mat = Rcpp::as< Rcpp::Matrix< REALSXP > >( geometries );
+          return coordinates_impl( mat );
+        } else { // vector
+          Rcpp::Vector< REALSXP > vec = Rcpp::as< Rcpp::Vector< REALSXP > >( geometries );
+          return coordinates_impl( vec );
+        }
+      }
+      case VECSXP: {
+        Rcpp::List lst = Rcpp::as< Rcpp::List >( geometries );
+        return coordinates_impl( lst );
+      }
+      default: {
+        Rcpp::stop("geometries - only vectors, matrices and lists are supported");
+      }
     }
     return Rcpp::List::create(); // #nocov never reaches
   }
