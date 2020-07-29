@@ -62,6 +62,21 @@
 #'   , geometry_cols = c(2,3)
 #'  )
 #'
+#' ## use close to make the last row the same as the first row
+#' df <- data.frame(
+#'   id = c(1,1,1,1)
+#'   , x = c(1,1,2,2)
+#'   , y = c(1,2,2,1)
+#' )
+#'
+#' gm_geometries(
+#'   df
+#'   , id_cols = "id"
+#'   , geometry_cols = c("x","y")
+#'   , close = T
+#' )
+#'
+#'
 #' @export
 gm_geometries <- function( obj, id_cols, geometry_cols, class_attributes = list(), close = FALSE ) {
   id_cols <- index_correct( obj, id_cols )

@@ -126,18 +126,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// test_bbox
-SEXP test_bbox(SEXP x, SEXP cols);
-RcppExport SEXP _geometries_test_bbox(SEXP xSEXP, SEXP colsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type cols(colsSEXP);
-    rcpp_result_gen = Rcpp::wrap(test_bbox(x, cols));
-    return rcpp_result_gen;
-END_RCPP
-}
 // test_to_geometry_matrix
 SEXP test_to_geometry_matrix(SEXP x, SEXP cols);
 RcppExport SEXP _geometries_test_to_geometry_matrix(SEXP xSEXP, SEXP colsSEXP) {
@@ -310,7 +298,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_rleid", (DL_FUNC) &_geometries_rcpp_rleid, 2},
     {"_geometries_rcpp_rleid_indices", (DL_FUNC) &_geometries_rcpp_rleid_indices, 1},
     {"_geometries_rcpp_nest", (DL_FUNC) &_geometries_rcpp_nest, 2},
-    {"_geometries_test_bbox", (DL_FUNC) &_geometries_test_bbox, 2},
     {"_geometries_test_to_geometry_matrix", (DL_FUNC) &_geometries_test_to_geometry_matrix, 2},
     {"_geometries_tm", (DL_FUNC) &_geometries_tm, 1},
     {"_geometries_test_sexp_col_int", (DL_FUNC) &_geometries_test_sexp_col_int, 2},
