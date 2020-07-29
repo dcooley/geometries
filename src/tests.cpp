@@ -41,6 +41,10 @@ SEXP test_bbox() {
 // matrix.hpp
 
 // test various objects make matrix
+// [[Rcpp::export(.test_to_geometry_matrix)]]
+SEXP test_to_geometry_matrix( SEXP x, SEXP cols ) {
+  return geometries::matrix::to_geometry_matrix( x, cols );
+}
 
 SEXP test_matrix() {
 
@@ -99,6 +103,11 @@ SEXP tm( SEXP x ) {
 
 // ----------------------------
 // sexp.hpp
+// [[Rcpp::export(.test_sexp_col_int)]]
+Rcpp::IntegerVector test_sexp_col_int( SEXP x, SEXP v ) {
+  return geometries::utils::sexp_col_int( x, v );
+}
+
 // [[Rcpp::export(.test_sexp_col_names)]]
 Rcpp::StringVector test_sexp_col_names( SEXP x ) {
   return geometries::utils::sexp_col_names( x );

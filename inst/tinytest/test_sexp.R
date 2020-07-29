@@ -14,6 +14,12 @@ df <- data.frame(
 mdbl <- as.matrix( df )
 lst <- as.list( df )
 
+expect_error( geometries:::.test_sexp_col_int( df, 1 ), "geometries - require either integer or string column indices" )
+expect_equal( geometries:::.test_sexp_col_int( df, 0L ), 0 )
+expect_equal( geometries:::.test_sexp_col_int( df, 1L ), 1 )
+expect_equal( geometries:::.test_sexp_col_int( df, "x" ), 0 )
+expect_equal( geometries:::.test_sexp_col_int( df, "y" ), 1 )
+
 expect_equal( geometries:::.test_sexp_col_names( df ), names( df ) )
 expect_equal( geometries:::.test_sexp_col_names( mint ), names( df ) )
 expect_equal( geometries:::.test_sexp_col_names( mdbl ), names( df ) )
