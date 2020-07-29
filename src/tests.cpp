@@ -43,12 +43,14 @@ SEXP test_bbox() {
 
 // geometries::coordinates::coordinates_impl() also tested as part of gm_coordinates()
 
-//[[Rcpp::export(.test_coordinates)]]
-SEXP test_coordinates(
-    SEXP geometries
-  ) {
-  return geometries::coordinates::coordinates_impl( geometries );
-}
+// //[[Rcpp::export(.test_coordinates)]]
+// SEXP test_coordinates(
+//     SEXP geometries
+//   ) {
+//   Rcpp::List res;
+//   geometries::coordinates::coordinates( geometries );
+//
+// }
 
 // ----------------------------
 // matrix.hpp

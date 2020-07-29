@@ -137,7 +137,7 @@ m <- matrix(1:4, ncol = 2)
 df <- data.frame(
   x = 1:4
 )
-geometries:::.test_coordinates( df )
+
 
 
 
