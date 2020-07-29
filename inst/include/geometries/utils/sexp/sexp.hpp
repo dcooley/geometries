@@ -9,7 +9,8 @@ namespace utils {
 
   inline Rcpp::StringVector name_attributes( SEXP& x ) {
     //if( x.hasAttribute("names") ) {
-      Rcpp::StringVector attr({"names"});
+      Rcpp::StringVector attr(1);
+      attr[0] = "names";
       SEXP a = Rf_getAttrib( x, attr );
       if( !Rf_isNull( a ) ) {
         return Rcpp::as< Rcpp::StringVector >( a );

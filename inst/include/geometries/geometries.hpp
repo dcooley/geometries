@@ -153,6 +153,16 @@ namespace geometries {
     return make_geometries( lst, int_ids, int_geom, attributes, close );
   }
 
+  inline SEXP make_geometries(
+    SEXP& x,
+    SEXP& ids,
+    SEXP& geometry_cols,
+    bool close = false
+  ) {
+    Rcpp::List attr;
+    return make_geometries(x, ids, geometry_cols, attr, close);
+  }
+
 } // geometries
 
 #endif

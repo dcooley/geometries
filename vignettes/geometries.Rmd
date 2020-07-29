@@ -110,16 +110,18 @@ Calling `geometries::make_geometries()` will split this data.frame by these ID c
 
 ```{r}
 cppFunction(
+  
   depends = "geometries"
   , includes = '#include "geometries/geometries.hpp"'
   , code = '
-    SEXP my_shape( DataFrame df, IntegerVector id_cols, IntegerVector geometry_cols ) {
+    SEXP my_shape( SEXP df, SEXP id_cols, SEXP geometry_cols ) {
       return geometries::make_geometries( df, id_cols, geometry_cols );
     }
   '
+  , plugins = "cpp11"
 )
 
-my_shape( df, c(0,1), c(2,3) )
+my_shape( df, c(0L,1L), c(2L,3L) )
 ```
 
 
@@ -131,13 +133,14 @@ cppFunction(
   depends = "geometries"
   , includes = '#include "geometries/geometries.hpp"'
   , code = '
-    SEXP my_shape( Rcpp::DataFrame df, Rcpp::IntegerVector id_cols, Rcpp::IntegerVector geometry_cols, Rcpp::StringVector class_attributes ) {
+    SEXP my_shape( Rcpp::DataFrame df, Rcpp::IntegerVector id_cols, Rcpp::IntegerVector geometry_cols, Rcpp::List class_attributes ) {
       return geometries::make_geometries( df, id_cols, geometry_cols, class_attributes );
     }
   '
+  , plugins = "cpp11"
 )
 
-my_shape( df, c(0,1), c(2,3), "my_polygon")
+my_shape( df, c(0,1), c(2,3), list(class = "my_polygon") )
 
 ```
 
@@ -147,7 +150,7 @@ And if you have `library(sf)` loaded, setting the class as `sfg` `POLYGON`, you 
 
 ```{r}
 
-my_shape( df, c(0,1), c(2,3), c("XY", "POLYGON","sfg") )
+my_shape( df, c(0,1), c(2,3), list( class = c("XY", "POLYGON","sfg") ) )
 
 ```
 
@@ -160,7 +163,7 @@ df$id0 <- 1
 df$id00 <- 1
 head( df ) 
 
-my_shape( df, c(0,1,4,5), c(2,3), "my_new_shape")
+my_shape( df, c(0,1,4,5), c(2,3), list(class = "my_new_shape") )
 
 ```
 
