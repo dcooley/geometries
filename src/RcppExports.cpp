@@ -126,15 +126,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// test_to_geometry_matrix
-SEXP test_to_geometry_matrix(SEXP x, SEXP cols);
-RcppExport SEXP _geometries_test_to_geometry_matrix(SEXP xSEXP, SEXP colsSEXP) {
+// test_to_geometry_matrix_cols
+SEXP test_to_geometry_matrix_cols(SEXP x, SEXP cols);
+RcppExport SEXP _geometries_test_to_geometry_matrix_cols(SEXP xSEXP, SEXP colsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
     Rcpp::traits::input_parameter< SEXP >::type cols(colsSEXP);
-    rcpp_result_gen = Rcpp::wrap(test_to_geometry_matrix(x, cols));
+    rcpp_result_gen = Rcpp::wrap(test_to_geometry_matrix_cols(x, cols));
+    return rcpp_result_gen;
+END_RCPP
+}
+// test_to_geometry_matrix_single
+SEXP test_to_geometry_matrix_single(SEXP x);
+RcppExport SEXP _geometries_test_to_geometry_matrix_single(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_to_geometry_matrix_single(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -298,7 +309,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_rleid", (DL_FUNC) &_geometries_rcpp_rleid, 2},
     {"_geometries_rcpp_rleid_indices", (DL_FUNC) &_geometries_rcpp_rleid_indices, 1},
     {"_geometries_rcpp_nest", (DL_FUNC) &_geometries_rcpp_nest, 2},
-    {"_geometries_test_to_geometry_matrix", (DL_FUNC) &_geometries_test_to_geometry_matrix, 2},
+    {"_geometries_test_to_geometry_matrix_cols", (DL_FUNC) &_geometries_test_to_geometry_matrix_cols, 2},
+    {"_geometries_test_to_geometry_matrix_single", (DL_FUNC) &_geometries_test_to_geometry_matrix_single, 1},
     {"_geometries_tm", (DL_FUNC) &_geometries_tm, 1},
     {"_geometries_test_sexp_col_int", (DL_FUNC) &_geometries_test_sexp_col_int, 2},
     {"_geometries_test_sexp_col_names", (DL_FUNC) &_geometries_test_sexp_col_names, 1},

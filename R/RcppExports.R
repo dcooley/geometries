@@ -41,8 +41,12 @@ rcpp_nest <- function(x, depth) {
     .Call(`_geometries_rcpp_nest`, x, depth)
 }
 
-.test_to_geometry_matrix <- function(x, cols) {
-    .Call(`_geometries_test_to_geometry_matrix`, x, cols)
+.test_to_geometry_matrix_cols <- function(x, cols) {
+    .Call(`_geometries_test_to_geometry_matrix_cols`, x, cols)
+}
+
+.test_to_geometry_matrix_single <- function(x) {
+    .Call(`_geometries_test_to_geometry_matrix_single`, x)
 }
 
 tm <- function(x) {

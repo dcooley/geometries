@@ -56,9 +56,15 @@ SEXP test_bbox() {
 // matrix.hpp
 
 // test various objects make matrix
-// [[Rcpp::export(.test_to_geometry_matrix)]]
-SEXP test_to_geometry_matrix( SEXP x, SEXP cols ) {
+// [[Rcpp::export(.test_to_geometry_matrix_cols)]]
+SEXP test_to_geometry_matrix_cols( SEXP x, SEXP cols ) {
   return geometries::matrix::to_geometry_matrix( x, cols );
+}
+
+// [[Rcpp::export(.test_to_geometry_matrix_single)]]
+SEXP test_to_geometry_matrix_single( SEXP x ) {
+  SEXP x2 = Rcpp::clone( x );
+  return geometries::matrix::to_geometry_matrix( x2 );
 }
 
 SEXP test_matrix() {
