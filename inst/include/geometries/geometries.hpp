@@ -142,6 +142,7 @@ namespace geometries {
     Rcpp::List attributes,
     bool close = false
   ) {
+
     if( TYPEOF( ids ) != TYPEOF( geometry_cols ) ) {
       Rcpp::stop("geometries - id_columns and geometry_columns must be the same type");
     }

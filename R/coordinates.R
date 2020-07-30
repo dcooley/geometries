@@ -41,7 +41,6 @@
 #'
 #' @param x object representing a geometry shape (e.g., list of matrices)
 #'
-#' @export
 gm_dimensions <- function( x ) {
   rcpp_geometry_dimensions( x )
 }

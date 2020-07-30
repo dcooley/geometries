@@ -88,7 +88,14 @@ gm_geometries <- function( obj, id_cols, geometry_cols, class_attributes = list(
 ## convert R-index to c++-index integer
 index_correct <- function( obj, cols ) {
 
+  if( is.null( cols ) ) {
+    stop("columns can't be NULL")
+  }
+
   if( is.numeric( cols ) ) {
+    if( any( cols == 0 ) ) {
+      stop("invalid column index")
+    }
     return( as.integer( cols ) - 1L )
   }
 

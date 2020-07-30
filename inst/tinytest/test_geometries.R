@@ -21,7 +21,28 @@ df <- data.frame(
   , a = 1:7
 )
 
+expect_error(
+  geometries:::rcpp_make_geometries( df, c(0L), c("y"), TRUE, TRUE )
+  , "geometries - id_columns and geometry_columns must be the same type"
+  )
+
+expect_error(
+  geometries:::rcpp_make_geometries( df, c(1L), c("y"), TRUE, TRUE )
+  , "geometries - id_columns and geometry_columns must be the same type"
+)
+
 m <- as.matrix( df )
+
+## indexing crash
+expect_error(
+  gm_geometries(df, c(0L),  c("x","y"), list( class = "my_attr") )
+  , "invalid column index"
+)
+
+
+## NULL column ids
+expect_error( gm_geometries(df, id_cols = NULL, c("x","y"), list( class = "my_attr") ), "columns can't be NULL")
+
 
 ## single ID, single geometry, no attributes
 res <- gm_geometries(df, 1, 4)
