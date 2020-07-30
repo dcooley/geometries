@@ -95,6 +95,10 @@ SEXP test_matrix() {
 
   Rcpp::NumericMatrix nm9 = geometries::matrix::to_geometry_matrix( nmxy, icols );
 
+  Rcpp::NumericMatrix nm10 = geometries::matrix::to_geometry_matrix( df, true );
+  Rcpp::NumericVector nm11 = geometries::matrix::to_geometry_matrix( x );
+  Rcpp::NumericMatrix nm12 = geometries::matrix::to_geometry_matrix( lst, true );
+  Rcpp::NumericVector nm13 = geometries::matrix::to_geometry_matrix( x, icols );
 
   return Rcpp::List::create(
     Rcpp::_["nm1"] = nm1,
@@ -105,7 +109,11 @@ SEXP test_matrix() {
     Rcpp::_["nm6"] = nm6,
     Rcpp::_["nm7"] = nm7,
     Rcpp::_["nm8"] = nm8,
-    Rcpp::_["nm9"] = nm9
+    Rcpp::_["nm9"] = nm9,
+    Rcpp::_["nm10"] = nm10,
+    Rcpp::_["nm11"] = nm11,
+    Rcpp::_["nm12"] = nm12,
+    Rcpp::_["nm13"] = nm13
   );
 
 }

@@ -29,6 +29,12 @@ expect_equal( l$test_matrix$nm8, l$test_matrix$nm4 )
 
 expect_equal( l$test_matrix$nm9, l$test_matrix$nm2 )
 
+expect_equal( colnames( l$test_matrix$nm10 ), c("x","y") )
+expect_equal( l$test_matrix$nm11, matrix(1:4, ncol = 4))
+
+expect_equal( l$test_matrix$nm12, l$test_matrix$nm10 )
+
+expect_equal( l$test_matrix$nm13, matrix(1) )
 
 ### SEXP col_int
 expect_true( l$test_colint$x_col == 0 )

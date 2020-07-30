@@ -9,6 +9,7 @@ m <- as.matrix( df )
 ldf <- as.list( df )
 
 expect_equal( geometries:::.test_to_geometry_matrix( df, NULL ), unname( m ) )
+expect_equal( geometries:::.test_to_geometry_matrix( df, NULL ), unname( m ) )
 expect_equal( geometries:::.test_to_geometry_matrix( df, c(0L,1L,2L) ), unname( m ) )
 expect_equal( geometries:::.test_to_geometry_matrix( df, c(1L,2L) ), unname( m[, 2:3] ) )
 expect_equal( geometries:::.test_to_geometry_matrix( df, c("x","y","z") ), unname( m ) )
