@@ -73,7 +73,7 @@
 #'   df
 #'   , id_cols = "id"
 #'   , geometry_cols = c("x","y")
-#'   , close = T
+#'   , close = TRUE
 #' )
 #'
 #'
