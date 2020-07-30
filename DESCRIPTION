@@ -1,19 +1,19 @@
 Package: geometries
 Type: Package
 Title: Convert Between R Objects and Geometric Structures
-Date: 2020-06-05
+Date: 2020-07-31
 Version: 0.1.0
 Authors@R: c(
     person("David", "Cooley", ,"david.cooley.au@gmail.com", role = c("aut", "cre"))
     )
-Description: Conversion functions are available at both the R level, 
-  and through 'Rcpp'.
+Description: Geometry shapes in R are typically represented by matrices (points, lines), with more complex 
+  shapes being lists of matrices (polygons). Geometries will convert various R objects into these shapes. 
+  Conversion functions are available at both the R level, and through 'Rcpp'.
 License: MIT + file LICENSE
 URL: https://dcooley.github.io/geometries/
 BugReports: https://github.com/dcooley/geometries/issues
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 3.5.0)
 RoxygenNote: 7.1.0
 SystemRequirements: C++11
 LinkingTo: 

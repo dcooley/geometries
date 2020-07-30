@@ -124,8 +124,9 @@ cppFunction(
 my_shape( df, c(0L,1L), c(2L,3L) )
 ```
 
+Notice here there are no class attributes on the shapes. In `{geometries}` I only want to provide the tools to build these structures, then each user can define what they mean.
 
-If you want to define a class for each geometry you can supply a "class" vector as the 4th argument
+For example, if you want to define a class for each geometry you can supply a list containing a "class" vector as the 4th argument
 
 ```{r}
 
@@ -146,7 +147,7 @@ my_shape( df, c(0,1), c(2,3), list(class = "my_polygon") )
 
 Notice here that each list element now has a `"my_polygon"` class.
 
-And if you have `library(sf)` loaded, setting the class as `sfg` `POLYGON`, you should see each elemented printed in the usual `sf` way
+And if you have `library(sf)` loaded, setting the class as `sfg` `POLYGON`, you should see each elemente printed in the usual `sf` way
 
 ```{r}
 
