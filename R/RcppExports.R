@@ -41,6 +41,10 @@ rcpp_rleid_indices <- function(x) {
     .Call(`_geometries_test_to_geometry_matrix_cols`, x, cols)
 }
 
+.test_to_geometry_matrix_cols_names <- function(x, cols, keep_names) {
+    .Call(`_geometries_test_to_geometry_matrix_cols_names`, x, cols, keep_names)
+}
+
 .test_to_geometry_matrix_single <- function(x) {
     .Call(`_geometries_test_to_geometry_matrix_single`, x)
 }

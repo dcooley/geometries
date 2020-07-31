@@ -61,6 +61,11 @@ SEXP test_to_geometry_matrix_cols( SEXP x, SEXP cols ) {
   return geometries::matrix::to_geometry_matrix( x, cols );
 }
 
+// [[Rcpp::export(.test_to_geometry_matrix_cols_names)]]
+SEXP test_to_geometry_matrix_cols_names( Rcpp::DataFrame x, Rcpp::IntegerVector cols, bool keep_names ) {
+  return geometries::matrix::to_geometry_matrix( x, cols, keep_names );
+}
+
 // [[Rcpp::export(.test_to_geometry_matrix_single)]]
 SEXP test_to_geometry_matrix_single( SEXP x ) {
   SEXP x2 = Rcpp::clone( x );
