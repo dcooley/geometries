@@ -114,6 +114,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// test_attributes
+void test_attributes(SEXP& obj, Rcpp::List& attributes);
+RcppExport SEXP _geometries_test_attributes(SEXP objSEXP, SEXP attributesSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP& >::type obj(objSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List& >::type attributes(attributesSEXP);
+    test_attributes(obj, attributes);
+    return R_NilValue;
+END_RCPP
+}
 // test_to_geometry_matrix_cols
 SEXP test_to_geometry_matrix_cols(SEXP x, SEXP cols);
 RcppExport SEXP _geometries_test_to_geometry_matrix_cols(SEXP xSEXP, SEXP colsSEXP) {
@@ -240,6 +251,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// test_column_positions
+SEXP test_column_positions(SEXP x, Rcpp::StringVector cols);
+RcppExport SEXP _geometries_test_column_positions(SEXP xSEXP, SEXP colsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type cols(colsSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_column_positions(x, cols));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tests
 SEXP tests();
 RcppExport SEXP _geometries_tests() {
@@ -309,6 +332,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_id_positions", (DL_FUNC) &_geometries_rcpp_id_positions, 2},
     {"_geometries_rcpp_rleid", (DL_FUNC) &_geometries_rcpp_rleid, 2},
     {"_geometries_rcpp_rleid_indices", (DL_FUNC) &_geometries_rcpp_rleid_indices, 1},
+    {"_geometries_test_attributes", (DL_FUNC) &_geometries_test_attributes, 2},
     {"_geometries_test_to_geometry_matrix_cols", (DL_FUNC) &_geometries_test_to_geometry_matrix_cols, 2},
     {"_geometries_test_to_geometry_matrix_cols_names", (DL_FUNC) &_geometries_test_to_geometry_matrix_cols_names, 3},
     {"_geometries_test_to_geometry_matrix_single", (DL_FUNC) &_geometries_test_to_geometry_matrix_single, 1},
@@ -320,6 +344,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_test_sexp_length", (DL_FUNC) &_geometries_test_sexp_length, 1},
     {"_geometries_test_other_columns_impl", (DL_FUNC) &_geometries_test_other_columns_impl, 0},
     {"_geometries_test_other_columns", (DL_FUNC) &_geometries_test_other_columns, 3},
+    {"_geometries_test_column_positions", (DL_FUNC) &_geometries_test_column_positions, 2},
     {"_geometries_tests", (DL_FUNC) &_geometries_tests, 0},
     {"_geometries_rcpp_concatenate_vectors", (DL_FUNC) &_geometries_rcpp_concatenate_vectors, 2},
     {"_geometries_rcpp_column_positions", (DL_FUNC) &_geometries_rcpp_column_positions, 2},

@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 
+#include "geometries/utils/attributes/attributes.hpp"
 #include "geometries/bbox/bbox.hpp"
 #include "geometries/matrix/to_mat.hpp"
 #include "geometries/utils/sexp/sexp.hpp"
@@ -8,6 +9,13 @@
 #include "geometries/utils/lists/as_list.hpp"
 #include "geometries/utils/lists/fill.hpp"
 #include "geometries/coordinates/coordinates_impl.hpp"
+
+// ----------------------------
+// attributes.hpp
+// [[Rcpp::export(.test_attributes)]]
+void test_attributes( SEXP& obj, Rcpp::List& attributes ) {
+  geometries::utils::attach_attributes( obj, attributes );
+}
 
 // ----------------------------
 // bbox.hpp
@@ -250,6 +258,10 @@ SEXP test_other_columns( SEXP x, SEXP y, SEXP z ) {
   return geometries::utils::other_columns( x, y, z );
 }
 
+//[[Rcpp::export(.test_column_positions)]]
+SEXP test_column_positions( SEXP x, Rcpp::StringVector cols ) {
+  return geometries::utils::column_positions( x, cols );
+}
 
 
 // ----------------------------

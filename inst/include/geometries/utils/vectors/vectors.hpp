@@ -18,7 +18,8 @@ namespace utils {
         return i;
       }
     }
-    return -1;
+    Rcpp::stop("geometries - could not find column");
+    return -1; // #nocov
   }
 
   inline int where_is(
@@ -31,7 +32,8 @@ namespace utils {
         return i;
       }
     }
-    return -1;
+    Rcpp::stop("geometries - could not find column");
+    return -1; // #nocov
   }
 
   inline Rcpp::IntegerVector where_is(

@@ -37,6 +37,10 @@ rcpp_rleid_indices <- function(x) {
     .Call(`_geometries_rcpp_rleid_indices`, x)
 }
 
+.test_attributes <- function(obj, attributes) {
+    invisible(.Call(`_geometries_test_attributes`, obj, attributes))
+}
+
 .test_to_geometry_matrix_cols <- function(x, cols) {
     .Call(`_geometries_test_to_geometry_matrix_cols`, x, cols)
 }
@@ -79,6 +83,10 @@ test_other_columns_impl <- function() {
 
 .test_other_columns <- function(x, y, z) {
     .Call(`_geometries_test_other_columns`, x, y, z)
+}
+
+.test_column_positions <- function(x, cols) {
+    .Call(`_geometries_test_column_positions`, x, cols)
 }
 
 .tests <- function() {

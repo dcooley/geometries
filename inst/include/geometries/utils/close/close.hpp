@@ -78,7 +78,7 @@ namespace utils {
           break;
         }
         default: {
-          Rcpp::stop("geometries - closing shapes requires matrices");
+          Rcpp::stop("geometries - closing shapes requires matrices"); // #nocov
         }
       }
     }
