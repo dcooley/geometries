@@ -89,6 +89,10 @@ test_other_columns_impl <- function() {
     .Call(`_geometries_test_column_positions`, x, cols)
 }
 
+.test_make_dataframe <- function(lst, n_rows, col_names) {
+    .Call(`_geometries_test_make_dataframe`, lst, n_rows, col_names)
+}
+
 .tests <- function() {
     .Call(`_geometries_tests`)
 }

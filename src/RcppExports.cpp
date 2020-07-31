@@ -263,6 +263,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// test_make_dataframe
+SEXP test_make_dataframe(Rcpp::List lst, R_xlen_t n_rows, Rcpp::CharacterVector col_names);
+RcppExport SEXP _geometries_test_make_dataframe(SEXP lstSEXP, SEXP n_rowsSEXP, SEXP col_namesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type lst(lstSEXP);
+    Rcpp::traits::input_parameter< R_xlen_t >::type n_rows(n_rowsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type col_names(col_namesSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_make_dataframe(lst, n_rows, col_names));
+    return rcpp_result_gen;
+END_RCPP
+}
 // tests
 SEXP tests();
 RcppExport SEXP _geometries_tests() {
@@ -345,6 +358,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_test_other_columns_impl", (DL_FUNC) &_geometries_test_other_columns_impl, 0},
     {"_geometries_test_other_columns", (DL_FUNC) &_geometries_test_other_columns, 3},
     {"_geometries_test_column_positions", (DL_FUNC) &_geometries_test_column_positions, 2},
+    {"_geometries_test_make_dataframe", (DL_FUNC) &_geometries_test_make_dataframe, 3},
     {"_geometries_tests", (DL_FUNC) &_geometries_tests, 0},
     {"_geometries_rcpp_concatenate_vectors", (DL_FUNC) &_geometries_rcpp_concatenate_vectors, 2},
     {"_geometries_rcpp_column_positions", (DL_FUNC) &_geometries_rcpp_column_positions, 2},

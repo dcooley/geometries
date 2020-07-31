@@ -8,6 +8,7 @@
 #include "geometries/utils/rleid/rleid.hpp"
 #include "geometries/utils/lists/as_list.hpp"
 #include "geometries/utils/lists/fill.hpp"
+#include "geometries/utils/dataframe/dataframe.hpp"
 #include "geometries/coordinates/coordinates_impl.hpp"
 
 // ----------------------------
@@ -261,6 +262,13 @@ SEXP test_other_columns( SEXP x, SEXP y, SEXP z ) {
 //[[Rcpp::export(.test_column_positions)]]
 SEXP test_column_positions( SEXP x, Rcpp::StringVector cols ) {
   return geometries::utils::column_positions( x, cols );
+}
+
+// ----------------------------
+// dataframe.hpp
+//[[Rcpp::export(.test_make_dataframe)]]
+SEXP test_make_dataframe( Rcpp::List lst, R_xlen_t n_rows, Rcpp::CharacterVector col_names ) {
+  return geometries::utils::make_dataframe( lst, n_rows, col_names );
 }
 
 
