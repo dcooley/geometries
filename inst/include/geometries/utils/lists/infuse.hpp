@@ -1,5 +1,5 @@
-#ifndef R_SFHEADERS_LIST_INFUSE_H
-#define R_SFHEADERS_LIST_INFUSE_H
+#ifndef R_GEOMETRIES_LIST_INFUSE_H
+#define R_GEOMETRIES_LIST_INFUSE_H
 
 #include <Rcpp.h>
 #include "geometries/utils/lists/unlist.hpp"

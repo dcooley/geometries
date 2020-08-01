@@ -1,5 +1,14 @@
 
 df <- data.frame(x = 1:5, y = 1:5)
+expect_error( geometries:::.test_column_check( df, 1L:4L ), "geometries - number of columns requested is greater than those available")
+
+expect_silent( geometries:::.test_column_check( 1L, 0L ) )
+expect_error( geometries:::.test_column_check( 1L, 1L ), "geometries - invalid geometry column index" )
+expect_error( geometries:::.test_column_check( 1L, -1L ), "geometries - invalid geometry column index" )
+
+
+
+df <- data.frame(x = 1:5, y = 1:5)
 expect_error( geometries:::.test_column_positions(df, 1L), "geometries - expecting matrix when finding column positions")
 
 m <- as.matrix( df )

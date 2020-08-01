@@ -1,5 +1,5 @@
-#ifndef R_SFHEADERS_LIST_COLLAPSE_H
-#define R_SFHEADERS_LIST_COLLAPSE_H
+#ifndef R_GEOMETRIES_LIST_COLLAPSE_H
+#define R_GEOMETRIES_LIST_COLLAPSE_H
 
 #include <Rcpp.h>
 #include "geometries/utils/lists/utils.hpp"

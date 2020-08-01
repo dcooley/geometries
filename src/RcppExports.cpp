@@ -228,6 +228,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// test_column_check
+void test_column_check(SEXP x, SEXP cols);
+RcppExport SEXP _geometries_test_column_check(SEXP xSEXP, SEXP colsSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type cols(colsSEXP);
+    test_column_check(x, cols);
+    return R_NilValue;
+END_RCPP
+}
 // test_other_columns_impl
 SEXP test_other_columns_impl();
 RcppExport SEXP _geometries_test_other_columns_impl() {
@@ -285,6 +296,28 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
     Rcpp::traits::input_parameter< SEXP >::type id_col(id_colSEXP);
     rcpp_result_gen = Rcpp::wrap(test_unique_ids(x, id_col));
+    return rcpp_result_gen;
+END_RCPP
+}
+// test_unique_sort
+SEXP test_unique_sort(SEXP x);
+RcppExport SEXP _geometries_test_unique_sort(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_unique_sort(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// test_as_list
+SEXP test_as_list(SEXP x);
+RcppExport SEXP _geometries_test_as_list(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_as_list(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -367,11 +400,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_test_sexp_n_col", (DL_FUNC) &_geometries_test_sexp_n_col, 1},
     {"_geometries_test_sexp_n_row", (DL_FUNC) &_geometries_test_sexp_n_row, 1},
     {"_geometries_test_sexp_length", (DL_FUNC) &_geometries_test_sexp_length, 1},
+    {"_geometries_test_column_check", (DL_FUNC) &_geometries_test_column_check, 2},
     {"_geometries_test_other_columns_impl", (DL_FUNC) &_geometries_test_other_columns_impl, 0},
     {"_geometries_test_other_columns", (DL_FUNC) &_geometries_test_other_columns, 3},
     {"_geometries_test_column_positions", (DL_FUNC) &_geometries_test_column_positions, 2},
     {"_geometries_test_make_dataframe", (DL_FUNC) &_geometries_test_make_dataframe, 3},
     {"_geometries_test_unique_ids", (DL_FUNC) &_geometries_test_unique_ids, 2},
+    {"_geometries_test_unique_sort", (DL_FUNC) &_geometries_test_unique_sort, 1},
+    {"_geometries_test_as_list", (DL_FUNC) &_geometries_test_as_list, 1},
     {"_geometries_tests", (DL_FUNC) &_geometries_tests, 0},
     {"_geometries_rcpp_concatenate_vectors", (DL_FUNC) &_geometries_rcpp_concatenate_vectors, 2},
     {"_geometries_rcpp_column_positions", (DL_FUNC) &_geometries_rcpp_column_positions, 2},

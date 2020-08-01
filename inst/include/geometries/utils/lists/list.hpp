@@ -1,5 +1,5 @@
-#ifndef R_SFHEADERS_LIST_H
-#define R_SFHEADERS_LIST_H
+#ifndef R_GEOMETRIES_LIST_H
+#define R_GEOMETRIES_LIST_H
 
 // adapted from colourvalues
 

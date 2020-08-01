@@ -25,7 +25,7 @@ namespace utils {
     if( TYPEOF( cols ) == INTSXP ) {
       Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( cols );
       int m = Rcpp::max( iv );
-      if( m > ( n_col - 1 ) ) {
+      if( m > ( n_col - 1 ) || m < 0 ) {
         Rcpp::stop("geometries - invalid geometry column index");
       }
     }

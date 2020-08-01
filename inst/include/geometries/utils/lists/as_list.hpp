@@ -62,7 +62,7 @@ namespace utils {
         return Rcpp::as< Rcpp::List >( x );
       }
       default: {
-        Rcpp::stop("sfheaders - unknown object type for converting to list");
+        Rcpp::stop("geometries - unknown object type for converting to list");
       }
     }
     return Rcpp::List::create(); // never reaches

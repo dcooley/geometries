@@ -201,6 +201,11 @@ Rcpp::List test_sexp() {
 // ----------------------------
 // columns.hpp
 
+// [[Rcpp::export(.test_column_check)]]
+void test_column_check( SEXP x, SEXP cols ) {
+  geometries::utils::column_check( x, cols );
+}
+
 // [[Rcpp::export]]
 SEXP test_other_columns_impl() {
 
@@ -280,6 +285,11 @@ SEXP test_unique_ids( SEXP x, SEXP id_col ) {
   return geometries::utils::get_ids( x, id_col );
 }
 
+//[[Rcpp::export(.test_unique_sort)]]
+SEXP test_unique_sort( SEXP x ) {
+  return geometries::utils::get_sexp_unique( x );
+}
+
 
 // ----------------------------
 // rleid.hpp
@@ -330,6 +340,11 @@ SEXP test_fill_list() {
 
 // ----------------------------
 // list.hpp
+
+//[[Rcpp::export(.test_as_list)]]
+SEXP test_as_list( SEXP x ) {
+  return geometries::utils::as_list( x );
+}
 
 SEXP test_list() {
   // test various objects converted to list

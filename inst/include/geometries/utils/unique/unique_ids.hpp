@@ -15,7 +15,7 @@ namespace utils {
   ) {
 
     R_xlen_t n_col = geometries::utils::sexp_n_col( x );
-    if( id_col < 0 || id_col > n_col ) {
+    if( id_col < 0 || id_col >= n_col ) {
       Rcpp::stop("geometries - column index out of range");
     }
 

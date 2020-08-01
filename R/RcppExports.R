@@ -77,6 +77,10 @@ tm <- function(x) {
     .Call(`_geometries_test_sexp_length`, x)
 }
 
+.test_column_check <- function(x, cols) {
+    invisible(.Call(`_geometries_test_column_check`, x, cols))
+}
+
 test_other_columns_impl <- function() {
     .Call(`_geometries_test_other_columns_impl`)
 }
@@ -95,6 +99,14 @@ test_other_columns_impl <- function() {
 
 .test_unique_ids <- function(x, id_col) {
     .Call(`_geometries_test_unique_ids`, x, id_col)
+}
+
+.test_unique_sort <- function(x) {
+    .Call(`_geometries_test_unique_sort`, x)
+}
+
+.test_as_list <- function(x) {
+    .Call(`_geometries_test_as_list`, x)
 }
 
 .tests <- function() {
