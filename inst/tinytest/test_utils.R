@@ -270,20 +270,20 @@ expect_error( geometries:::rcpp_where_is( "foo" , sv ), "geometries - could not 
 
 
 m <- matrix(1L:4L, ncol = 2)
-expect_equal( geometries:::rcpp_get_ids( m, 0 ), c(1L:2L) )
+expect_equal( geometries:::rcpp_get_ids( m, 0L ), c(1L:2L) )
 
 m <- matrix(c(1.2, 2,3,4), ncol = 2)
-expect_equal( geometries:::rcpp_get_ids( m, 0 ), c(1.2,2) )
+expect_equal( geometries:::rcpp_get_ids( m, 0L ), c(1.2,2) )
 
 m <- matrix(1L:4L, ncol = 2)
 df <- as.data.frame(m)
 m <- as.matrix(m)
-expect_equal( geometries:::rcpp_get_ids( m, 0 ), c(1L:2L) )
+expect_equal( geometries:::rcpp_get_ids( m, 0L ), c(1L:2L) )
 expect_equal( geometries:::rcpp_get_ids( m, "V1" ), c(1L:2L) )
 
 m <- matrix(c(1.2, 2,3,4), ncol = 2)
 df <- as.data.frame(m)
 m <- as.matrix(m)
-expect_equal( geometries:::rcpp_get_ids( m, 0 ), c(1.2,2) )
+expect_equal( geometries:::rcpp_get_ids( m, 0L ), c(1.2,2) )
 expect_equal( geometries:::rcpp_get_ids( m, "V1" ), c(1.2,2) )
 

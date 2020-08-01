@@ -4,6 +4,7 @@
 #include <Rcpp.h>
 
 #include "geometries/utils/unique/unique_sort.hpp"
+#include "geometries/utils/sexp/sexp.hpp"
 
 namespace geometries {
 namespace utils {
@@ -12,34 +13,40 @@ namespace utils {
       SEXP& x,
       int& id_col
   ) {
+
+    R_xlen_t n_col = geometries::utils::sexp_n_col( x );
+    if( id_col < 0 || id_col > n_col ) {
+      Rcpp::stop("geometries - column index out of range");
+    }
+
     switch( TYPEOF( x ) ) {
     case INTSXP: {
       if( Rf_isMatrix( x ) ) {
-      Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
-      Rcpp::IntegerVector ids = im( Rcpp::_, id_col );
-      SEXP unique_ids = geometries::utils::get_sexp_unique( ids );
-      return unique_ids;
-    }
+        Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( x );
+        Rcpp::IntegerVector ids = im( Rcpp::_, id_col );
+        SEXP unique_ids = geometries::utils::get_sexp_unique( ids );
+        return unique_ids;
+      }
     }
     case REALSXP: {
       if( Rf_isMatrix( x ) ) {
-      Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
-      Rcpp::NumericVector ids = nm( Rcpp::_, id_col );
-      SEXP unique_ids = geometries::utils::get_sexp_unique( ids );
-      return unique_ids;
-    }
+        Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( x );
+        Rcpp::NumericVector ids = nm( Rcpp::_, id_col );
+        SEXP unique_ids = geometries::utils::get_sexp_unique( ids );
+        return unique_ids;
+      }
     }
     case VECSXP: {
       if( Rf_inherits( x, "data.frame") ) {
-      Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
-      SEXP ids = df[ id_col ];
-      SEXP unique_ids = geometries::utils::get_sexp_unique( ids );
-      return unique_ids;
+        Rcpp::DataFrame df = Rcpp::as< Rcpp::DataFrame >( x );
+        SEXP ids = df[ id_col ];
+        SEXP unique_ids = geometries::utils::get_sexp_unique( ids );
+        return unique_ids;
+      }
     }
-    }
-    default: {
-      Rcpp::stop("geometries - could not get id column");
-    }
+      default: {
+        Rcpp::stop("geometries - could not get id column");
+      }
     }
     return Rcpp::List::create();
   }
@@ -88,6 +95,8 @@ namespace utils {
     return unique_ids;
   }
 
+  // Returns the unique of the id column
+  // if the column is null, 1L is returned
   inline SEXP get_ids(
       SEXP& x,
       SEXP& id_col
@@ -101,7 +110,7 @@ namespace utils {
     }
 
     switch( TYPEOF( id_col ) ) {
-    case REALSXP: {}
+    // case REALSXP: {}
     case INTSXP: {
       Rcpp::IntegerVector iv_id_col = Rcpp::as< Rcpp::IntegerVector >( id_col );
       int i_id_col = iv_id_col[0];

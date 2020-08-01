@@ -93,6 +93,10 @@ test_other_columns_impl <- function() {
     .Call(`_geometries_test_make_dataframe`, lst, n_rows, col_names)
 }
 
+.test_unique_ids <- function(x, id_col) {
+    .Call(`_geometries_test_unique_ids`, x, id_col)
+}
+
 .tests <- function() {
     .Call(`_geometries_tests`)
 }

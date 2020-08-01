@@ -9,6 +9,7 @@
 #include "geometries/utils/lists/as_list.hpp"
 #include "geometries/utils/lists/fill.hpp"
 #include "geometries/utils/dataframe/dataframe.hpp"
+#include "geometries/utils/unique/unique_ids.hpp"
 #include "geometries/coordinates/coordinates_impl.hpp"
 
 // ----------------------------
@@ -269,6 +270,14 @@ SEXP test_column_positions( SEXP x, Rcpp::StringVector cols ) {
 //[[Rcpp::export(.test_make_dataframe)]]
 SEXP test_make_dataframe( Rcpp::List lst, R_xlen_t n_rows, Rcpp::CharacterVector col_names ) {
   return geometries::utils::make_dataframe( lst, n_rows, col_names );
+}
+
+// ----------------------------
+// unique.hpp
+
+//[[Rcpp::export(.test_unique_ids)]]
+SEXP test_unique_ids( SEXP x, SEXP id_col ) {
+  return geometries::utils::get_ids( x, id_col );
 }
 
 
