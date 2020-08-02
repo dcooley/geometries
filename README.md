@@ -47,7 +47,13 @@ Take for example, the
 [LinkingTo](https://github.com/dcooley/geometries/blob/master/DESCRIPTION#L17)
 section in the DESCRIPTION field of this package
 
-![](./docs/articles/images/LinkingTo.png)
+``` yaml
+SystemRequirements: C++11
+LinkingTo: 
+    Rcpp
+Imports:
+    Rcpp
+```
 
 This tells the compiler I want to link to Rcpp’s. Which means I can use
 all the [Rcpp
