@@ -8,8 +8,9 @@
 ^LICENSE\.md$
 ^vignettes/bbox.Rmd
 ^vignettes/coordinates.Rmd
-^vignettes/geometries.Rmd
 ^vignettes/shapes.Rmd
 ^vignettes/utils.Rmd
 ^codecov\.yml$
 ^CRAN-RELEASE$
+^doc$
+^Meta$
