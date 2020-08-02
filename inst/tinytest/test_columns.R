@@ -14,7 +14,7 @@ expect_error( geometries:::.test_column_positions(df, 1L), "geometries - expecti
 m <- as.matrix( df )
 expect_equal( geometries:::.test_column_positions( m, c("x","y") ), c(0L, 1L) )
 expect_equal( geometries:::.test_column_positions( m, c("y", "x") ), c(1L, 0L) )
-expect_error( geometries:::.test_column_positions( m, c("x","z") ), "geometries - could not find column" )
+expect_equal( geometries:::.test_column_positions( m, c("x","z") ), c(0L, -1L) )
 
 
 expect_equal( geometries:::.test_other_columns( df, NULL, NULL ), c(0,1) )

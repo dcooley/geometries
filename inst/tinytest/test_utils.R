@@ -266,7 +266,7 @@ expect_equal( geometries:::rcpp_column_positions( m, c("a","b") ), c(0,1) )
 sv <- c("hello", "world")
 expect_equal( geometries:::rcpp_where_is( "hello" , sv ), 0L )
 expect_equal( geometries:::rcpp_where_is( "world" , sv ), 1L )
-expect_error( geometries:::rcpp_where_is( "foo" , sv ), "geometries - could not find column" )
+expect_equal( geometries:::rcpp_where_is( "foo" , sv ), -1L )
 
 
 m <- matrix(1L:4L, ncol = 2)

@@ -8,6 +8,14 @@
 namespace geometries {
 namespace utils {
 
+  /*
+   * Finds the position of values in a vector
+   * -------
+   * CAUTION
+   * if no position is found it returns -1, which will need to be handled
+   * by the calling function so you don't try and subset using -1 as the index
+   * -------
+   */
   inline int where_is(
       int to_find,
       Rcpp::IntegerVector& iv ) {
@@ -18,7 +26,7 @@ namespace utils {
         return i;
       }
     }
-    Rcpp::stop("geometries - could not find column");
+    //Rcpp::stop("geometries - could not find column");
     return -1; // #nocov
   }
 
@@ -32,7 +40,7 @@ namespace utils {
         return i;
       }
     }
-    Rcpp::stop("geometries - could not find column");
+    //Rcpp::stop("geometries - could not find column");
     return -1; // #nocov
   }
 
