@@ -9,6 +9,8 @@
 #' @param class_attributes class attributes to assign to each geometry
 #' @param close logical stating if the last row must equal the first row of each geometry
 #'
+#' @return A list of matrices representing the input object, split by the id column(s).
+#'
 #' @examples
 #'
 #' df <- data.frame(

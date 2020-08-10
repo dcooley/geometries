@@ -23,6 +23,9 @@ gm_geometries(
 
 \item{close}{logical stating if the last row must equal the first row of each geometry}
 }
+\value{
+A list of matrices representing the input object, split by the id column(s).
+}
 \description{
 Converts a data.frame into a collection of geometries.
 }
