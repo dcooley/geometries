@@ -60,4 +60,3 @@ all the [Rcpp
 code](https://github.com/RcppCore/Rcpp/tree/master/inst/include/Rcpp) by
 including whichever header file I want.
 
-## What sort of things can I do with this package?
