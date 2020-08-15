@@ -13,6 +13,8 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+
+library(geometries)
 ```
 
 # geometries
@@ -41,6 +43,44 @@ But constructing these can sometimes be a bit fiddly.
 
 So my **goal** of this package is to take away the pain of building **shapes**. I want to accept **any** base R data object and convert it into the required **shape**
 
+## Some Examples
+
+Take a `data.frame`
+
+```{r}
+df <- data.frame(
+  id = c(1,1,1,1,1,2,2,2,2,2)
+  , x = 1:10
+  , y = 10:1
+)
+df
+```
+
+You can make two "LINE"* objects by splitting this into a list of matrices
+
+```{r}
+gm_geometries(
+  obj = df
+  , geometry_cols = c("x","y")
+  , id_cols = c("id")
+)
+```
+
+*I've put "LINE" in quotes because this doesn't _have_ to be called a LINE, it's just that a LINE is typically represented by a matrix in R.
+
+And if you send it a `class_attribute`, you can make it into whatever type of object you want
+
+```{r}
+gm_geometries(
+  obj = df
+  , geometry_cols = c("x","y")
+  , id_cols = c("id")
+  , class_attributes = list(class = "my_new_shape", other = "really_awesome_shape")
+)
+
+```
+
+
 And I'm building it as an **interface** package. That is, it's all being written in C++ header files, so you can link to these header files from your own package.
 
 ## What do you mean, 'link to'?
@@ -58,9 +98,6 @@ Imports:
 ```
 
 This tells the compiler I want to link to Rcpp's. Which means I can use all the [Rcpp code](https://github.com/RcppCore/Rcpp/tree/master/inst/include/Rcpp) by including whichever header file I want.
-
-
-## What sort of things can I do with this package?
 
 
 
