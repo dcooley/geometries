@@ -7,7 +7,7 @@ namespace geometries {
 namespace coordinates {
 
   /*
-   * Count Coordinates
+   * Dimensions
    *
    * counts the number of coordinates in a single geometry
    * If the input is a List, it returns the total number of coordinates
@@ -28,40 +28,40 @@ namespace coordinates {
     // and not the cumulative
 
     switch( TYPEOF( geom ) ) {
-    case INTSXP: {}
-    case REALSXP: {
-      rtype = TYPEOF( geom );
-      if( !Rf_isMatrix( geom ) ) {
-        // it's a vector, right?
-        geom_count += 1;
-        geom_dimension = geometries::utils::sexp_length( geom );
-      } else {
-        geom_count += geometries::utils::sexp_n_row( geom );
-        geom_dimension = geometries::utils::sexp_n_col( geom );
-      }
-    break;
-    }
-    case VECSXP: {
-      if( Rf_inherits( geom, "data.frame" ) ) {
-      Rcpp::stop("geometries - unsupported coordinate type");
-    }
-      Rcpp::List lst = Rcpp::as< Rcpp::List >( geom );
-      //if (lst.size() == 0 ) {
-      //return 0; // ?
-      //}
-      R_xlen_t n = lst.size();
-      R_xlen_t i;
-      nest += 1;
-      Rcpp::IntegerVector res( n );
-      for( i = 0; i < n; ++i ) {
-        SEXP tmp_geom = lst[i];
-        geometry_dimension( tmp_geom, geom_count, geom_dimension, nest, max_dimension, max_nest, rtype );  // recurse
-      }
+      case INTSXP: {}
+      case REALSXP: {
+        rtype = TYPEOF( geom );
+        if( !Rf_isMatrix( geom ) ) {
+          // it's a vector, right?
+          geom_count += 1;
+          geom_dimension = geometries::utils::sexp_length( geom );
+        } else {
+          geom_count += geometries::utils::sexp_n_row( geom );
+          geom_dimension = geometries::utils::sexp_n_col( geom );
+        }
       break;
-    }
-    default: {
-      Rcpp::stop("geometries - unsupported coordinate type");
-    }
+      }
+      case VECSXP: {
+        if( Rf_inherits( geom, "data.frame" ) ) {
+        Rcpp::stop("geometries - unsupported coordinate type");
+      }
+        Rcpp::List lst = Rcpp::as< Rcpp::List >( geom );
+        //if (lst.size() == 0 ) {
+        //return 0; // ?
+        //}
+        R_xlen_t n = lst.size();
+        R_xlen_t i;
+        nest += 1;
+        Rcpp::IntegerVector res( n );
+        for( i = 0; i < n; ++i ) {
+          SEXP tmp_geom = lst[i];
+          geometry_dimension( tmp_geom, geom_count, geom_dimension, nest, max_dimension, max_nest, rtype );  // recurse
+        }
+        break;
+      }
+      default: {
+        Rcpp::stop("geometries - unsupported coordinate type");
+      }
     }
 
     max_dimension = geom_dimension > max_dimension ? geom_dimension : max_dimension;

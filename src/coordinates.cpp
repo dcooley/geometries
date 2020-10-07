@@ -11,8 +11,6 @@ SEXP rcpp_geometry_dimensions( SEXP geometries ) {
  * Returns the coordinates of a single geometry
  */
 // [[Rcpp::export]]
-SEXP rcpp_coordinates(
-    SEXP& geometries
-) {
+SEXP rcpp_coordinates( SEXP& geometries ) {
   return geometries::coordinates::coordinates_impl( geometries );
 }
