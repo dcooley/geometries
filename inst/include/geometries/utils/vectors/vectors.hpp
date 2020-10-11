@@ -16,9 +16,7 @@ namespace utils {
    * by the calling function so you don't try and subset using -1 as the index
    * -------
    */
-  inline int where_is(
-      int to_find,
-      Rcpp::IntegerVector& iv ) {
+  inline int where_is( int to_find, Rcpp::IntegerVector& iv ) {
     int n = iv.size();
     int i;
     for( i = 0; i < n; ++i ) {
