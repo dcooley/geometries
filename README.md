@@ -8,7 +8,7 @@ status](https://github.com/dcooley/geometries/workflows/R-CMD-check/badge.svg)](
 [![Codecov test
 coverage](https://codecov.io/gh/dcooley/geometries/branch/master/graph/badge.svg)](https://codecov.io/gh/dcooley/geometries?branch=master)
 
-Have you every wanted to generate geometric structures from data.frames,
+Have you ever wanted to generate geometric structures from data.frames,
 but independent of any R classes, attributes or libraries?
 
 No? Ok, this library isn’t for you.
