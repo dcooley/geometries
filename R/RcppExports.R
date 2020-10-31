@@ -13,6 +13,10 @@ rcpp_other_columns <- function(x, id_cols, id_col2, id_col3) {
     .Call(`_geometries_rcpp_other_columns`, x, id_cols, id_col2, id_col3)
 }
 
+rcpp_column_positions <- function(x, cols) {
+    .Call(`_geometries_rcpp_column_positions`, x, cols)
+}
+
 rcpp_geometry_dimensions <- function(geometries) {
     .Call(`_geometries_rcpp_geometry_dimensions`, geometries)
 }
@@ -115,10 +119,6 @@ test_other_columns_impl <- function() {
 
 rcpp_concatenate_vectors <- function(vec_1, vec_2) {
     .Call(`_geometries_rcpp_concatenate_vectors`, vec_1, vec_2)
-}
-
-rcpp_column_positions <- function(m, cols) {
-    .Call(`_geometries_rcpp_column_positions`, m, cols)
 }
 
 rcpp_where_is <- function(to_find, sv) {

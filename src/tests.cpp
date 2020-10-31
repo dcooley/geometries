@@ -265,8 +265,13 @@ SEXP test_other_columns( SEXP x, SEXP y, SEXP z ) {
   return geometries::utils::other_columns( x, y, z );
 }
 
-//[[Rcpp::export(.test_column_positions)]]
-SEXP test_column_positions( SEXP x, Rcpp::StringVector cols ) {
+// //[[Rcpp::export(.test_column_positions)]]
+// SEXP test_column_positions( SEXP x, Rcpp::StringVector cols ) {
+//   return geometries::utils::column_positions( x, cols );
+// }
+
+// [[Rcpp::export(.test_column_positions)]]
+SEXP test_column_positions( SEXP x, SEXP cols ) {
   return geometries::utils::column_positions( x, cols );
 }
 

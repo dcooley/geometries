@@ -242,29 +242,13 @@ namespace utils {
 
   }
 
+  template < int RTYPE >
   inline SEXP column_positions(
-      Rcpp::NumericMatrix& nm,
+      Rcpp::Matrix< RTYPE >& m,
       Rcpp::StringVector& cols
   ) {
 
-    Rcpp::StringVector m_names = geometries::utils::sexp_col_names( nm );
-    R_xlen_t n_col = cols.size();
-
-    Rcpp::IntegerVector iv( n_col );
-    R_xlen_t i;
-    for( i = 0; i < n_col; ++i ) {
-      Rcpp::String this_col = cols[i];
-      iv[ i ] = geometries::utils::where_is( this_col, m_names );
-    }
-    return iv;
-  }
-
-  inline SEXP column_positions(
-      Rcpp::IntegerMatrix& im,
-      Rcpp::StringVector& cols
-  ) {
-
-    Rcpp::StringVector m_names = geometries::utils::sexp_col_names( im );
+    Rcpp::StringVector m_names = geometries::utils::sexp_col_names( m );
     R_xlen_t n_col = cols.size();
 
     Rcpp::IntegerVector iv( n_col );
@@ -281,9 +265,9 @@ namespace utils {
     Rcpp::StringVector& cols
   ) {
 
-    if( !Rf_isMatrix( x ) ) {
-      Rcpp::stop("geometries - expecting matrix when finding column positions");
-    }
+    // if( !Rf_isMatrix( x ) ) {
+    //   Rcpp::stop("geometries - expecting matrix when finding column positions");
+    // }
 
     Rcpp::StringVector m_names = geometries::utils::sexp_col_names( x );
     R_xlen_t n_col = cols.size();
@@ -296,6 +280,29 @@ namespace utils {
     }
     return iv;
   }
+
+  inline SEXP column_positions(
+    SEXP& x,
+    SEXP& cols
+  ) {
+
+    if( !Rf_isVector( cols ) ) {
+      Rcpp::stop("geometries - column indexes need to be a vector");
+    }
+
+    switch( TYPEOF( cols ) ) {
+      case STRSXP: {
+        Rcpp::StringVector sv = Rcpp::as< Rcpp::StringVector >( cols );
+        return column_positions( x, sv );
+      }
+      default: {
+        Rcpp::stop("geometries - expecting string vector of column names when finding column positions");
+      }
+    }
+    return Rcpp::List::create();
+  }
+
+
 
 } // utils
 } // geometries

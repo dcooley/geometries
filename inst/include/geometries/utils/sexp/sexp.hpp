@@ -21,9 +21,14 @@ namespace utils {
   }
 
   template< int RTYPE >
-  inline Rcpp::StringVector sexp_col_names( Rcpp::Matrix< RTYPE > mat ) {
+  inline Rcpp::StringVector sexp_col_names( Rcpp::Matrix< RTYPE >& mat ) {
     return colnames( mat );
   }
+
+  // covered by name_attributes
+  // inline Rcpp::StringVector sexp_col_names( Rcpp::DataFrame& df ) {
+  //   return df.names();
+  // }
 
   inline Rcpp::StringVector sexp_col_names( SEXP& x ) {
     if( Rf_isMatrix( x ) ) {

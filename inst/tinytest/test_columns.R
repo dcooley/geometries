@@ -9,12 +9,15 @@ expect_error( geometries:::.test_column_check( 1L, -1L ), "geometries - invalid 
 
 
 df <- data.frame(x = 1:5, y = 1:5)
-expect_error( geometries:::.test_column_positions(df, 1L), "geometries - expecting matrix when finding column positions")
+expect_error( geometries:::.test_column_positions(df, 1L), "geometries - expecting string vector of column names when finding column positions")
+expect_equal( geometries:::.test_column_positions(df, "x"), 0L )
+expect_equal( geometries:::.test_column_positions(df, c("y","x")), c(1L, 0L) )
 
 m <- as.matrix( df )
 expect_equal( geometries:::.test_column_positions( m, c("x","y") ), c(0L, 1L) )
 expect_equal( geometries:::.test_column_positions( m, c("y", "x") ), c(1L, 0L) )
 expect_equal( geometries:::.test_column_positions( m, c("x","z") ), c(0L, -1L) )
+expect_error( geometries:::.test_column_positions( m, c(0L, 1L) ), "geometries - expecting string vector of column names when finding column positions" )
 
 
 expect_equal( geometries:::.test_other_columns( df, NULL, NULL ), c(0,1) )
