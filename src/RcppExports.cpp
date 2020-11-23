@@ -77,8 +77,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // rcpp_make_geometries
-SEXP rcpp_make_geometries(SEXP x, SEXP id_cols, SEXP geometry_cols, Rcpp::List attributes, bool close);
-RcppExport SEXP _geometries_rcpp_make_geometries(SEXP xSEXP, SEXP id_colsSEXP, SEXP geometry_colsSEXP, SEXP attributesSEXP, SEXP closeSEXP) {
+SEXP rcpp_make_geometries(SEXP x, SEXP id_cols, SEXP geometry_cols, Rcpp::List attributes, bool close, bool closed_attribute);
+RcppExport SEXP _geometries_rcpp_make_geometries(SEXP xSEXP, SEXP id_colsSEXP, SEXP geometry_colsSEXP, SEXP attributesSEXP, SEXP closeSEXP, SEXP closed_attributeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -87,7 +87,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< SEXP >::type geometry_cols(geometry_colsSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type attributes(attributesSEXP);
     Rcpp::traits::input_parameter< bool >::type close(closeSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_make_geometries(x, id_cols, geometry_cols, attributes, close));
+    Rcpp::traits::input_parameter< bool >::type closed_attribute(closed_attributeSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_make_geometries(x, id_cols, geometry_cols, attributes, close, closed_attribute));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -387,7 +388,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_column_positions", (DL_FUNC) &_geometries_rcpp_column_positions, 2},
     {"_geometries_rcpp_geometry_dimensions", (DL_FUNC) &_geometries_rcpp_geometry_dimensions, 1},
     {"_geometries_rcpp_coordinates", (DL_FUNC) &_geometries_rcpp_coordinates, 1},
-    {"_geometries_rcpp_make_geometries", (DL_FUNC) &_geometries_rcpp_make_geometries, 5},
+    {"_geometries_rcpp_make_geometries", (DL_FUNC) &_geometries_rcpp_make_geometries, 6},
     {"_geometries_rcpp_id_positions", (DL_FUNC) &_geometries_rcpp_id_positions, 2},
     {"_geometries_rcpp_rleid", (DL_FUNC) &_geometries_rcpp_rleid, 2},
     {"_geometries_rcpp_rleid_indices", (DL_FUNC) &_geometries_rcpp_rleid_indices, 1},

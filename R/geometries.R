@@ -8,6 +8,8 @@
 #' @param geometry_cols vector of geometry columns (either integer or string)
 #' @param class_attributes class attributes to assign to each geometry
 #' @param close logical stating if the last row must equal the first row of each geometry
+#' @param closed_attribute logical, if true a 'has_been_closed' attribute is added to each
+#' matrix that has been closed.
 #'
 #' @return A list of matrices representing the input object, split by the id column(s).
 #'
@@ -80,10 +82,10 @@
 #'
 #'
 #' @export
-gm_geometries <- function( obj, id_cols, geometry_cols, class_attributes = list(), close = FALSE ) {
+gm_geometries <- function( obj, id_cols, geometry_cols, class_attributes = list(), close = FALSE, closed_attribute = FALSE ) {
   id_cols <- index_correct( obj, id_cols )
   geometry_cols <- index_correct( obj, geometry_cols )
-  return( rcpp_make_geometries( obj, id_cols, geometry_cols, class_attributes, close ) )
+  return( rcpp_make_geometries( obj, id_cols, geometry_cols, class_attributes, close, closed_attribute ) )
 }
 
 

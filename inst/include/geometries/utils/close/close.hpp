@@ -12,11 +12,10 @@ namespace utils {
     }
   }
 
-  template < int RTYPE >
-  inline Rcpp::Matrix< RTYPE > close_matrix(
-      Rcpp::Matrix< RTYPE >& mat
+  template< int RTYPE >
+  inline bool matrix_is_closed(
+    Rcpp::Matrix< RTYPE >& mat
   ) {
-
     R_xlen_t n_row = mat.nrow();
     R_xlen_t n_col = mat.ncol();
     R_xlen_t i;
@@ -32,8 +31,20 @@ namespace utils {
         break;
       }
     }
+    return is_closed;
+  }
+
+  template < int RTYPE >
+  inline Rcpp::Matrix< RTYPE > close_matrix(
+    Rcpp::Matrix< RTYPE >& mat,
+    bool& is_closed
+  ) {
+    R_xlen_t n_row = mat.nrow();
+    R_xlen_t n_col = mat.ncol();
+    R_xlen_t i;
 
     if( !is_closed ) {
+      Rcpp::Vector< RTYPE > first_row = mat( 0, Rcpp::_ );
       Rcpp::Matrix< RTYPE > mat2( n_row + 1, n_col );
       for( i = 0; i < n_col; ++i ) {
         Rcpp::Vector< RTYPE > nv( n_row + 1);
@@ -46,10 +57,17 @@ namespace utils {
       check_closed_rows( mat2.nrow() );
       return mat2;
     }
-
     // it is closed
     check_closed_rows( mat.nrow() );
     return mat;
+  }
+
+  template < int RTYPE >
+  inline Rcpp::Matrix< RTYPE > close_matrix(
+      Rcpp::Matrix< RTYPE >& mat
+  ) {
+    bool is_closed = matrix_is_closed( mat );
+    return close_matrix( mat, is_closed );
   }
 
   inline Rcpp::List close_matrix(

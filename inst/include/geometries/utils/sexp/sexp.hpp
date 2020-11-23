@@ -7,6 +7,22 @@
 namespace geometries{
 namespace utils {
 
+  inline R_xlen_t has_been_closed_attribute( SEXP& x ) {
+    Rcpp::StringVector attr(1);
+    attr[0] = "closed";
+    SEXP a = Rf_getAttrib( x, attr );
+    if( !Rf_isNull( a ) ) {
+      //Rcpp::Rcout << "a: " << a << std::endl;
+      Rcpp::StringVector sv = Rcpp::as< Rcpp::StringVector >( a );
+      //Rcpp::Rcout << "lgl: " << sv << std::endl;
+      Rcpp::String s = sv[0];
+      const char* cs = s.get_cstring();
+
+      return strcmp( cs, "has_been_closed" ) == 0 ? 1 : 0;
+    }
+    return 0;
+  }
+
   inline Rcpp::StringVector name_attributes( SEXP& x ) {
     //if( x.hasAttribute("names") ) {
       Rcpp::StringVector attr(1);

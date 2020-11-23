@@ -9,7 +9,8 @@ gm_geometries(
   id_cols,
   geometry_cols,
   class_attributes = list(),
-  close = FALSE
+  close = FALSE,
+  closed_attribute = FALSE
 )
 }
 \arguments{
@@ -22,6 +23,9 @@ gm_geometries(
 \item{class_attributes}{class attributes to assign to each geometry}
 
 \item{close}{logical stating if the last row must equal the first row of each geometry}
+
+\item{closed_attribute}{logical, if true a 'has_been_closed' attribute is added to each
+matrix that has been closed.}
 }
 \value{
 A list of matrices representing the input object, split by the id column(s).
