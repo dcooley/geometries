@@ -20,7 +20,6 @@ namespace coordinates {
       R_xlen_t& nest,
       R_xlen_t& max_dimension,
       R_xlen_t& max_nest,
-      R_xlen_t& number_of_closures,
       SEXPTYPE& rtype
   ) {
 
@@ -39,10 +38,6 @@ namespace coordinates {
         } else {
           geom_count += geometries::utils::sexp_n_row( geom );
           geom_dimension = geometries::utils::sexp_n_col( geom );
-
-          number_of_closures += geometries::utils::has_been_closed_attribute( geom );
-
-          //has_been_closed = geometries::utils::has_been_closed_attribute( geom );
         }
       break;
       }
@@ -60,7 +55,7 @@ namespace coordinates {
         Rcpp::IntegerVector res( n );
         for( i = 0; i < n; ++i ) {
           SEXP tmp_geom = lst[i];
-          geometry_dimension( tmp_geom, geom_count, geom_dimension, nest, max_dimension, max_nest, number_of_closures, rtype );  // recurse
+          geometry_dimension( tmp_geom, geom_count, geom_dimension, nest, max_dimension, max_nest, rtype );  // recurse
         }
         break;
       }
@@ -82,9 +77,8 @@ namespace coordinates {
     R_xlen_t nest = 1;
     R_xlen_t max_dimension = 0;
     R_xlen_t max_nest = 0;
-    R_xlen_t number_of_closures = 0;
     SEXPTYPE rtype;
-    geometry_dimension( geom, geom_count, dimension, nest, max_dimension, max_nest, number_of_closures, rtype );
+    geometry_dimension( geom, geom_count, dimension, nest, max_dimension, max_nest, rtype );
   }
 
   /*
@@ -107,7 +101,7 @@ namespace coordinates {
 
     R_xlen_t cumulative_coords = 0;
     R_xlen_t n = geometries.size();
-    Rcpp::IntegerMatrix res( n, 6 );
+    Rcpp::IntegerMatrix res( n, 5 );
     R_xlen_t i;
 
     R_xlen_t max_dimension = 0;
@@ -117,12 +111,11 @@ namespace coordinates {
       R_xlen_t geom_counter = 0;
       R_xlen_t geom_dimension = 0;
       R_xlen_t nest = 1;
-      R_xlen_t number_of_closures = 0;
       SEXPTYPE rtype;
       SEXP geom = geometries[i];
 
       geometries::coordinates::geometry_dimension(
-        geom, geom_counter, geom_dimension, nest, max_dimension, max_nest, number_of_closures, rtype
+        geom, geom_counter, geom_dimension, nest, max_dimension, max_nest, rtype
         );
 
       res( i, 0 ) = cumulative_coords;
@@ -131,7 +124,6 @@ namespace coordinates {
       res( i, 2 ) = geom_dimension;
       res( i, 3 ) = nest;
       res( i, 4 ) = rtype;
-      res( i, 5 ) = number_of_closures;
     }
 
     //return res;
@@ -158,18 +150,16 @@ namespace coordinates {
   ) {
 
     if( Rf_isMatrix( geometries ) ) {
-      Rcpp::IntegerMatrix im(1, 6); // initialise a (0,0) matrix
+      Rcpp::IntegerMatrix im(1, 5); // initialise a (0,0) matrix
       // one row, because it's only one geometry
       // column '0' will start with 0, so no need to fill it
       R_xlen_t max_nest = 0;
       R_xlen_t max_dimension = geometries::utils::sexp_n_col( geometries );
-      R_xlen_t number_of_closures = geometries::utils::has_been_closed_attribute( geometries );
 
       im(0, 1) = geometries::utils::sexp_n_row( geometries ) - 1;
       im(0, 2) = max_dimension;
       im(0, 3) = max_nest; // level of nesting (a matrix is not nested in a list)
       im(0, 4) = TYPEOF( geometries );
-      im(0, 5) = number_of_closures;
 
       return Rcpp::List::create(
         Rcpp::_["dimensions"] = im,
@@ -184,16 +174,14 @@ namespace coordinates {
 
     } else if ( TYPEOF( geometries ) == INTSXP || TYPEOF( geometries ) == REALSXP ) {
       // vectors - start and end at the same place
-      Rcpp::IntegerMatrix im(1, 6); // initialise (0,0) matrix
+      Rcpp::IntegerMatrix im(1, 5); // initialise (0,0) matrix
 
       R_xlen_t max_nest = 0;
       R_xlen_t max_dimension = geometries::utils::sexp_length( geometries );
-      R_xlen_t number_of_closures = geometries::utils::has_been_closed_attribute( geometries );
 
       im(0, 2) = max_dimension;
       im(0, 3) = max_nest;
       im(0, 4) = TYPEOF( geometries );
-      im(0, 5) = number_of_closures;
 
       return Rcpp::List::create(
         Rcpp::_["dimensions"] = im,

@@ -4,7 +4,7 @@
 x <- 1L:3L
 res <- geometries:::gm_dimensions( x )
 
-expect_true( ncol(res$dimensions) == 6)
+expect_true( ncol(res$dimensions) == 5)
 expect_true( all(names(res) == c("dimensions", "max_dimension","max_nest")))
 
 dims <- res$dimensions
@@ -13,7 +13,6 @@ expect_true( dims[1,2] == 0 ) ## vector only has 1 row
 expect_true( dims[1,3] == 3 ) ## dimension (3 values in a coordinate)
 expect_true( dims[1,4] == 0 ) ## nest - a vector is not nested in a list
 expect_true( dims[1,5] == 13 ) ## integer
-expect_true( dims[1,6] == 0 )
 
 l <- list( x )
 res <- geometries:::gm_dimensions( l )
@@ -24,7 +23,6 @@ expect_true( dims[1,2] == 0 ) ## vector only has 1 row
 expect_true( dims[1,3] == 3 ) ## dimension (3 values in a coordinate)
 expect_true( dims[1,4] == 1 ) ## nest - inside a list
 expect_true( dims[1,5] == 13 ) ## integer
-expect_true( dims[1,6] == 0 )
 
 m <- matrix(1:6, ncol = 2)
 res <- geometries:::gm_dimensions( m )
@@ -35,7 +33,6 @@ expect_true( dims[1,2] == 2 )
 expect_true( dims[1,3] == 2 ) ## dimension (3 values in a coordinate)
 expect_true( dims[1,4] == 0 ) ## nest - inside a list
 expect_true( dims[1,5] == 13 ) ## integer
-expect_true( dims[1,6] == 0 )
 
 l <- list(
   1:3 ## point XYZ
@@ -133,44 +130,6 @@ expect_equal(
 ## ID index starts at 1
 expect_true( all( res[1:2, 1] == c(1,1) ) )
 
-
-
-## has_been_closed on individual geometries
-m <- matrix(1:6, ncol = 3)
-attr( m, "closed") = "has_been_closed"
-l <- list(
-  1:3 ## point XYZ
-  , matrix(1:6, ncol = 2)
-  , list(
-    m
-  )
-  , matrix(1:8, ncol = 4) ## line XYZM
-)
-
-res <- geometries:::gm_dimensions( l )
-expect_true( res$dimensions[1, 6] == 0 )
-expect_true( res$dimensions[2, 6] == 0 )
-expect_true( res$dimensions[3, 6] == 1 )   ## the 3rd matrix has the 'closed' attribute
-expect_true( res$dimensions[4, 6] == 0 )
-
-## has_been_closed correctly 'counted' for sfc-type objects
-## (i.e., our list is a list of sfg objects)
-m <- matrix(1:6, ncol = 3)
-
-attr( m, "closed") = "has_been_closed"
-l <- list(
-  1:3 ## point XYZ
-  , matrix(1:6, ncol = 2)
-  , list(
-    m
-  )
-  , m
-)
-
-res <- geometries:::gm_dimensions( list( l ) )
-expect_true( res$dimensions[1, 6] == 2 ) ## 2 of the sfg's have_been_closed
-
-
 df <- data.frame(
   multi_id = c(1,1,1,1, 1,1,1,1,1, 1,1,1,1)
   , poly_id = c(1,1,1,1, 1,1,1,1,1, 2,2,2,2)
@@ -180,33 +139,6 @@ df <- data.frame(
   , z = c(1,2,2,2, 2,3,3,3,2, 3,2,2,3)
   #, prop = letters[1:13]
 )
-
-## multipolygon structure
-m1 <- as.matrix(
-  df[ df$line_id == 1 & df$poly_id == 1, c("x","y","z")]
-)
-
-m2 <- as.matrix(
-  df[ df$line_id == 2 & df$poly_id == 1, c("x","y","z")]
-)
-
-m3 <- as.matrix(
-  df[ df$line_id == 1 & df$poly_id == 2, c("x","y","z")]
-)
-
-m1 <- unname( m1 )
-m2 <- unname( m2 )
-m3 <- unname( m3 )
-
-l <- list(
-  list( list(m1, m2), list(m3) )
-)
-
-## just calling 'dimensions' on its own doesn't close
-## matrices. Closing can only happen when making geometries
-res <- geometries:::rcpp_geometry_dimensions( l )
-expect_true( nrow( res$dimensions ) == 1 )
-expect_true( res$dimensions[1, 6] == 0 ) ## i.e., no closures
 
 res <- geometries::gm_geometries(
   obj = df
@@ -226,5 +158,4 @@ expect_true( attr( res[[1]][[2]][[1]], "closed" ) == "has_been_closed" )
 ## Now we can return how many closures there have been
 dims <- geometries:::gm_dimensions( res )
 expect_true( nrow( dims$dimensions ) == 1 ) ## one sfg
-expect_true( dims$dimensions[1, 6] == 2 ) ## two closures
 
