@@ -41,6 +41,10 @@ rcpp_rleid_indices <- function(x) {
     .Call(`_geometries_rcpp_rleid_indices`, x)
 }
 
+rcpp_nest <- function(x, depth) {
+    .Call(`_geometries_rcpp_nest`, x, depth)
+}
+
 .test_attributes <- function(obj, attributes) {
     invisible(.Call(`_geometries_test_attributes`, obj, attributes))
 }
@@ -107,6 +111,10 @@ test_other_columns_impl <- function() {
 
 .test_unique_sort <- function(x) {
     .Call(`_geometries_test_unique_sort`, x)
+}
+
+.test_split_by_id <- function(lst, ids, geometry_cols, last, attributes, close, closed_attribute) {
+    .Call(`_geometries_test_split_by_id`, lst, ids, geometry_cols, last, attributes, close, closed_attribute)
 }
 
 .test_as_list <- function(x) {

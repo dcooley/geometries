@@ -10,8 +10,9 @@ namespace utils {
 
   //' Split By Id
   //'
-  //'
-  //' @param closed_attribute logical indicating if each matrix returned should
+  //' @param last bool indicates if the ids contain the outer-most id value. For example,
+  //' when making a polygon, last will indicate if the ids vector contains the polygon_id
+  //' @param closed_attribute bool indicating if each matrix returned should
   //' have a 'has_been_closed' attribute attached
   inline SEXP split_by_id(
       Rcpp::List& l,

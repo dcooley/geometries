@@ -127,6 +127,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rcpp_nest
+SEXP rcpp_nest(SEXP x, int depth);
+RcppExport SEXP _geometries_rcpp_nest(SEXP xSEXP, SEXP depthSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type depth(depthSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_nest(x, depth));
+    return rcpp_result_gen;
+END_RCPP
+}
 // test_attributes
 void test_attributes(SEXP& obj, Rcpp::List& attributes);
 RcppExport SEXP _geometries_test_attributes(SEXP objSEXP, SEXP attributesSEXP) {
@@ -323,6 +335,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// test_split_by_id
+SEXP test_split_by_id(Rcpp::List lst, Rcpp::IntegerVector ids, Rcpp::IntegerVector geometry_cols, bool last, Rcpp::List attributes, bool close, bool closed_attribute);
+RcppExport SEXP _geometries_test_split_by_id(SEXP lstSEXP, SEXP idsSEXP, SEXP geometry_colsSEXP, SEXP lastSEXP, SEXP attributesSEXP, SEXP closeSEXP, SEXP closed_attributeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type lst(lstSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type ids(idsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type geometry_cols(geometry_colsSEXP);
+    Rcpp::traits::input_parameter< bool >::type last(lastSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type attributes(attributesSEXP);
+    Rcpp::traits::input_parameter< bool >::type close(closeSEXP);
+    Rcpp::traits::input_parameter< bool >::type closed_attribute(closed_attributeSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_split_by_id(lst, ids, geometry_cols, last, attributes, close, closed_attribute));
+    return rcpp_result_gen;
+END_RCPP
+}
 // test_as_list
 SEXP test_as_list(SEXP x);
 RcppExport SEXP _geometries_test_as_list(SEXP xSEXP) {
@@ -392,6 +421,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_id_positions", (DL_FUNC) &_geometries_rcpp_id_positions, 2},
     {"_geometries_rcpp_rleid", (DL_FUNC) &_geometries_rcpp_rleid, 2},
     {"_geometries_rcpp_rleid_indices", (DL_FUNC) &_geometries_rcpp_rleid_indices, 1},
+    {"_geometries_rcpp_nest", (DL_FUNC) &_geometries_rcpp_nest, 2},
     {"_geometries_test_attributes", (DL_FUNC) &_geometries_test_attributes, 2},
     {"_geometries_test_to_geometry_matrix_cols", (DL_FUNC) &_geometries_test_to_geometry_matrix_cols, 2},
     {"_geometries_test_to_geometry_matrix_cols_names", (DL_FUNC) &_geometries_test_to_geometry_matrix_cols_names, 3},
@@ -409,6 +439,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_test_make_dataframe", (DL_FUNC) &_geometries_test_make_dataframe, 3},
     {"_geometries_test_unique_ids", (DL_FUNC) &_geometries_test_unique_ids, 2},
     {"_geometries_test_unique_sort", (DL_FUNC) &_geometries_test_unique_sort, 1},
+    {"_geometries_test_split_by_id", (DL_FUNC) &_geometries_test_split_by_id, 7},
     {"_geometries_test_as_list", (DL_FUNC) &_geometries_test_as_list, 1},
     {"_geometries_tests", (DL_FUNC) &_geometries_tests, 0},
     {"_geometries_rcpp_concatenate_vectors", (DL_FUNC) &_geometries_rcpp_concatenate_vectors, 2},

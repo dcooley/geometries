@@ -171,3 +171,60 @@ res <- geometries:::gm_dimensions( list( l ) )
 expect_true( res$dimensions[1, 6] == 2 ) ## 2 of the sfg's have_been_closed
 
 
+df <- data.frame(
+  multi_id = c(1,1,1,1, 1,1,1,1,1, 1,1,1,1)
+  , poly_id = c(1,1,1,1, 1,1,1,1,1, 2,2,2,2)
+  , line_id = c(1,1,1,1, 2,2,2,2,2, 1,1,1,1)
+  , x = c(0,0,1,1, 2,2,3,3,2, 10,10,12,12)
+  , y = c(0,1,1,0, 2,3,3,2,2, 10,12,12,10)
+  , z = c(1,2,2,2, 2,3,3,3,2, 3,2,2,3)
+  #, prop = letters[1:13]
+)
+
+## multipolygon structure
+m1 <- as.matrix(
+  df[ df$line_id == 1 & df$poly_id == 1, c("x","y","z")]
+)
+
+m2 <- as.matrix(
+  df[ df$line_id == 2 & df$poly_id == 1, c("x","y","z")]
+)
+
+m3 <- as.matrix(
+  df[ df$line_id == 1 & df$poly_id == 2, c("x","y","z")]
+)
+
+m1 <- unname( m1 )
+m2 <- unname( m2 )
+m3 <- unname( m3 )
+
+l <- list(
+  list( list(m1, m2), list(m3) )
+)
+
+## just calling 'dimensions' on its own doesn't close
+## matrices. Closing can only happen when making geometries
+res <- geometries:::rcpp_geometry_dimensions( l )
+expect_true( nrow( res$dimensions ) == 1 )
+expect_true( res$dimensions[1, 6] == 0 ) ## i.e., no closures
+
+res <- geometries::gm_geometries(
+  obj = df
+  , id_cols = c(1L,2L,3L)
+  , geometry_cols = c(4L,5L)
+  , class_attributes = NULL
+  , close = TRUE
+  , closed_attribute = TRUE
+)
+
+## Now they will be closed
+expect_true( length( res[[1]][[1]] ) == 2 )
+expect_true( attr( res[[1]][[1]][[1]], "closed" ) == "has_been_closed" )
+expect_true( is.null( attr( res[[1]][[1]][[2]], "closed") ) )
+expect_true( attr( res[[1]][[2]][[1]], "closed" ) == "has_been_closed" )
+
+## Now we can return how many closures there have been
+dims <- geometries:::gm_dimensions( res )
+expect_true( nrow( dims$dimensions ) == 1 ) ## one sfg
+expect_true( dims$dimensions[1, 6] == 2 ) ## two closures
+

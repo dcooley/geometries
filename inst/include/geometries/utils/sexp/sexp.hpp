@@ -12,9 +12,7 @@ namespace utils {
     attr[0] = "closed";
     SEXP a = Rf_getAttrib( x, attr );
     if( !Rf_isNull( a ) ) {
-      //Rcpp::Rcout << "a: " << a << std::endl;
       Rcpp::StringVector sv = Rcpp::as< Rcpp::StringVector >( a );
-      //Rcpp::Rcout << "lgl: " << sv << std::endl;
       Rcpp::String s = sv[0];
       const char* cs = s.get_cstring();
 
