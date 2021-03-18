@@ -286,7 +286,7 @@ namespace utils {
   inline void expand_vector(
       Rcpp::List& res,
       SEXP& v,
-      Rcpp::NumericVector& expanded_index,
+      Rcpp::IntegerVector& expanded_index,
       R_xlen_t& i
   ) {
 
