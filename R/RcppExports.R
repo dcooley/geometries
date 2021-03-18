@@ -13,6 +13,10 @@ rcpp_other_columns <- function(x, id_cols, id_col2, id_col3) {
     .Call(`_geometries_rcpp_other_columns`, x, id_cols, id_col2, id_col3)
 }
 
+rcpp_column_positions <- function(x, cols) {
+    .Call(`_geometries_rcpp_column_positions`, x, cols)
+}
+
 rcpp_geometry_dimensions <- function(geometries) {
     .Call(`_geometries_rcpp_geometry_dimensions`, geometries)
 }
@@ -21,8 +25,8 @@ rcpp_coordinates <- function(geometries) {
     .Call(`_geometries_rcpp_coordinates`, geometries)
 }
 
-rcpp_make_geometries <- function(x, id_cols, geometry_cols, attributes, close) {
-    .Call(`_geometries_rcpp_make_geometries`, x, id_cols, geometry_cols, attributes, close)
+rcpp_make_geometries <- function(x, id_cols, geometry_cols, attributes, close, closed_attribute) {
+    .Call(`_geometries_rcpp_make_geometries`, x, id_cols, geometry_cols, attributes, close, closed_attribute)
 }
 
 rcpp_id_positions <- function(x, i) {
@@ -35,6 +39,10 @@ rcpp_rleid <- function(df, ids) {
 
 rcpp_rleid_indices <- function(x) {
     .Call(`_geometries_rcpp_rleid_indices`, x)
+}
+
+rcpp_nest <- function(x, depth) {
+    .Call(`_geometries_rcpp_nest`, x, depth)
 }
 
 .test_attributes <- function(obj, attributes) {
@@ -105,6 +113,10 @@ test_other_columns_impl <- function() {
     .Call(`_geometries_test_unique_sort`, x)
 }
 
+.test_split_by_id <- function(lst, ids, geometry_cols, last, attributes, close, closed_attribute) {
+    .Call(`_geometries_test_split_by_id`, lst, ids, geometry_cols, last, attributes, close, closed_attribute)
+}
+
 .test_as_list <- function(x) {
     .Call(`_geometries_test_as_list`, x)
 }
@@ -115,10 +127,6 @@ test_other_columns_impl <- function() {
 
 rcpp_concatenate_vectors <- function(vec_1, vec_2) {
     .Call(`_geometries_rcpp_concatenate_vectors`, vec_1, vec_2)
-}
-
-rcpp_column_positions <- function(m, cols) {
-    .Call(`_geometries_rcpp_column_positions`, m, cols)
 }
 
 rcpp_where_is <- function(to_find, sv) {

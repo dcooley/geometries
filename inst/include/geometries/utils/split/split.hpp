@@ -8,13 +8,20 @@
 namespace geometries {
 namespace utils {
 
+  //' Split By Id
+  //'
+  //' @param last bool indicates if the ids contain the outer-most id value. For example,
+  //' when making a polygon, last will indicate if the ids vector contains the polygon_id
+  //' @param closed_attribute bool indicating if each matrix returned should
+  //' have a 'has_been_closed' attribute attached
   inline SEXP split_by_id(
       Rcpp::List& l,
       Rcpp::IntegerVector& ids,
       Rcpp::IntegerVector& geometry_cols,
       bool last,
       Rcpp::List attributes,
-      bool close = false
+      bool close = false,
+      bool closed_attribute = false
   ) {
 
     bool has_class = attributes.length() > 0;
@@ -40,31 +47,34 @@ namespace utils {
     for( i = 1; i < n_rows; ++i ) {
       bool same = true;
       int j = n_id_cols;
+
+      // this while loop is taken from geometries::utils::rleid()
       while( --j >= 0 && same ) {
         SEXP jcol = VECTOR_ELT( l, ids[ j ] );
         switch( TYPEOF( jcol ) ) {
-        case LGLSXP: {}
-        case INTSXP: {
-          same = INTEGER( jcol )[ i ] == INTEGER( jcol )[ i - 1 ];
-          break;
-        }
-        case REALSXP: {
-          long long *ll = (long long *)REAL( jcol );
-          same = ll[ i ] == ll[ i - 1 ];
-          break;
-        }
-        case STRSXP: {
-          same = STRING_ELT( jcol, i ) == STRING_ELT( jcol, i - 1 );
-          break;
-        }
-        default: {
-          Rcpp::stop("geometries - unsupported id column type");
-        }
+          case LGLSXP: {}
+          case INTSXP: {
+            same = INTEGER( jcol )[ i ] == INTEGER( jcol )[ i - 1 ];
+            break;
+          }
+          case REALSXP: {
+            long long *ll = (long long *)REAL( jcol );
+            same = ll[ i ] == ll[ i - 1 ];
+            break;
+          }
+          case STRSXP: {
+            same = STRING_ELT( jcol, i ) == STRING_ELT( jcol, i - 1 );
+            break;
+          }
+          default: {
+            Rcpp::stop("geometries - unsupported id column type");
+          }
         }
       }  // while end
 
       // at this point we now have a run-length-encoded vector
       n_elements += same;
+
       // at the point where same == 0 we have a new rleid
       if( !same ) {
 
@@ -79,7 +89,17 @@ namespace utils {
           Rcpp::Range row_rng( start, end );
           Rcpp::NumericMatrix res_mat = geometry_mat( row_rng, Rcpp::_ );
           if( close ) {
+            bool is_closed = geometries::utils::matrix_is_closed( res_mat );
             res_mat = geometries::utils::close_matrix( res_mat );
+
+            // it it started as 'not closed' , and it's here, then it has to have
+            // been closed
+            if( closed_attribute && !is_closed) {
+              Rcpp::List att = Rcpp::List::create(
+                Rcpp::_["closed"] = "has_been_closed"
+              );
+              geometries::utils::attach_attributes( res_mat, att );
+            }
           }
 
           if( has_class && n_id_cols == 1 ) {
@@ -108,7 +128,16 @@ namespace utils {
       Rcpp::NumericMatrix res_mat = geometry_mat( row_rng, Rcpp::_ );
 
       if( close ) {
+        bool is_closed = geometries::utils::matrix_is_closed( res_mat );
         res_mat = geometries::utils::close_matrix( res_mat );
+
+        if( closed_attribute && !is_closed) {
+          Rcpp::List att = Rcpp::List::create(
+            Rcpp::_["closed"] = "has_been_closed"
+          );
+          geometries::utils::attach_attributes( res_mat, att );
+        }
+
       }
 
       if( has_class && n_id_cols == 1 ) {

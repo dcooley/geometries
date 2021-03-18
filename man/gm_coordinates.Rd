@@ -9,6 +9,9 @@ gm_coordinates(x)
 \arguments{
 \item{x}{object representing geometry shapes (e.g., list of matrices)}
 }
+\value{
+a single data.frame representing all the values in the input lists and matrices.
+}
 \description{
 Converts all coordinates from various geometric shapes into a single data.frame.
 }

@@ -61,6 +61,8 @@ gm_dimensions <- function( x ) {
 #'
 #' @param x object representing geometry shapes (e.g., list of matrices)
 #'
+#' @return a single data.frame representing all the values in the input lists and matrices.
+#'
 #' @examples
 #'
 #' x <- 1:3

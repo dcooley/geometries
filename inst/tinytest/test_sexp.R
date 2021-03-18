@@ -35,6 +35,8 @@ expect_equal( geometries:::.test_sexp_n_row( 1 ), 1 )
 expect_equal( geometries:::.test_sexp_n_row( 1:4 ), 1 )
 expect_equal( geometries:::.test_sexp_n_row( data.frame() ), 0 )
 expect_equal( geometries:::.test_sexp_n_row( data.frame(x = 1:2) ), 2 )
+expect_equal( geometries:::.test_sexp_n_row( list() ), 0 )
+expect_equal( geometries:::.test_sexp_n_row( list( data.frame(x = 1:2) ) ), 1 )  ## n_row is not-recursive
 
 expect_equal( geometries:::.test_sexp_length( 1:4 ), 4 )
 expect_equal( geometries:::.test_sexp_length( 1L:5L ), 5 )

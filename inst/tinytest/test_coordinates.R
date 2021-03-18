@@ -34,7 +34,6 @@ expect_true( dims[1,3] == 2 ) ## dimension (3 values in a coordinate)
 expect_true( dims[1,4] == 0 ) ## nest - inside a list
 expect_true( dims[1,5] == 13 ) ## integer
 
-
 l <- list(
   1:3 ## point XYZ
   , matrix(1:6, ncol = 2) #line XY
@@ -131,16 +130,32 @@ expect_equal(
 ## ID index starts at 1
 expect_true( all( res[1:2, 1] == c(1,1) ) )
 
-### coordinates.hpp
-
-m <- matrix(1:4, ncol = 2)
 df <- data.frame(
-  x = 1:4
+  multi_id = c(1,1,1,1, 1,1,1,1,1, 1,1,1,1)
+  , poly_id = c(1,1,1,1, 1,1,1,1,1, 2,2,2,2)
+  , line_id = c(1,1,1,1, 2,2,2,2,2, 1,1,1,1)
+  , x = c(0,0,1,1, 2,2,3,3,2, 10,10,12,12)
+  , y = c(0,1,1,0, 2,3,3,2,2, 10,12,12,10)
+  , z = c(1,2,2,2, 2,3,3,3,2, 3,2,2,3)
+  #, prop = letters[1:13]
 )
 
+res <- geometries::gm_geometries(
+  obj = df
+  , id_cols = c(1L,2L,3L)
+  , geometry_cols = c(4L,5L)
+  , class_attributes = NULL
+  , close = TRUE
+  , closed_attribute = TRUE
+)
 
+## Now they will be closed
+expect_true( length( res[[1]][[1]] ) == 2 )
+expect_true( attr( res[[1]][[1]][[1]], "closed" ) == "has_been_closed" )
+expect_true( is.null( attr( res[[1]][[1]][[2]], "closed") ) )
+expect_true( attr( res[[1]][[2]][[1]], "closed" ) == "has_been_closed" )
 
-
-
-
+## Now we can return how many closures there have been
+dims <- geometries:::gm_dimensions( res )
+expect_true( nrow( dims$dimensions ) == 1 ) ## one sfg
 

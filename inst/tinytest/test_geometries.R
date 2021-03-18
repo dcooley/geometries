@@ -22,12 +22,12 @@ df <- data.frame(
 )
 
 expect_error(
-  geometries:::rcpp_make_geometries( df, c(0L), c("y"), TRUE, TRUE )
+  geometries:::rcpp_make_geometries( df, c(0L), c("y"), TRUE, TRUE, FALSE )
   , "geometries - id_columns and geometry_columns must be the same type"
   )
 
 expect_error(
-  geometries:::rcpp_make_geometries( df, c(1L), c("y"), TRUE, TRUE )
+  geometries:::rcpp_make_geometries( df, c(1L), c("y"), TRUE, TRUE, FALSE )
   , "geometries - id_columns and geometry_columns must be the same type"
 )
 

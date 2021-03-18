@@ -7,6 +7,20 @@
 namespace geometries{
 namespace utils {
 
+  inline R_xlen_t has_been_closed_attribute( SEXP& x ) {
+    Rcpp::StringVector attr(1);
+    attr[0] = "closed";
+    SEXP a = Rf_getAttrib( x, attr );
+    if( !Rf_isNull( a ) ) {
+      Rcpp::StringVector sv = Rcpp::as< Rcpp::StringVector >( a );
+      Rcpp::String s = sv[0];
+      const char* cs = s.get_cstring();
+
+      return strcmp( cs, "has_been_closed" ) == 0 ? 1 : 0;
+    }
+    return 0;
+  }
+
   inline Rcpp::StringVector name_attributes( SEXP& x ) {
     //if( x.hasAttribute("names") ) {
       Rcpp::StringVector attr(1);
@@ -21,9 +35,14 @@ namespace utils {
   }
 
   template< int RTYPE >
-  inline Rcpp::StringVector sexp_col_names( Rcpp::Matrix< RTYPE > mat ) {
+  inline Rcpp::StringVector sexp_col_names( Rcpp::Matrix< RTYPE >& mat ) {
     return colnames( mat );
   }
+
+  // covered by name_attributes
+  // inline Rcpp::StringVector sexp_col_names( Rcpp::DataFrame& df ) {
+  //   return df.names();
+  // }
 
   inline Rcpp::StringVector sexp_col_names( SEXP& x ) {
     if( Rf_isMatrix( x ) ) {

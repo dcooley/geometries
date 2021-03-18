@@ -46,7 +46,8 @@ namespace geometries {
       Rcpp::IntegerVector& ids,
       Rcpp::IntegerVector& geometry_cols,
       Rcpp::List attributes,
-      bool close = false
+      bool close = false,
+      bool closed_attribute = false
   ) {
 
     bool has_class = attributes.length() > 0;
@@ -68,7 +69,7 @@ namespace geometries {
       // because once back here, a single-id column split doesn't get packaged up
       // AND iff nesting == n_id_cols (1)
 
-      rleid( i ) = geometries::utils::split_by_id( l, rle_ids, geometry_cols, last, attributes, close );
+      rleid( i ) = geometries::utils::split_by_id( l, rle_ids, geometry_cols, last, attributes, close, closed_attribute );
 
       // here the rleid(i) tells us which elements of rleid(i+1)
       // belong in which "package"
@@ -104,7 +105,7 @@ namespace geometries {
           Rcpp::List obj = prev_res[ inner_rng ];
 
           if( first && has_class && n_id_cols != 1 ) {
-            geometries::utils::attach_attributes( obj, attributes);
+            geometries::utils::attach_attributes( obj, attributes );
           }
           curr_res( j ) = obj;
         }
@@ -140,7 +141,8 @@ namespace geometries {
     SEXP& ids,
     SEXP& geometry_cols,
     Rcpp::List attributes,
-    bool close = false
+    bool close = false,
+    bool closed_attribute = false
   ) {
 
     if( TYPEOF( ids ) != TYPEOF( geometry_cols ) ) {
@@ -151,17 +153,18 @@ namespace geometries {
     Rcpp::IntegerVector int_geom = geometries::utils::sexp_col_int( x, geometry_cols );
 
     Rcpp::List lst = geometries::utils::as_list( x );
-    return make_geometries( lst, int_ids, int_geom, attributes, close );
+    return make_geometries( lst, int_ids, int_geom, attributes, close, closed_attribute );
   }
 
   inline SEXP make_geometries(
     SEXP& x,
     SEXP& ids,
     SEXP& geometry_cols,
-    bool close = false
+    bool close = false,
+    bool closed_attribute = false
   ) {
     Rcpp::List attr;
-    return make_geometries(x, ids, geometry_cols, attr, close);
+    return make_geometries(x, ids, geometry_cols, attr, close, closed_attribute );
   }
 
 } // geometries

@@ -21,18 +21,6 @@ SEXP rcpp_concatenate_vectors(
   return geometries::utils::concatenate_vectors( vec_1, vec_2 );
 }
 
-/*
- * Given a matrix with names, and columns, returns the integer-index
- * of those columsn
- */
-// [[Rcpp::export]]
-Rcpp::IntegerVector rcpp_column_positions(
-    SEXP m,
-    Rcpp::StringVector cols
-) {
-  return geometries::utils::column_positions( m, cols );
-}
-
 // [[Rcpp::export]]
 int rcpp_where_is(
     Rcpp::String to_find,

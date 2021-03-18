@@ -16,9 +16,7 @@ namespace utils {
    * by the calling function so you don't try and subset using -1 as the index
    * -------
    */
-  inline int where_is(
-      int to_find,
-      Rcpp::IntegerVector& iv ) {
+  inline int where_is( int to_find, Rcpp::IntegerVector& iv ) {
     int n = iv.size();
     int i;
     for( i = 0; i < n; ++i ) {
@@ -291,45 +289,45 @@ namespace utils {
   ) {
 
     switch( TYPEOF( v ) ) {
-    case LGLSXP: {
-      Rcpp::LogicalVector lv = Rcpp::as< Rcpp::LogicalVector >( v );
-      res[ i ] = lv[ expanded_index ];
-      break;
-    }
-    case INTSXP: {
-      Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( v );
-      res[ i ] = iv[ expanded_index ];
-      break;
-    }
-    case REALSXP: {
-      Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( v );
-      Rcpp::NumericVector res_nv = nv[ expanded_index ];
-      res[ i ] = res_nv;
-      break;
-    }
-    case STRSXP: {
-      Rcpp::StringVector sv = Rcpp::as< Rcpp::StringVector >( v );
-      res[ i ] = sv[ expanded_index ];
-      break;
-    }
-    case CPLXSXP: {
-      Rcpp::ComplexVector cv = Rcpp::as< Rcpp::ComplexVector >( v );
-      res[ i ] = cv[ expanded_index ];
-      break;
-    }
-    case RAWSXP: {
-      Rcpp::RawVector rv = Rcpp::as< Rcpp::RawVector >( v );
-      res[ i ] = rv[ expanded_index ];
-      break;
-    }
-    case VECSXP: {
-      Rcpp::List lst = Rcpp::as< Rcpp::List >( v );
-      res[ i ] = lst[ expanded_index ];
-      break;
-    }
-    default: {
-      Rcpp::stop("geometries - unsupported column type when expanding vectors");
-    }
+      case LGLSXP: {
+        Rcpp::LogicalVector lv = Rcpp::as< Rcpp::LogicalVector >( v );
+        res[ i ] = lv[ expanded_index ];
+        break;
+      }
+      case INTSXP: {
+        Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( v );
+        res[ i ] = iv[ expanded_index ];
+        break;
+      }
+      case REALSXP: {
+        Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( v );
+        Rcpp::NumericVector res_nv = nv[ expanded_index ];
+        res[ i ] = res_nv;
+        break;
+      }
+      case STRSXP: {
+        Rcpp::StringVector sv = Rcpp::as< Rcpp::StringVector >( v );
+        res[ i ] = sv[ expanded_index ];
+        break;
+      }
+      case CPLXSXP: {
+        Rcpp::ComplexVector cv = Rcpp::as< Rcpp::ComplexVector >( v );
+        res[ i ] = cv[ expanded_index ];
+        break;
+      }
+      case RAWSXP: {
+        Rcpp::RawVector rv = Rcpp::as< Rcpp::RawVector >( v );
+        res[ i ] = rv[ expanded_index ];
+        break;
+      }
+      case VECSXP: {
+        Rcpp::List lst = Rcpp::as< Rcpp::List >( v );
+        res[ i ] = lst[ expanded_index ];
+        break;
+      }
+      default: {
+        Rcpp::stop("geometries - unsupported column type when expanding vectors");
+      }
     }
   }
 

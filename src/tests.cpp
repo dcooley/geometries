@@ -10,7 +10,9 @@
 #include "geometries/utils/lists/fill.hpp"
 #include "geometries/utils/dataframe/dataframe.hpp"
 #include "geometries/utils/unique/unique_ids.hpp"
+#include "geometries/utils/split/split.hpp"
 #include "geometries/coordinates/coordinates_impl.hpp"
+
 
 // ----------------------------
 // attributes.hpp
@@ -265,8 +267,13 @@ SEXP test_other_columns( SEXP x, SEXP y, SEXP z ) {
   return geometries::utils::other_columns( x, y, z );
 }
 
-//[[Rcpp::export(.test_column_positions)]]
-SEXP test_column_positions( SEXP x, Rcpp::StringVector cols ) {
+// //[[Rcpp::export(.test_column_positions)]]
+// SEXP test_column_positions( SEXP x, Rcpp::StringVector cols ) {
+//   return geometries::utils::column_positions( x, cols );
+// }
+
+// [[Rcpp::export(.test_column_positions)]]
+SEXP test_column_positions( SEXP x, SEXP cols ) {
   return geometries::utils::column_positions( x, cols );
 }
 
@@ -326,6 +333,21 @@ SEXP test_rleid() {
     Rcpp::_["idx"] = id_idx
   );
 
+}
+
+// -------------------------------
+// split.hpp
+// [[Rcpp::export(.test_split_by_id)]]
+SEXP test_split_by_id(
+  Rcpp::List lst,
+  Rcpp::IntegerVector ids,
+  Rcpp::IntegerVector geometry_cols,
+  bool last,
+  Rcpp::List attributes,
+  bool close,
+  bool closed_attribute
+) {
+  return geometries::utils::split_by_id( lst, ids, geometry_cols, last, attributes, close, closed_attribute );
 }
 
 // ----------------------------
