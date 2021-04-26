@@ -331,6 +331,16 @@ namespace utils {
     }
   }
 
+  // For supporting >= 0.2.0
+  inline void expand_vector(
+      Rcpp::List& res,
+      SEXP& v,
+      Rcpp::NumericVector& expanded_index,
+      R_xlen_t& i
+  ) {
+    Rcpp::stop("geometries - Expecting an integer vector for indexing");
+  }
+
 
 } // utils
 } // geometries
