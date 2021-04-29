@@ -104,6 +104,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rcpp_unlist_list
+SEXP rcpp_unlist_list(Rcpp::List lst);
+RcppExport SEXP _geometries_rcpp_unlist_list(SEXP lstSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type lst(lstSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_unlist_list(lst));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rcpp_rleid
 Rcpp::IntegerVector rcpp_rleid(Rcpp::DataFrame df, Rcpp::IntegerVector ids);
 RcppExport SEXP _geometries_rcpp_rleid(SEXP dfSEXP, SEXP idsSEXP) {
@@ -419,6 +430,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_coordinates", (DL_FUNC) &_geometries_rcpp_coordinates, 1},
     {"_geometries_rcpp_make_geometries", (DL_FUNC) &_geometries_rcpp_make_geometries, 6},
     {"_geometries_rcpp_id_positions", (DL_FUNC) &_geometries_rcpp_id_positions, 2},
+    {"_geometries_rcpp_unlist_list", (DL_FUNC) &_geometries_rcpp_unlist_list, 1},
     {"_geometries_rcpp_rleid", (DL_FUNC) &_geometries_rcpp_rleid, 2},
     {"_geometries_rcpp_rleid_indices", (DL_FUNC) &_geometries_rcpp_rleid_indices, 1},
     {"_geometries_rcpp_nest", (DL_FUNC) &_geometries_rcpp_nest, 2},

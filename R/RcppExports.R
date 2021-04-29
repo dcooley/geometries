@@ -33,6 +33,10 @@ rcpp_id_positions <- function(x, i) {
     .Call(`_geometries_rcpp_id_positions`, x, i)
 }
 
+rcpp_unlist_list <- function(lst) {
+    .Call(`_geometries_rcpp_unlist_list`, lst)
+}
+
 rcpp_rleid <- function(df, ids) {
     .Call(`_geometries_rcpp_rleid`, df, ids)
 }
