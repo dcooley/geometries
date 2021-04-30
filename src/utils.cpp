@@ -36,3 +36,16 @@ SEXP rcpp_get_ids(
 ) {
   return geometries::utils::get_ids( x, id_col );
 }
+
+// [[Rcpp::export]]
+SEXP rcpp_unlist_list( Rcpp::List lst ) {
+  return geometries::utils::unlist_list( lst );
+}
+
+// [[Rcpp::export]]
+SEXP rcpp_list_sizes( Rcpp::List lst ) {
+  R_xlen_t total_size = 0;
+  int existing_type = 10;
+  return geometries::utils::list_size( lst, total_size, existing_type );
+}
+
