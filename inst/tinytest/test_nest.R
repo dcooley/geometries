@@ -19,6 +19,7 @@ expect_equal( geometries:::rcpp_nest( l5, 3 ), l3 )
 expect_equal( geometries:::rcpp_nest( l5, 4 ), l4 )
 expect_equal( geometries:::rcpp_nest( l5, 5 ), l5 )
 
+
 ## representative of a POLYGON
 l <- list(m, m)
 
@@ -27,10 +28,50 @@ res <- geometries:::rcpp_nest( l, 2 )
 expect_true( length( res ) == 1 )
 expect_true( length( res[[1]] ) == 2 )
 
+## No impact, beause it's max-nested at level 1 anyway
+## geometries:::gm_dimensions( l )
 res <- geometries:::rcpp_nest( l, 1 )
 expect_equal( l, res )
 
-expect_error( geometries:::rcpp_nest( l, 0 ), "geometries - error trying to unnest the object" )
+# geometries:::gm_dimensions( l )$max_dimension
+
+## No change
+expect_equal(
+  geometries:::rcpp_nest( l, 0 )
+  , l
+)
+
+## what about mixed-depth lists
+## the 'depth' is relative to the max depth
+
+l <- list(
+  1:3
+  , list(
+    list(3:1)
+  )
+)
+
+# geometries:::gm_dimensions( l )
+# max_dimension == 3
+expect_equal(
+  geometries:::rcpp_nest( l, 3 )
+  , l
+)
+
+## relative to the max dimension,
+## the first element won't get unnested any further than a single 'list'
+## The first element starts at nesting level '1'
+## so unnesting it doesn't have any effect
+expect_equal(
+  geometries:::rcpp_nest( l, 0 )
+  , geometries:::rcpp_nest( l, 1 )
+)
+
+expect_equal(
+  geometries:::rcpp_nest( l, 0 )[[1]]
+  , geometries:::rcpp_nest( l, 2 )[[1]]
+)
+
 
 ## representative of converting to LINESTRINGs
 # geometries:::rcpp_nest( l, 1 )

@@ -23,6 +23,9 @@ namespace nest {
     return res;
   }
 
+  //' Unnest
+  //'
+  //'
   inline SEXP unnest( SEXP x, int depth ) {
 
     // Will only work on nested list objects
@@ -32,38 +35,33 @@ namespace nest {
 
     Rcpp::List lst = Rcpp::as< Rcpp::List >( x );
 
-    // Rcpp::Rcout << "lst length: " << lst.length() << std::endl;
-    //
-    // if( lst.length() != 1 ) {
-    //   Rcpp::stop("geometries - error trying to unnest the object");
-    // }
-
-    // TODO:
-    // count the number of inner-elements
-    // create a new object
-
-    //SEXP res = lst[0];
-
     R_xlen_t n = lst.size();
     Rcpp::List inner_elements( n );
-    R_xlen_t n_counter = 0; // will udpate each iteration
+    R_xlen_t n_counter = 0; // will update each iteration
     R_xlen_t i, j;
 
     for( i = 0; i < n; ++i ) {
-      Rcpp::List inner_list = lst[ i ];
-      n_counter = n_counter + inner_list.size();
-      inner_elements[ i ] = inner_list;
+      SEXP inner_obj = lst[ i ];
+      int obj_size = TYPEOF( inner_obj ) == VECSXP ? Rf_length( inner_obj ) : 1;
+      n_counter = n_counter + obj_size;
+      inner_elements[ i ] = inner_obj;
     }
-
 
     // unpack
     Rcpp::List res( n_counter );
     n_counter = 0;
     for( i = 0; i < n; ++i ) {
-      Rcpp::List inner_list = inner_elements[ i ];
-      for( j = 0; j < inner_list.size(); ++j ) {
-        res[ n_counter ] = inner_list[ j ];
-        ++n_counter;
+      SEXP inner_obj = inner_elements[ i ];
+
+      if( TYPEOF( inner_obj ) == VECSXP ) {
+        Rcpp::List inner_list = Rcpp::as< Rcpp::List >( inner_obj );
+        for( j = 0; j < inner_list.size(); ++j ) {
+          res[ n_counter ] = inner_list[ j ];
+          ++n_counter;
+        }
+      } else {
+          res[ n_counter ] = inner_obj;
+          ++n_counter;
       }
     }
 
@@ -76,6 +74,12 @@ namespace nest {
     return res;
   }
 
+  //' nest_impl
+  //'
+  //' Applies the nesting 'depth' relative to the max_nest (from geometry_dimensions)
+  //'
+  //' This is desigend to work on lists whose elements are all the same depth,
+  //' like you would find in a geometry, e.g. list[[ list[[ matrix ]] ]]
   inline SEXP nest_impl( SEXP x, int depth ) {
     // Need to know the depth of the current item, in order to know how deep to go
     Rcpp::List dimension = geometries::coordinates::geometry_dimensions( x );
