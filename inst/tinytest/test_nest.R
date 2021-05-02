@@ -6,6 +6,24 @@ l3 <- list( l2 )
 l4 <- list( l3 )
 l5 <- list( l4 )
 
+res <- geometries:::gm_dimensions( m )
+expect_true( res$max_nest == 0 )
+
+res <- geometries:::gm_dimensions( l1 )
+expect_true( res$max_nest == 1 )
+
+res <- geometries:::gm_dimensions( l2 )
+expect_true( res$max_nest == 2 )
+
+res <- geometries:::gm_dimensions( l3 )
+expect_true( res$max_nest == 3 )
+
+res <- geometries:::gm_dimensions( l4 )
+expect_true( res$max_nest == 4 )
+
+res <- geometries:::gm_dimensions( l5 )
+expect_true( res$max_nest == 5 )
+
 
 expect_equal( geometries:::rcpp_nest( l1, 1 ), l1 )
 expect_equal( geometries:::rcpp_nest( l1, 2 ), l2 )
@@ -72,6 +90,13 @@ expect_equal(
   , geometries:::rcpp_nest( l, 2 )[[1]]
 )
 
+
+## strings work
+l <- list(list(c("a", "b", "c", "d"), c("e", "f", "g", "h")))
+expect_equal(
+  geometries:::rcpp_nest( l, 1 )
+  , l[[1]]
+)
 
 ## representative of converting to LINESTRINGs
 # geometries:::rcpp_nest( l, 1 )

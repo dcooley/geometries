@@ -28,8 +28,10 @@ namespace coordinates {
     // and not the cumulative
 
     switch( TYPEOF( geom ) ) {
+      case LGLSXP: {}
       case INTSXP: {}
-      case REALSXP: {
+      case REALSXP: {}
+      case STRSXP: {
         rtype = TYPEOF( geom );
         if( !Rf_isMatrix( geom ) ) {
           // it's a vector, right?

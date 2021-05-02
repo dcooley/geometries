@@ -106,6 +106,23 @@ namespace utils {
   // finds the integer index position of column names
   inline Rcpp::IntegerVector sexp_col_int(
       Rcpp::StringVector& names,
+      std::string& s
+  ) {
+    Rcpp::IntegerVector ians( 1 );
+
+    R_xlen_t i;
+    for( i = 0; i < names.length(); ++i ) {
+      const char * n = names[ i ];
+      if( strcmp( s.c_str(), n ) == 0) {
+        ians[0] = i;
+        break;
+      }
+    }
+    return ians;
+  }
+
+  inline Rcpp::IntegerVector sexp_col_int(
+      Rcpp::StringVector& names,
       Rcpp::StringVector& s
   ) {
 
