@@ -9,6 +9,7 @@ namespace geometries {
 namespace nest {
 
   inline SEXP nest( SEXP x, int depth ) {
+    // Rcpp::Rcout << "nest()" << std::endl;
     if( depth < 1 ) {
       return x;
     }
@@ -23,10 +24,9 @@ namespace nest {
     return res;
   }
 
-  //' Unnest
-  //'
-  //'
   inline SEXP unnest( SEXP x, int depth ) {
+
+    // Rcpp::Rcout << "unnest()" << std::endl;
 
     // Will only work on nested list objects
     if( !Rf_isNewList( x ) ) {
@@ -78,12 +78,17 @@ namespace nest {
   //'
   //' Applies the nesting 'depth' relative to the max_nest (from geometry_dimensions)
   //'
-  //' This is desigend to work on lists whose elements are all the same depth,
+  //' This is designed to work on lists whose elements are all the same depth,
   //' like you would find in a geometry, e.g. list[[ list[[ matrix ]] ]]
+  //'
+  //' and the 'depth' argument specifies how many levels deep the returned list will be
+  //' so if your list starts as a level 2 nesting, and your depth value is 2
+  //' it won't do anything. It does not mean it will nest it a further 2 levels
   inline SEXP nest_impl( SEXP x, int depth ) {
     // Need to know the depth of the current item, in order to know how deep to go
     Rcpp::List dimension = geometries::coordinates::geometry_dimensions( x );
     int current_depth = dimension["max_nest"];
+    // Rcpp::Rcout << "current_depth: " << current_depth << std::endl;
 
     if( current_depth == depth ) {
       // already at the right depth
@@ -96,7 +101,9 @@ namespace nest {
       return geometries::nest::unnest( x, unnest_depth );
     }
 
+    // Rcpp::Rcout << "depth: " << depth << std::endl;
     int nest_depth = depth - current_depth;
+    // Rcpp::Rcout << "nest_depth: " << nest_depth << std::endl;
     return geometries::nest::nest( x, nest_depth );
     // if current_depth > depth, need to unnest
     // if current_dept < depth, need to nest further

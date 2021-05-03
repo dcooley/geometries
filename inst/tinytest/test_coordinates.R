@@ -1,6 +1,88 @@
 
 ## Dimensions
 
+
+df <- data.frame(
+  x = 1:20
+  , y = 1:20
+  , val = 1:20
+  , id1 = rep(1,20)
+  , id2 = c(rep(1,10),rep(2,10))
+  , id3 = c(rep(1,5), rep(2,5), rep(1,5), rep(2,5))
+)
+
+sf_mp <- sfheaders::sf_multipolygon(
+  obj = df
+  , x = "x"
+  , y = "y"
+  , multipolygon_id = "id1"
+  , polygon_id = "id2"
+  , linestring_id = "id3"
+  , keep = TRUE
+  , list_columns = "val"
+)
+
+sf_p <- sfheaders::sf_polygon(
+  obj = df
+  , x = "x"
+  , y = "y"
+  #  , multipolygon_id = "id1"
+  , polygon_id = "id2"
+  , linestring_id = "id3"
+  , keep = TRUE
+  , list_columns = "val"
+)
+
+geometries:::gm_dimensions( sf_p[1, ]$geometry )
+geometries:::gm_dimensions( sf_mp[1, ]$geometry )  ## this should be 3!!
+
+## this represents a MULTIPOLYGON
+l <- list(
+  list(
+    list(
+      1:4
+    )
+    , list(
+      3:5
+    )
+    , list(
+      3:6
+    )
+    , list(
+      1:4
+    )
+  )
+)
+
+## The max-nest should be 3, not 4
+l
+
+res <- geometries:::gm_dimensions(l); res
+expect_equal(
+  res$max_nest
+  , 3
+)
+
+## This geometry would be invalid, because the coordinates are at different levels
+l <- list(
+  list(
+    list(
+      1:4
+    )
+    , list(
+      3:5
+    )
+    , list(
+      1:4
+      , 4:1
+      , list(1:5)
+    )
+  )
+)
+
+geometries:::gm_dimensions( l )
+
+
 x <- 1L:3L
 res <- geometries:::gm_dimensions( x )
 
@@ -41,6 +123,11 @@ l <- list(
     matrix(1:6, ncol = 3) ## polygon XYZM
   )
   , matrix(1:8, ncol = 4) ## line XYZM
+  # , list(
+  #   list(
+  #     matrix(1:6, ncol = 3) ## Multipolygon
+  #   )
+  # )
 )
 
 res <- geometries:::gm_dimensions( l )

@@ -12,6 +12,22 @@ namespace coordinates {
    * counts the number of coordinates in a single geometry
    * If the input is a List, it returns the total number of coordinates
    * in each geometry inside the list
+   *
+   * The input (geometry) is expected to have the same level of nesting.
+   * That is, the actual coordinates should all be at the same level
+   *
+   * for example - valid:
+   * list(
+   *   list(1:4)
+   *   , list(1:4)
+   * )
+   *
+   * invalid:
+   * list(
+   *   1:4
+   *   , list(1:4)  ## coordiantes are nested deeper
+   * )
+   *
    */
   inline void geometry_dimension(
       SEXP& geom,
@@ -27,11 +43,14 @@ namespace coordinates {
     // we only need the 'last' nesting level,
     // and not the cumulative
 
+    R_xlen_t list_counter = 0;
+
     switch( TYPEOF( geom ) ) {
-      case LGLSXP: {}
+      case LGLSXP: {}  // allow other types, so this also works on 'list columns'
       case INTSXP: {}
       case REALSXP: {}
       case STRSXP: {
+        //nest = nest - 1;
         rtype = TYPEOF( geom );
         if( !Rf_isMatrix( geom ) ) {
           // it's a vector, right?
@@ -48,17 +67,49 @@ namespace coordinates {
         Rcpp::stop("geometries - unsupported coordinate type");
       }
         Rcpp::List lst = Rcpp::as< Rcpp::List >( geom );
-        //if (lst.size() == 0 ) {
-        //return 0; // ?
-        //}
+
         R_xlen_t n = lst.size();
         R_xlen_t i;
-        nest += 1;
+
+        // iff n > 1, it's going to iterate over each
+        // element and count the number of inner-elements
+        // so we don't want to increment 'nest' here....
+
+        nest += 1; // - (n - 1);
+        //Rcpp::Rcout << "nest: " << nest << std::endl;
         Rcpp::IntegerVector res( n );
+
+        // This loop goes around each list-element
+        // so it's incrementing 'nest' for every inner-element
+        // so if a list has two elements, each with two elements, this will return '4'
+        // rather than 2!
+
+        // each inner-element should only increment 'nest' if it actually
+        // goes 'deeper'
+
+        // only iff inner-elements are lists do we want to increment 'nest'
+
         for( i = 0; i < n; ++i ) {
           SEXP tmp_geom = lst[i];
           geometry_dimension( tmp_geom, geom_count, geom_dimension, nest, max_dimension, max_nest, rtype );  // recurse
+
+          // nest_counter keeps count of how many elements at the same level are 'lists'
+          // because for each list elemetn at the same level, we don't want to increment the nest
+          // level
+          list_counter = TYPEOF( tmp_geom ) == VECSXP ? list_counter + 1 : list_counter;
+          Rcpp::Rcout << "i: " << i << std::endl;
+          Rcpp::Rcout<< "list_counter; " << list_counter << std::endl;
+
+          // if we've encountered a list at the same level, we need to subtract a 'nest'
+          // because it's already been accounted for
+          //nest = TYPEOF( tmp_geom ) == VECSXP && list_counter >= 1 ? nest - 1 : nest;
+
         }
+
+        // Rcpp::Rcout << "to remove " << list_counter << std::endl;
+        // nest = list_counter > 1 ? nest - (list_counter - 1) : nest;
+        // Rcpp::Rcout << "nest: " << nest << std::endl;
+
         break;
       }
       default: {
@@ -66,6 +117,7 @@ namespace coordinates {
       }
     }
 
+    Rcpp::Rcout<< "list_counter end; " << list_counter << std::endl;
     max_dimension = geom_dimension > max_dimension ? geom_dimension : max_dimension;
     max_nest = nest > max_nest ? nest : max_nest;
 
@@ -110,6 +162,7 @@ namespace coordinates {
     R_xlen_t max_nest = 0;
 
     for( i = 0; i < n; ++i ) {
+      //Rcpp::Rcout << "i: " << i << std::endl;
       R_xlen_t geom_counter = 0;
       R_xlen_t geom_dimension = 0;
       R_xlen_t nest = 1;
@@ -119,6 +172,8 @@ namespace coordinates {
       geometries::coordinates::geometry_dimension(
         geom, geom_counter, geom_dimension, nest, max_dimension, max_nest, rtype
         );
+
+      //Rcpp::Rcout << "final nest: " << nest << std::endl;
 
       res( i, 0 ) = cumulative_coords;
       cumulative_coords += geom_counter;
