@@ -9,7 +9,6 @@ namespace geometries {
 namespace nest {
 
   inline SEXP nest( SEXP x, int depth ) {
-    // Rcpp::Rcout << "nest()" << std::endl;
     if( depth < 1 ) {
       return x;
     }
@@ -25,8 +24,6 @@ namespace nest {
   }
 
   inline SEXP unnest( SEXP x, int depth ) {
-
-    // Rcpp::Rcout << "unnest()" << std::endl;
 
     // Will only work on nested list objects
     if( !Rf_isNewList( x ) ) {
@@ -88,7 +85,6 @@ namespace nest {
     // Need to know the depth of the current item, in order to know how deep to go
     Rcpp::List dimension = geometries::coordinates::geometry_dimensions( x );
     int current_depth = dimension["max_nest"];
-    // Rcpp::Rcout << "current_depth: " << current_depth << std::endl;
 
     if( current_depth == depth ) {
       // already at the right depth
@@ -101,9 +97,8 @@ namespace nest {
       return geometries::nest::unnest( x, unnest_depth );
     }
 
-    // Rcpp::Rcout << "depth: " << depth << std::endl;
     int nest_depth = depth - current_depth;
-    // Rcpp::Rcout << "nest_depth: " << nest_depth << std::endl;
+
     return geometries::nest::nest( x, nest_depth );
     // if current_depth > depth, need to unnest
     // if current_dept < depth, need to nest further
