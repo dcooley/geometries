@@ -12,6 +12,22 @@ namespace coordinates {
    * counts the number of coordinates in a single geometry
    * If the input is a List, it returns the total number of coordinates
    * in each geometry inside the list
+   *
+   * The input (geometry) is expected to have the same level of nesting.
+   * That is, the actual coordinates should all be at the same level
+   *
+   * for example - valid:
+   * list(
+   *   list(1:4)
+   *   , list(1:4)
+   * )
+   *
+   * invalid:
+   * list(
+   *   1:4
+   *   , list(1:4)  ## coordiantes are nested deeper
+   * )
+   *
    */
   inline void geometry_dimension(
       SEXP& geom,
@@ -20,16 +36,23 @@ namespace coordinates {
       R_xlen_t& nest,
       R_xlen_t& max_dimension,
       R_xlen_t& max_nest,
-      SEXPTYPE& rtype
+      SEXPTYPE& rtype,
+      R_xlen_t loop_counter = 0,
+      R_xlen_t list_counter = 0
   ) {
 
     // assuming the nesting level is the same for all matrices in a list,
     // we only need the 'last' nesting level,
     // and not the cumulative
 
+    //R_xlen_t list_counter = 0;
+
     switch( TYPEOF( geom ) ) {
+      case LGLSXP: {}  // allow other types, so this also works on 'list columns'
       case INTSXP: {}
-      case REALSXP: {
+      case REALSXP: {}
+      case STRSXP: {
+        //nest = nest - 1;
         rtype = TYPEOF( geom );
         if( !Rf_isMatrix( geom ) ) {
           // it's a vector, right?
@@ -46,16 +69,54 @@ namespace coordinates {
         Rcpp::stop("geometries - unsupported coordinate type");
       }
         Rcpp::List lst = Rcpp::as< Rcpp::List >( geom );
-        //if (lst.size() == 0 ) {
-        //return 0; // ?
-        //}
+
         R_xlen_t n = lst.size();
         R_xlen_t i;
-        nest += 1;
+
+        // Rcpp::Rcout << "lst.size() " << n << std::endl;
+
+        // When n > 1, the list has many elements
+        // which could be nested lists, or objects at the same level
+        //
+        //
+
+        // start by updating the nesting, because we're inside a list
+        if( loop_counter == 0 || ( loop_counter > 0 && list_counter == 0 ) ) {
+          nest = nest + 1;
+        }
+
+        // when in the 'for' loop, we don't want to increment 'nest'
+        // for every elemetn inside 'lst'
+        // because they are at the same nesting level
+        //Rcpp::Rcout << "list counter: " << list_counter << std::endl;
+        // if( loop_counter == 0 ) {
+        //   nest += 1; // - (n - 1);
+        // }
+
         Rcpp::IntegerVector res( n );
+
+        list_counter = 0;
+
         for( i = 0; i < n; ++i ) {
           SEXP tmp_geom = lst[i];
-          geometry_dimension( tmp_geom, geom_count, geom_dimension, nest, max_dimension, max_nest, rtype );  // recurse
+
+          // Rcpp::Rcout << "i: " << i << std::endl;
+          // if( i == 0 ) {
+          //   nest = nest + 1;
+          // }
+
+          // nest_counter keeps count of how many elements at the same level are 'lists'
+          // because for each list elemetn at the same level, we don't want to increment the nest
+          // level
+          // if( list_counter == 1 ) {
+          //   nest = nest + 1;
+          // }
+          geometry_dimension( tmp_geom, geom_count, geom_dimension, nest, max_dimension, max_nest, rtype, i, list_counter );  // recurse
+
+          list_counter = Rf_isNewList( tmp_geom ) ? list_counter + 1 : list_counter;
+
+          // Rcpp::Rcout << "list_counter: " << list_counter << std::endl;
+          // Rcpp::Rcout << "nest: " << nest << std::endl;
         }
         break;
       }
@@ -63,7 +124,6 @@ namespace coordinates {
         Rcpp::stop("geometries - unsupported coordinate type");
       }
     }
-
     max_dimension = geom_dimension > max_dimension ? geom_dimension : max_dimension;
     max_nest = nest > max_nest ? nest : max_nest;
 
@@ -149,6 +209,8 @@ namespace coordinates {
     SEXP& geometries
   ) {
 
+    //Rcpp::Rcout << "TYPEOF( geometries ) " << TYPEOF( geometries ) << std::endl;
+
     if( Rf_isMatrix( geometries ) ) {
       Rcpp::IntegerMatrix im(1, 5); // initialise a (0,0) matrix
       // one row, because it's only one geometry
@@ -172,7 +234,7 @@ namespace coordinates {
       Rcpp::List lst = Rcpp::as< Rcpp::List >( geometries );
       return geometry_dimensions( lst );
 
-    } else if ( TYPEOF( geometries ) == INTSXP || TYPEOF( geometries ) == REALSXP ) {
+    } else if ( TYPEOF( geometries ) == INTSXP || TYPEOF( geometries ) == REALSXP || TYPEOF( geometries ) == LGLSXP || TYPEOF( geometries ) == STRSXP ) {
       // vectors - start and end at the same place
       Rcpp::IntegerMatrix im(1, 5); // initialise (0,0) matrix
 

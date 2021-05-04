@@ -1,5 +1,72 @@
 
-## Dimensions
+## this represents a MULTIPOLYGON
+l <- list(
+  list(
+    list(
+      1:4
+    )
+    , list(
+      3:5
+    )
+    , list(
+      3:6
+    )
+    , list(
+      1:4
+    )
+  )
+)
+
+## The max-nest should be 3, not 4
+res <- geometries:::gm_dimensions(l)
+expect_equal(res$max_nest, 3)
+expect_equal(res$dimensions[, 4], res$max_nest)
+
+
+## This geometry (sfg) would be invalid, because the coordinates are at different levels
+## But it's still ok to calculate the dimensions, because it can represent an 'sfc'
+l <- list(
+  list(
+    list(
+      1:4
+      , 4:1
+      , list(1:5)
+    )
+  )
+)
+
+res <- geometries:::gm_dimensions( l )
+
+expect_equal(res$max_nest, 4)
+expect_equal(res$max_nest, res$dimensions[, 4])
+
+
+## Another example
+l <- list(
+  list(
+    list(
+      1:4
+    )
+    , list(
+      3:5
+    )
+    , list(
+      3:6
+    )
+    , list(
+      1:4
+      , 4:1
+    )
+  )
+)
+
+## The max-nest should be 3, not 4
+res <- geometries:::gm_dimensions(l)
+expect_equal(res$max_nest, 3)
+expect_equal(res$dimensions[, 4], res$max_nest)
+
+
+
 
 x <- 1L:3L
 res <- geometries:::gm_dimensions( x )
@@ -41,6 +108,11 @@ l <- list(
     matrix(1:6, ncol = 3) ## polygon XYZM
   )
   , matrix(1:8, ncol = 4) ## line XYZM
+  # , list(
+  #   list(
+  #     matrix(1:6, ncol = 3) ## Multipolygon
+  #   )
+  # )
 )
 
 res <- geometries:::gm_dimensions( l )
