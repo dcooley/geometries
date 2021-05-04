@@ -22,14 +22,12 @@ namespace utils {
   }
 
   inline Rcpp::StringVector name_attributes( SEXP& x ) {
-    //if( x.hasAttribute("names") ) {
       Rcpp::StringVector attr(1);
       attr[0] = "names";
       SEXP a = Rf_getAttrib( x, attr );
       if( !Rf_isNull( a ) ) {
         return Rcpp::as< Rcpp::StringVector >( a );
       }
-    //}
 
     Rcpp::stop("geometries - object does not have names");
   }
@@ -38,11 +36,6 @@ namespace utils {
   inline Rcpp::StringVector sexp_col_names( Rcpp::Matrix< RTYPE >& mat ) {
     return colnames( mat );
   }
-
-  // covered by name_attributes
-  // inline Rcpp::StringVector sexp_col_names( Rcpp::DataFrame& df ) {
-  //   return df.names();
-  // }
 
   inline Rcpp::StringVector sexp_col_names( SEXP& x ) {
     if( Rf_isMatrix( x ) ) {
