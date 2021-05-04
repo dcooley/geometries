@@ -209,6 +209,8 @@ namespace coordinates {
     SEXP& geometries
   ) {
 
+    //Rcpp::Rcout << "TYPEOF( geometries ) " << TYPEOF( geometries ) << std::endl;
+
     if( Rf_isMatrix( geometries ) ) {
       Rcpp::IntegerMatrix im(1, 5); // initialise a (0,0) matrix
       // one row, because it's only one geometry
@@ -232,7 +234,7 @@ namespace coordinates {
       Rcpp::List lst = Rcpp::as< Rcpp::List >( geometries );
       return geometry_dimensions( lst );
 
-    } else if ( TYPEOF( geometries ) == INTSXP || TYPEOF( geometries ) == REALSXP ) {
+    } else if ( TYPEOF( geometries ) == INTSXP || TYPEOF( geometries ) == REALSXP || TYPEOF( geometries ) == LGLSXP || TYPEOF( geometries ) == STRSXP ) {
       // vectors - start and end at the same place
       Rcpp::IntegerMatrix im(1, 5); // initialise (0,0) matrix
 
