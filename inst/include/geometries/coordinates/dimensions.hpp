@@ -73,25 +73,13 @@ namespace coordinates {
         R_xlen_t n = lst.size();
         R_xlen_t i;
 
-        // Rcpp::Rcout << "lst.size() " << n << std::endl;
-
         // When n > 1, the list has many elements
         // which could be nested lists, or objects at the same level
-        //
-        //
 
         // start by updating the nesting, because we're inside a list
         if( loop_counter == 0 || ( loop_counter > 0 && list_counter == 0 ) ) {
           nest = nest + 1;
         }
-
-        // when in the 'for' loop, we don't want to increment 'nest'
-        // for every elemetn inside 'lst'
-        // because they are at the same nesting level
-        //Rcpp::Rcout << "list counter: " << list_counter << std::endl;
-        // if( loop_counter == 0 ) {
-        //   nest += 1; // - (n - 1);
-        // }
 
         Rcpp::IntegerVector res( n );
 
@@ -100,23 +88,13 @@ namespace coordinates {
         for( i = 0; i < n; ++i ) {
           SEXP tmp_geom = lst[i];
 
-          // Rcpp::Rcout << "i: " << i << std::endl;
-          // if( i == 0 ) {
-          //   nest = nest + 1;
-          // }
-
           // nest_counter keeps count of how many elements at the same level are 'lists'
           // because for each list elemetn at the same level, we don't want to increment the nest
           // level
-          // if( list_counter == 1 ) {
-          //   nest = nest + 1;
-          // }
           geometry_dimension( tmp_geom, geom_count, geom_dimension, nest, max_dimension, max_nest, rtype, i, list_counter );  // recurse
 
           list_counter = Rf_isNewList( tmp_geom ) ? list_counter + 1 : list_counter;
 
-          // Rcpp::Rcout << "list_counter: " << list_counter << std::endl;
-          // Rcpp::Rcout << "nest: " << nest << std::endl;
         }
         break;
       }

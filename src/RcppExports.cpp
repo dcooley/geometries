@@ -420,17 +420,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpp_unlist_list
-SEXP rcpp_unlist_list(Rcpp::List lst);
-RcppExport SEXP _geometries_rcpp_unlist_list(SEXP lstSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type lst(lstSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_unlist_list(lst));
-    return rcpp_result_gen;
-END_RCPP
-}
 // rcpp_list_sizes
 SEXP rcpp_list_sizes(Rcpp::List lst);
 RcppExport SEXP _geometries_rcpp_list_sizes(SEXP lstSEXP) {
@@ -479,7 +468,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_geometries_rcpp_concatenate_vectors", (DL_FUNC) &_geometries_rcpp_concatenate_vectors, 2},
     {"_geometries_rcpp_where_is", (DL_FUNC) &_geometries_rcpp_where_is, 2},
     {"_geometries_rcpp_get_ids", (DL_FUNC) &_geometries_rcpp_get_ids, 2},
-    {"_geometries_rcpp_unlist_list", (DL_FUNC) &_geometries_rcpp_unlist_list, 1},
     {"_geometries_rcpp_list_sizes", (DL_FUNC) &_geometries_rcpp_list_sizes, 1},
     {NULL, NULL, 0}
 };

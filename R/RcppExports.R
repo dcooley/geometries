@@ -141,10 +141,6 @@ rcpp_get_ids <- function(x, id_col) {
     .Call(`_geometries_rcpp_get_ids`, x, id_col)
 }
 
-rcpp_unlist_list <- function(lst) {
-    .Call(`_geometries_rcpp_unlist_list`, lst)
-}
-
 rcpp_list_sizes <- function(lst) {
     .Call(`_geometries_rcpp_list_sizes`, lst)
 }

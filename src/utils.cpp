@@ -38,11 +38,6 @@ SEXP rcpp_get_ids(
 }
 
 // [[Rcpp::export]]
-SEXP rcpp_unlist_list( Rcpp::List lst ) {
-  return geometries::utils::unlist_list( lst );
-}
-
-// [[Rcpp::export]]
 SEXP rcpp_list_sizes( Rcpp::List lst ) {
   R_xlen_t total_size = 0;
   int existing_type = 10;
