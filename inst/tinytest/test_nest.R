@@ -108,7 +108,7 @@ expect_equal(
 # same with POINTs and MULTIPOINTs
 
 
-## TODO
+# ## TODO
 # ## list of shapes (like a sfc)
 # ## Needs to iterate over the list and nest/unnest each shape individually
 # l <- list(
@@ -116,6 +116,6 @@ expect_equal(
 #   l2
 # )
 #
-# expect_equal( geometries:::rcpp_nest(l, 3), list( list( l )  ) )
+# expect_equal( geometries:::rcpp_nest(l, 3), list( list( l ) ) )
 
 
