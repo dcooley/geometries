@@ -1,7 +1,7 @@
 Package: geometries
 Type: Package
 Title: Convert Between R Objects and Geometric Structures
-Date: 2021-09-04
+Date: 2023-02-04
 Version: 0.2.1
 Authors@R: c(
     person("David", "Cooley", ,"david.cooley.au@gmail.com", role = c("aut", "cre"))
@@ -13,12 +13,12 @@ License: MIT + file LICENSE
 URL: https://dcooley.github.io/geometries/
 BugReports: https://github.com/dcooley/geometries/issues
 Encoding: UTF-8
-RoxygenNote: 7.1.1
-SystemRequirements: C++11
+RoxygenNote: 7.2.3
+SystemRequirements: C++17
 LinkingTo: 
     Rcpp
 Imports: 
-    Rcpp
+    Rcpp (>= 1.0.10)
 Roxygen: list(markdown = TRUE)
 Suggests: 
     covr,
