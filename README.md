@@ -8,7 +8,7 @@ status](https://github.com/dcooley/geometries/workflows/R-CMD-check/badge.svg)](
 [![Codecov test
 coverage](https://codecov.io/gh/dcooley/geometries/branch/master/graph/badge.svg)](https://codecov.io/gh/dcooley/geometries?branch=master)
 
-Have you ever wanted to generate geometric structures from data.frames,
+Have you every wanted to generate geometric structures from data.frames,
 but independent of any R classes, attributes or libraries?
 
 No? Ok, this library isn’t for you.
@@ -20,10 +20,10 @@ But if you answered ‘yes’, this might be of interest.
 When one thinks of ‘shape’ objects in R, the current standard / typical
 structures are
 
-  - **Point** - a vector of x, y values
-  - **Line** - a matrix of x, y columns
-  - **Polygon** - a list of matrices of x, y columns
-  - **MultiPolygon** - a list of list of matrices of x, y columns
+- **Point** - a vector of x, y values
+- **Line** - a matrix of x, y columns
+- **Polygon** - a list of matrices of x, y columns
+- **MultiPolygon** - a list of list of matrices of x, y columns
 
 (in reality you can have more than just x & y columns)
 
