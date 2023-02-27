@@ -85,18 +85,15 @@ namespace geometries {
 
         Rcpp::List curr_res( nelems.size() );
         R_xlen_t prev_idx = 0;
-        R_xlen_t out_size;
 
         for( j = 0; j < nelems.size(); ++j ) {
 
           R_xlen_t curr_sum = curr_sums[ j ];
           R_xlen_t start_prev_idx = prev_idx;
           R_xlen_t prev_sum = prev_sums[ prev_idx ];
-          out_size = 1;
 
           while( prev_sum != curr_sum ) { // prev_sum will always start <= to curr_sum
             prev_idx++;
-            out_size++;
             prev_sum = prev_sums[ prev_idx ];
           }
           prev_idx++;
