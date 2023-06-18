@@ -14,7 +14,6 @@ URL: https://dcooley.github.io/geometries/
 BugReports: https://github.com/dcooley/geometries/issues
 Encoding: UTF-8
 RoxygenNote: 7.2.3
-SystemRequirements: C++17
 LinkingTo: 
     Rcpp
 Imports: 
