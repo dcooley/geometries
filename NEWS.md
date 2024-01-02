@@ -1,4 +1,10 @@
 
+# 0.2.2
+
+* removed C++ system requirements
+
+# 0.2.1
+
 * updated C++ dependencies
 * `nest_impl()` function for nesting & un-nesting lists
 
