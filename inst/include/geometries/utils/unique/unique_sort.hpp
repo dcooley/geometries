@@ -2,6 +2,7 @@
 #define R_GEOMETRIES_UTILS_UNIQUE_SORT_H
 
 #include <Rcpp.h>
+#include "geometries/utils/attributes/attributes.hpp"
 
 namespace geometries {
 namespace utils {
@@ -35,6 +36,20 @@ namespace utils {
       return sexp_unique< double, REALSXP >( s2 );
     }
     case INTSXP: {
+      // issue 89 (sfheaders - https://github.com/dcooley/sfheaders/issues/89)
+      if( Rf_isFactor(s2) ) {
+        Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( s2 );
+        Rcpp::List attributes = Rcpp::List::create(
+          Rcpp::_["levels"] = iv.attr("levels"),
+          Rcpp::_["class"] = iv.attr("class")
+        );
+
+        SEXP res = sexp_unique< int, INTSXP >( s2 );
+        geometries::utils::attach_attributes( res, attributes  );
+        return res;
+      }
+
+
       return sexp_unique< int, INTSXP >( s2 );
     }
     case STRSXP: {

@@ -1,4 +1,8 @@
 
+# 0.2.4
+
+* factor levels remain [sfheaders issue 89](https://github.com/dcooley/sfheaders/issues/89)
+
 # 0.2.2
 
 * removed C++ system requirements

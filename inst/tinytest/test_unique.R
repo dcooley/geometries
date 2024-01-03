@@ -15,3 +15,9 @@ expect_equal( geometries:::.test_unique_sort( c(1L,3L,3L,2L) ), c(1L,3L,2L) )
 expect_equal( geometries:::.test_unique_sort( c(1,3,3,2) ), c(1,3,2) )
 expect_equal( geometries:::.test_unique_sort( c(T,F,F,T) ), c(T,F) )
 
+## Sorting factor - levels remain
+f <- as.factor(c(1,2,3))
+expect_equal(geometries:::.test_unique_sort(f), f)
+
+df <- data.frame(fact = f)
+expect_equal(geometries:::.test_unique_ids(df, 0L), f)
