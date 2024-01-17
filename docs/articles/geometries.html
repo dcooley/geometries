@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,29 +33,26 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">geometries</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../articles/geometries.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/dcooley/geometries/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/dcooley/geometries/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -73,29 +72,33 @@
       <h1 data-toc-skip>geometries</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dcooley/geometries/blob/master/vignettes/geometries.Rmd"><code>vignettes/geometries.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dcooley/geometries/blob/HEAD/vignettes/geometries.Rmd" class="external-link"><code>vignettes/geometries.Rmd</code></a></small>
       <div class="hidden name"><code>geometries.Rmd</code></div>
 
     </div>
 
     
     
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">geometries</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">Rcpp</span>)</pre></body></html></div>
-<div id="header" class="section level3">
-<h3 class="hasAnchor">
-<a href="#header" class="anchor"></a>Header</h3>
-<pre><code>#include "geometries/geometries.hpp"</code></pre>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dcooley.github.io/geometries/" class="external-link">geometries</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.rcpp.org" class="external-link">Rcpp</a></span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="header">Header<a class="anchor" aria-label="anchor" href="#header"></a>
+</h3>
+<pre><code><span><span class="co">#include "geometries/geometries.hpp"</span></span></code></pre>
 </div>
-<div id="functions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#functions" class="anchor"></a>Functions</h3>
+<div class="section level3">
+<h3 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a>
+</h3>
 <pre><code>SEXP make_geometries()</code></pre>
 </div>
-<div id="data-as-geometries" class="section level2">
-<h2 class="hasAnchor">
-<a href="#data-as-geometries" class="anchor"></a>data as geometries</h2>
-<p>When one thinks of geometries in <code>R</code>, one of the most common data structures is the matrix. For example, in the <code>sf</code> world, an POINT is a single-row matrix (i.e, a vector)</p>
+<div class="section level2">
+<h2 id="data-as-geometries">data as geometries<a class="anchor" aria-label="anchor" href="#data-as-geometries"></a>
+</h2>
+<p>When one thinks of geometries in <code>R</code>, one of the most
+common data structures is the matrix. For example, in the
+<code>sf</code> world, an POINT is a single-row matrix (i.e, a
+vector)</p>
 <pre><code>sf::st_point( 1:2 )
 POINT (1 2)</code></pre>
 <p>A LINESTRING is a matrix</p>
@@ -104,7 +107,8 @@ LINESTRING (1 1, 1 2, 2 2, 2 1, 1 1)</code></pre>
 <p>and a POLYGON is a list of matrices</p>
 <pre><code>sf::st_polygon( list( matrix( c(1,1,1,2,2,2,2,1,1,1), ncol = 2, byrow = T) ) )
 POLYGON ((1 1, 1 2, 2 2, 2 1, 1 1))</code></pre>
-<p>And to group these into a <strong>collection</strong> you would put each geometry inside a list</p>
+<p>And to group these into a <strong>collection</strong> you would put
+each geometry inside a list</p>
 <pre><code>
 sf::st_sfc(
   list(
@@ -121,42 +125,46 @@ CRS:            NA
 LINESTRING (1 1, 1 2, 2 2, 2 1, 1 1)
 POLYGON ((1 1, 1 2, 2 2, 2 1, 1 1))</code></pre>
 <hr>
-<p>From my limited research (i.e., practically none), I estimate most users will have a <code>data.frame</code> and will want to convert it into a collection of geometries.</p>
-<p>For example, take a <code>data.frame</code> of <code>x</code> and <code>y</code> coordinates, and two <code>id</code> columns.</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r">
-<span class="no">df</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(
-  <span class="kw">id1</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>( <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>,<span class="fl">12</span>), <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">2</span>, <span class="fl">12</span>) )
-  , <span class="kw">id2</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>( <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>:<span class="fl">4</span>, <span class="kw">each</span> <span class="kw">=</span> <span class="fl">3</span>), <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">1</span>:<span class="fl">4</span>, <span class="kw">each</span> <span class="kw">=</span> <span class="fl">3</span>) )
-  , <span class="kw">x</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fl">24</span>
-  , <span class="kw">y</span> <span class="kw">=</span> <span class="fl">24</span>:<span class="fl">1</span>
-)
-
-<span class="no">df</span>
-<span class="co">#    id1 id2  x  y</span>
-<span class="co"># 1    1   1  1 24</span>
-<span class="co"># 2    1   1  2 23</span>
-<span class="co"># 3    1   1  3 22</span>
-<span class="co"># 4    1   2  4 21</span>
-<span class="co"># 5    1   2  5 20</span>
-<span class="co"># 6    1   2  6 19</span>
-<span class="co"># 7    1   3  7 18</span>
-<span class="co"># 8    1   3  8 17</span>
-<span class="co"># 9    1   3  9 16</span>
-<span class="co"># 10   1   4 10 15</span>
-<span class="co"># 11   1   4 11 14</span>
-<span class="co"># 12   1   4 12 13</span>
-<span class="co"># 13   2   1 13 12</span>
-<span class="co"># 14   2   1 14 11</span>
-<span class="co"># 15   2   1 15 10</span>
-<span class="co"># 16   2   2 16  9</span>
-<span class="co"># 17   2   2 17  8</span>
-<span class="co"># 18   2   2 18  7</span>
-<span class="co"># 19   2   3 19  6</span>
-<span class="co"># 20   2   3 20  5</span>
-<span class="co"># 21   2   3 21  4</span>
-<span class="co"># 22   2   4 22  3</span>
-<span class="co"># 23   2   4 23  2</span>
-<span class="co"># 24   2   4 24  1</span></pre></body></html></div>
+<p>From my limited research (i.e., practically none), I estimate most
+users will have a <code>data.frame</code> and will want to convert it
+into a collection of geometries.</p>
+<p>For example, take a <code>data.frame</code> of <code>x</code> and
+<code>y</code> coordinates, and two <code>id</code> columns.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  id1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">12</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">12</span><span class="op">)</span> <span class="op">)</span></span>
+<span>  , id2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, each <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, each <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">)</span></span>
+<span>  , x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">24</span></span>
+<span>  , y <span class="op">=</span> <span class="fl">24</span><span class="op">:</span><span class="fl">1</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">df</span></span>
+<span><span class="co">#    id1 id2  x  y</span></span>
+<span><span class="co"># 1    1   1  1 24</span></span>
+<span><span class="co"># 2    1   1  2 23</span></span>
+<span><span class="co"># 3    1   1  3 22</span></span>
+<span><span class="co"># 4    1   2  4 21</span></span>
+<span><span class="co"># 5    1   2  5 20</span></span>
+<span><span class="co"># 6    1   2  6 19</span></span>
+<span><span class="co"># 7    1   3  7 18</span></span>
+<span><span class="co"># 8    1   3  8 17</span></span>
+<span><span class="co"># 9    1   3  9 16</span></span>
+<span><span class="co"># 10   1   4 10 15</span></span>
+<span><span class="co"># 11   1   4 11 14</span></span>
+<span><span class="co"># 12   1   4 12 13</span></span>
+<span><span class="co"># 13   2   1 13 12</span></span>
+<span><span class="co"># 14   2   1 14 11</span></span>
+<span><span class="co"># 15   2   1 15 10</span></span>
+<span><span class="co"># 16   2   2 16  9</span></span>
+<span><span class="co"># 17   2   2 17  8</span></span>
+<span><span class="co"># 18   2   2 18  7</span></span>
+<span><span class="co"># 19   2   3 19  6</span></span>
+<span><span class="co"># 20   2   3 20  5</span></span>
+<span><span class="co"># 21   2   3 21  4</span></span>
+<span><span class="co"># 22   2   4 22  3</span></span>
+<span><span class="co"># 23   2   4 23  2</span></span>
+<span><span class="co"># 24   2   4 24  1</span></span></code></pre></div>
 <p>You can think of the ID columns in this example as</p>
 <ul>
 <li>
@@ -164,300 +172,261 @@ POLYGON ((1 1, 1 2, 2 2, 2 1, 1 1))</code></pre>
 <li>
 <code>id2</code> is each ring inside the polygon</li>
 </ul>
-<p>Calling <code>geometries::make_geometries()</code> will split this data.frame by these ID columns and put the resulting matrices inside list elements.</p>
-<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/pkg/Rcpp/man/cppFunction.html">cppFunction</a></span>(
-
-  <span class="kw">depends</span> <span class="kw">=</span> <span class="st">"geometries"</span>
-  , <span class="kw">includes</span> <span class="kw">=</span> <span class="st">'#include "geometries/geometries.hpp"'</span>
-  , <span class="kw">code</span> <span class="kw">=</span> <span class="st">'
-    SEXP my_shape( SEXP df, SEXP id_cols, SEXP geometry_cols ) {
-      return geometries::make_geometries( df, id_cols, geometry_cols );
-    }
-  '</span>
-  , <span class="kw">plugins</span> <span class="kw">=</span> <span class="st">"cpp11"</span>
-)
-
-<span class="fu">my_shape</span>( <span class="no">df</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0L</span>,<span class="fl">1L</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2L</span>,<span class="fl">3L</span>) )
-<span class="co"># [[1]]</span>
-<span class="co"># [[1]][[1]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]    1   24</span>
-<span class="co"># [2,]    2   23</span>
-<span class="co"># [3,]    3   22</span>
-<span class="co"># </span>
-<span class="co"># [[1]][[2]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]    4   21</span>
-<span class="co"># [2,]    5   20</span>
-<span class="co"># [3,]    6   19</span>
-<span class="co"># </span>
-<span class="co"># [[1]][[3]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]    7   18</span>
-<span class="co"># [2,]    8   17</span>
-<span class="co"># [3,]    9   16</span>
-<span class="co"># </span>
-<span class="co"># [[1]][[4]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   10   15</span>
-<span class="co"># [2,]   11   14</span>
-<span class="co"># [3,]   12   13</span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co"># [[2]]</span>
-<span class="co"># [[2]][[1]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   13   12</span>
-<span class="co"># [2,]   14   11</span>
-<span class="co"># [3,]   15   10</span>
-<span class="co"># </span>
-<span class="co"># [[2]][[2]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   16    9</span>
-<span class="co"># [2,]   17    8</span>
-<span class="co"># [3,]   18    7</span>
-<span class="co"># </span>
-<span class="co"># [[2]][[3]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   19    6</span>
-<span class="co"># [2,]   20    5</span>
-<span class="co"># [3,]   21    4</span>
-<span class="co"># </span>
-<span class="co"># [[2]][[4]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   22    3</span>
-<span class="co"># [2,]   23    2</span>
-<span class="co"># [3,]   24    1</span></pre></body></html></div>
-<p>Notice here there are no class attributes on the shapes. In <code>{geometries}</code> I only want to provide the tools to build these structures, then each user can define what they mean.</p>
-<p>For example, if you want to define a class for each geometry you can supply a list containing a “class” vector as the 4th argument</p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r">
-<span class="fu"><a href="https://rdrr.io/pkg/Rcpp/man/cppFunction.html">cppFunction</a></span>(
-  <span class="kw">depends</span> <span class="kw">=</span> <span class="st">"geometries"</span>
-  , <span class="kw">includes</span> <span class="kw">=</span> <span class="st">'#include "geometries/geometries.hpp"'</span>
-  , <span class="kw">code</span> <span class="kw">=</span> <span class="st">'
-    SEXP my_shape( Rcpp::DataFrame df, Rcpp::IntegerVector id_cols, Rcpp::IntegerVector geometry_cols, Rcpp::List class_attributes ) {
-      return geometries::make_geometries( df, id_cols, geometry_cols, class_attributes );
-    }
-  '</span>
-  , <span class="kw">plugins</span> <span class="kw">=</span> <span class="st">"cpp11"</span>
-)
-
-<span class="fu">my_shape</span>( <span class="no">df</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>,<span class="fl">1</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>,<span class="fl">3</span>), <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">class</span> <span class="kw">=</span> <span class="st">"my_polygon"</span>) )
-<span class="co"># [[1]]</span>
-<span class="co"># [[1]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]    1   24</span>
-<span class="co"># [2,]    2   23</span>
-<span class="co"># [3,]    3   22</span>
-<span class="co"># </span>
-<span class="co"># [[2]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]    4   21</span>
-<span class="co"># [2,]    5   20</span>
-<span class="co"># [3,]    6   19</span>
-<span class="co"># </span>
-<span class="co"># [[3]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]    7   18</span>
-<span class="co"># [2,]    8   17</span>
-<span class="co"># [3,]    9   16</span>
-<span class="co"># </span>
-<span class="co"># [[4]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   10   15</span>
-<span class="co"># [2,]   11   14</span>
-<span class="co"># [3,]   12   13</span>
-<span class="co"># </span>
-<span class="co"># attr(,"class")</span>
-<span class="co"># [1] "my_polygon"</span>
-<span class="co"># </span>
-<span class="co"># [[2]]</span>
-<span class="co"># [[1]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   13   12</span>
-<span class="co"># [2,]   14   11</span>
-<span class="co"># [3,]   15   10</span>
-<span class="co"># </span>
-<span class="co"># [[2]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   16    9</span>
-<span class="co"># [2,]   17    8</span>
-<span class="co"># [3,]   18    7</span>
-<span class="co"># </span>
-<span class="co"># [[3]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   19    6</span>
-<span class="co"># [2,]   20    5</span>
-<span class="co"># [3,]   21    4</span>
-<span class="co"># </span>
-<span class="co"># [[4]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   22    3</span>
-<span class="co"># [2,]   23    2</span>
-<span class="co"># [3,]   24    1</span>
-<span class="co"># </span>
-<span class="co"># attr(,"class")</span>
-<span class="co"># [1] "my_polygon"</span></pre></body></html></div>
-<p>Notice here that each list element now has a <code>"my_polygon"</code> class.</p>
-<p>And if you have <code><a href="https://rdrr.io/pkg/sf/man">library(sf)</a></code> loaded, setting the class as <code>sfg</code> <code>POLYGON</code>, you should see each elemente printed in the usual <code>sf</code> way</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r">
-<span class="fu">my_shape</span>( <span class="no">df</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>,<span class="fl">1</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>,<span class="fl">3</span>), <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>( <span class="kw">class</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"XY"</span>, <span class="st">"POLYGON"</span>,<span class="st">"sfg"</span>) ) )
-<span class="co"># [[1]]</span>
-<span class="co"># [[1]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]    1   24</span>
-<span class="co"># [2,]    2   23</span>
-<span class="co"># [3,]    3   22</span>
-<span class="co"># </span>
-<span class="co"># [[2]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]    4   21</span>
-<span class="co"># [2,]    5   20</span>
-<span class="co"># [3,]    6   19</span>
-<span class="co"># </span>
-<span class="co"># [[3]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]    7   18</span>
-<span class="co"># [2,]    8   17</span>
-<span class="co"># [3,]    9   16</span>
-<span class="co"># </span>
-<span class="co"># [[4]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   10   15</span>
-<span class="co"># [2,]   11   14</span>
-<span class="co"># [3,]   12   13</span>
-<span class="co"># </span>
-<span class="co"># attr(,"class")</span>
-<span class="co"># [1] "XY"      "POLYGON" "sfg"    </span>
-<span class="co"># </span>
-<span class="co"># [[2]]</span>
-<span class="co"># [[1]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   13   12</span>
-<span class="co"># [2,]   14   11</span>
-<span class="co"># [3,]   15   10</span>
-<span class="co"># </span>
-<span class="co"># [[2]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   16    9</span>
-<span class="co"># [2,]   17    8</span>
-<span class="co"># [3,]   18    7</span>
-<span class="co"># </span>
-<span class="co"># [[3]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   19    6</span>
-<span class="co"># [2,]   20    5</span>
-<span class="co"># [3,]   21    4</span>
-<span class="co"># </span>
-<span class="co"># [[4]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   22    3</span>
-<span class="co"># [2,]   23    2</span>
-<span class="co"># [3,]   24    1</span>
-<span class="co"># </span>
-<span class="co"># attr(,"class")</span>
-<span class="co"># [1] "XY"      "POLYGON" "sfg"</span></pre></body></html></div>
-<p>You can use this function to define any shape you want. The number of <code>id</code> columns you supply will determine how deeply nested the matrices are. If I add two more <code>id</code> columns, this will nest each matrix 2-levels deeper</p>
-<div class="sourceCode" id="cb12"><html><body><pre class="r">
-<span class="no">df</span>$<span class="no">id0</span> <span class="kw">&lt;-</span> <span class="fl">1</span>
-<span class="no">df</span>$<span class="no">id00</span> <span class="kw">&lt;-</span> <span class="fl">1</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>( <span class="no">df</span> )
-<span class="co">#   id1 id2 x  y id0 id00</span>
-<span class="co"># 1   1   1 1 24   1    1</span>
-<span class="co"># 2   1   1 2 23   1    1</span>
-<span class="co"># 3   1   1 3 22   1    1</span>
-<span class="co"># 4   1   2 4 21   1    1</span>
-<span class="co"># 5   1   2 5 20   1    1</span>
-<span class="co"># 6   1   2 6 19   1    1</span>
-
-<span class="fu">my_shape</span>( <span class="no">df</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">4</span>,<span class="fl">5</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>,<span class="fl">3</span>), <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">class</span> <span class="kw">=</span> <span class="st">"my_new_shape"</span>) )
-<span class="co"># [[1]]</span>
-<span class="co"># [[1]]</span>
-<span class="co"># [[1]][[1]]</span>
-<span class="co"># [[1]][[1]][[1]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]    1   24</span>
-<span class="co"># [2,]    2   23</span>
-<span class="co"># [3,]    3   22</span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co"># [[2]]</span>
-<span class="co"># [[2]][[1]]</span>
-<span class="co"># [[2]][[1]][[1]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]    4   21</span>
-<span class="co"># [2,]    5   20</span>
-<span class="co"># [3,]    6   19</span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co"># [[3]]</span>
-<span class="co"># [[3]][[1]]</span>
-<span class="co"># [[3]][[1]][[1]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]    7   18</span>
-<span class="co"># [2,]    8   17</span>
-<span class="co"># [3,]    9   16</span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co"># [[4]]</span>
-<span class="co"># [[4]][[1]]</span>
-<span class="co"># [[4]][[1]][[1]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   10   15</span>
-<span class="co"># [2,]   11   14</span>
-<span class="co"># [3,]   12   13</span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co"># attr(,"class")</span>
-<span class="co"># [1] "my_new_shape"</span>
-<span class="co"># </span>
-<span class="co"># [[2]]</span>
-<span class="co"># [[1]]</span>
-<span class="co"># [[1]][[1]]</span>
-<span class="co"># [[1]][[1]][[1]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   13   12</span>
-<span class="co"># [2,]   14   11</span>
-<span class="co"># [3,]   15   10</span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co"># [[2]]</span>
-<span class="co"># [[2]][[1]]</span>
-<span class="co"># [[2]][[1]][[1]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   16    9</span>
-<span class="co"># [2,]   17    8</span>
-<span class="co"># [3,]   18    7</span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co"># [[3]]</span>
-<span class="co"># [[3]][[1]]</span>
-<span class="co"># [[3]][[1]][[1]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   19    6</span>
-<span class="co"># [2,]   20    5</span>
-<span class="co"># [3,]   21    4</span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co"># [[4]]</span>
-<span class="co"># [[4]][[1]]</span>
-<span class="co"># [[4]][[1]][[1]]</span>
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]   22    3</span>
-<span class="co"># [2,]   23    2</span>
-<span class="co"># [3,]   24    1</span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co"># </span>
-<span class="co"># attr(,"class")</span>
-<span class="co"># [1] "my_new_shape"</span></pre></body></html></div>
+<p>Calling <code>geometries::make_geometries()</code> will split this
+data.frame by these ID columns and put the resulting matrices inside
+list elements.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/Rcpp/man/cppFunction.html" class="external-link">cppFunction</a></span><span class="op">(</span></span>
+<span>  </span>
+<span>  depends <span class="op">=</span> <span class="st">"geometries"</span></span>
+<span>  , includes <span class="op">=</span> <span class="st">'#include "geometries/geometries.hpp"'</span></span>
+<span>  , code <span class="op">=</span> <span class="st">'</span></span>
+<span><span class="st">    SEXP my_shape( SEXP df, SEXP id_cols, SEXP geometry_cols ) {</span></span>
+<span><span class="st">      return geometries::make_geometries( df, id_cols, geometry_cols );</span></span>
+<span><span class="st">    }</span></span>
+<span><span class="st">  '</span></span>
+<span>  , plugins <span class="op">=</span> <span class="st">"cpp11"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">my_shape</span><span class="op">(</span> <span class="va">df</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0L</span>,<span class="fl">1L</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2L</span>,<span class="fl">3L</span><span class="op">)</span> <span class="op">)</span></span>
+<span></span>
+<span><span class="co"># [[1]]</span></span>
+<span><span class="co"># [[1]][[1]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]    1   24</span></span>
+<span><span class="co"># [2,]    2   23</span></span>
+<span><span class="co"># [3,]    3   22</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[1]][[2]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]    4   21</span></span>
+<span><span class="co"># [2,]    5   20</span></span>
+<span><span class="co"># [3,]    6   19</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[1]][[3]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]    7   18</span></span>
+<span><span class="co"># [2,]    8   17</span></span>
+<span><span class="co"># [3,]    9   16</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[1]][[4]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]   10   15</span></span>
+<span><span class="co"># [2,]   11   14</span></span>
+<span><span class="co"># [3,]   12   13</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[2]]</span></span>
+<span><span class="co"># [[2]][[1]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]   13   12</span></span>
+<span><span class="co"># [2,]   14   11</span></span>
+<span><span class="co"># [3,]   15   10</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[2]][[2]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]   16    9</span></span>
+<span><span class="co"># [2,]   17    8</span></span>
+<span><span class="co"># [3,]   18    7</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[2]][[3]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]   19    6</span></span>
+<span><span class="co"># [2,]   20    5</span></span>
+<span><span class="co"># [3,]   21    4</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[2]][[4]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]   22    3</span></span>
+<span><span class="co"># [2,]   23    2</span></span>
+<span><span class="co"># [3,]   24    1</span></span></code></pre></div>
+<p>Notice here there are no class attributes on the shapes. In
+<a href="https://dcooley.github.io/geometries/" class="external-link">geometries</a> I only want to provide the tools to build
+these structures, then each user can define what they mean.</p>
+<p>For example, if you want to define a class for each geometry you can
+supply a list containing a “class” vector as the 4th argument</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/Rcpp/man/cppFunction.html" class="external-link">cppFunction</a></span><span class="op">(</span></span>
+<span>  depends <span class="op">=</span> <span class="st">"geometries"</span></span>
+<span>  , includes <span class="op">=</span> <span class="st">'#include "geometries/geometries.hpp"'</span></span>
+<span>  , code <span class="op">=</span> <span class="st">'</span></span>
+<span><span class="st">    SEXP my_shape( Rcpp::DataFrame df, Rcpp::IntegerVector id_cols, Rcpp::IntegerVector geometry_cols, Rcpp::List class_attributes ) {</span></span>
+<span><span class="st">      return geometries::make_geometries( df, id_cols, geometry_cols, class_attributes );</span></span>
+<span><span class="st">    }</span></span>
+<span><span class="st">  '</span></span>
+<span>  , plugins <span class="op">=</span> <span class="st">"cpp11"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">my_shape</span><span class="op">(</span> <span class="va">df</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>class <span class="op">=</span> <span class="st">"my_polygon"</span><span class="op">)</span> <span class="op">)</span></span>
+<span></span>
+<span><span class="co"># [[1]]</span></span>
+<span><span class="co"># [[1]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]    1   24</span></span>
+<span><span class="co"># [2,]    2   23</span></span>
+<span><span class="co"># [3,]    3   22</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[2]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]    4   21</span></span>
+<span><span class="co"># [2,]    5   20</span></span>
+<span><span class="co"># [3,]    6   19</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[3]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]    7   18</span></span>
+<span><span class="co"># [2,]    8   17</span></span>
+<span><span class="co"># [3,]    9   16</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[4]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]   10   15</span></span>
+<span><span class="co"># [2,]   11   14</span></span>
+<span><span class="co"># [3,]   12   13</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># attr(,"class")</span></span>
+<span><span class="co"># [1] "my_polygon"</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[2]]</span></span>
+<span><span class="co"># [[1]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]   13   12</span></span>
+<span><span class="co"># [2,]   14   11</span></span>
+<span><span class="co"># [3,]   15   10</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[2]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]   16    9</span></span>
+<span><span class="co"># [2,]   17    8</span></span>
+<span><span class="co"># [3,]   18    7</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[3]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]   19    6</span></span>
+<span><span class="co"># [2,]   20    5</span></span>
+<span><span class="co"># [3,]   21    4</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[4]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]   22    3</span></span>
+<span><span class="co"># [2,]   23    2</span></span>
+<span><span class="co"># [3,]   24    1</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># attr(,"class")</span></span>
+<span><span class="co"># [1] "my_polygon"</span></span></code></pre></div>
+<p>Notice here that each list element now has a
+<code>"my_polygon"</code> class.</p>
+<p>And if you have <code><a href="https://r-spatial.github.io/sf/" class="external-link">library(sf)</a></code> loaded, setting the class as
+<code>sfg</code> <code>POLYGON</code>, you should see each element
+printed in the usual <code>sf</code> way</p>
+<pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
+<span><span class="fu">my_shape</span><span class="op">(</span> <span class="va">df</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span> class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"XY"</span>, <span class="st">"POLYGON"</span>,<span class="st">"sfg"</span><span class="op">)</span> <span class="op">)</span> <span class="op">)</span></span>
+<span></span>
+<span><span class="co"># [[1]]</span></span>
+<span><span class="co"># POLYGON ((1 24, 2 23, 3 22), (4 21, 5 20, 6 19), (7 18, 8 17, 9 16), (10 15, 11 14, 12 13))</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[2]]</span></span>
+<span><span class="co"># POLYGON ((13 12, 14 11, 15 10), (16 9, 17 8, 18 7), (19 6, 20 5, 21 4), (22 3, 23 2, 24 1))</span></span></code></pre>
+<p>You can use this function to define any shape you want. The number of
+<code>id</code> columns you supply will determine how deeply nested the
+matrices are. If I add two more <code>id</code> columns, this will nest
+each matrix 2-levels deeper</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">df</span><span class="op">$</span><span class="va">id0</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span><span class="va">df</span><span class="op">$</span><span class="va">id00</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span> <span class="va">df</span> <span class="op">)</span> </span>
+<span></span>
+<span><span class="fu">my_shape</span><span class="op">(</span> <span class="va">df</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">4</span>,<span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>class <span class="op">=</span> <span class="st">"my_new_shape"</span><span class="op">)</span> <span class="op">)</span></span>
+<span></span>
+<span><span class="co"># [[1]]</span></span>
+<span><span class="co"># [[1]]</span></span>
+<span><span class="co"># [[1]][[1]]</span></span>
+<span><span class="co"># [[1]][[1]][[1]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]    1   24</span></span>
+<span><span class="co"># [2,]    2   23</span></span>
+<span><span class="co"># [3,]    3   22</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[2]]</span></span>
+<span><span class="co"># [[2]][[1]]</span></span>
+<span><span class="co"># [[2]][[1]][[1]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]    4   21</span></span>
+<span><span class="co"># [2,]    5   20</span></span>
+<span><span class="co"># [3,]    6   19</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[3]]</span></span>
+<span><span class="co"># [[3]][[1]]</span></span>
+<span><span class="co"># [[3]][[1]][[1]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]    7   18</span></span>
+<span><span class="co"># [2,]    8   17</span></span>
+<span><span class="co"># [3,]    9   16</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[4]]</span></span>
+<span><span class="co"># [[4]][[1]]</span></span>
+<span><span class="co"># [[4]][[1]][[1]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]   10   15</span></span>
+<span><span class="co"># [2,]   11   14</span></span>
+<span><span class="co"># [3,]   12   13</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># attr(,"class")</span></span>
+<span><span class="co"># [1] "my_new_shape"</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[2]]</span></span>
+<span><span class="co"># [[1]]</span></span>
+<span><span class="co"># [[1]][[1]]</span></span>
+<span><span class="co"># [[1]][[1]][[1]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]   13   12</span></span>
+<span><span class="co"># [2,]   14   11</span></span>
+<span><span class="co"># [3,]   15   10</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[2]]</span></span>
+<span><span class="co"># [[2]][[1]]</span></span>
+<span><span class="co"># [[2]][[1]][[1]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]   16    9</span></span>
+<span><span class="co"># [2,]   17    8</span></span>
+<span><span class="co"># [3,]   18    7</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[3]]</span></span>
+<span><span class="co"># [[3]][[1]]</span></span>
+<span><span class="co"># [[3]][[1]][[1]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]   19    6</span></span>
+<span><span class="co"># [2,]   20    5</span></span>
+<span><span class="co"># [3,]   21    4</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># [[4]]</span></span>
+<span><span class="co"># [[4]][[1]]</span></span>
+<span><span class="co"># [[4]][[1]][[1]]</span></span>
+<span><span class="co">#      [,1] [,2]</span></span>
+<span><span class="co"># [1,]   22    3</span></span>
+<span><span class="co"># [2,]   23    2</span></span>
+<span><span class="co"># [3,]   24    1</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># attr(,"class")</span></span>
+<span><span class="co"># [1] "my_new_shape"</span></span></code></pre></div>
 </div>
   </div>
 
@@ -472,11 +441,13 @@ POLYGON ((1 1, 1 2, 2 2, 2 1, 1 1))</code></pre>
 
 
       <footer><div class="copyright">
-  <p>Developed by David Cooley.</p>
+  <p></p>
+<p>Developed by David Cooley.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -484,6 +455,8 @@ POLYGON ((1 1, 1 2, 2 2, 2 1, 1 1))</code></pre>
 
   
 
+
+  
 
   </body>
 </html>
