@@ -84,7 +84,7 @@ namespace utils {
         }
       } break;
       case STRSXP: {
-        const SEXP *jd = STRING_PTR( x );
+        const SEXP *jd = STRING_PTR_RO( x );
         for (i = 1; i < len; ++i ) {
           if( jd[i] != jd[i-1] ) {
             ians[ counter ] = i;

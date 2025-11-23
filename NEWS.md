@@ -1,3 +1,6 @@
+# 0.2.5
+
+* replaced `STRING_PTR` with `STRING_PTR_RO` (as per CRAN requirements)
 
 # 0.2.4
 

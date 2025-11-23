@@ -1,8 +1,8 @@
 Package: geometries
 Type: Package
 Title: Convert Between R Objects and Geometric Structures
-Date: 2024-01-16
-Version: 0.2.4
+Date: 2025-11-23
+Version: 0.2.5
 Authors@R: c(
     person("David", "Cooley", ,"david.cooley.au@gmail.com", role = c("aut", "cre"))
     )
@@ -17,7 +17,7 @@ RoxygenNote: 7.2.3
 LinkingTo: 
     Rcpp
 Imports: 
-    Rcpp (>= 1.0.10)
+    Rcpp (>= 1.1.0)
 Roxygen: list(markdown = TRUE)
 Suggests: 
     covr,
